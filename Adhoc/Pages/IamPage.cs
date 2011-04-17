@@ -53,7 +53,7 @@ namespace Orca.MdfReader.Adhoc.Pages
 			sb.AppendLine("Slot7: " + Slot7);
 			sb.AppendLine();
 
-			int currentRangeStartPageID = Math.Max((PageID / 511232) * 511232, 2);
+			int currentRangeStartPageID = (PageID / 511232) * 511232;
 			int currentRangeStartMapIndex = 0;
 			bool currentStatus = ExtentMap[0];
 			for (int i = 0; i < ExtentMap.Length; i++)

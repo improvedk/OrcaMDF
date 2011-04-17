@@ -52,10 +52,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AlphaVSS.Common">
-      <HintPath>..\..\Referenced Binaries\AlphaVSS-1.0-Beta-Bin\Bin\AlphaVSS.Common.dll</HintPath>
+      <HintPath>..\Referenced Binaries\AlphaVSS-1.0-Beta-Bin\Bin\AlphaVSS.Common.dll</HintPath>
     </Reference>
     <Reference Include="AlphaVSS.Win2008.x64">
-      <HintPath>..\..\Referenced Binaries\AlphaVSS-1.0-Beta-Bin\Bin\AlphaVSS.Win2008.x64.dll</HintPath>
+      <HintPath>..\Referenced Binaries\AlphaVSS-1.0-Beta-Bin\Bin\AlphaVSS.Win2008.x64.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
