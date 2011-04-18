@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{829A5C51-CB21-4DE2-9021-44F6D804D231}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OrcaMDF.Core</RootNamespace>
+    <AssemblyName>OrcaMDF.Core</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MdfFile.cs" />
+    <Compile Include="PageLocation.cs" />
+    <Compile Include="Pages\DataPage.cs" />
+    <Compile Include="Pages\ExtentAllocationMap.cs" />
+    <Compile Include="Pages\GamPage.cs" />
+    <Compile Include="Pages\IamPage.cs" />
+    <Compile Include="Pages\Page.cs" />
+    <Compile Include="Pages\PageType.cs" />
+    <Compile Include="Pages\PFS\PfsFlags.cs" />
+    <Compile Include="Pages\PFS\PfsPage.cs" />
+    <Compile Include="Pages\PFS\PfsPageByte.cs" />
+    <Compile Include="Pages\SgamPage.cs" />
+    <Compile Include="Pages\TextMixPage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Record.cs" />
+    <Compile Include="RecordType.cs" />
+    <Compile Include="SqlTypes\ISqlType.cs" />
+    <Compile Include="SqlTypes\SqlBit.cs" />
+    <Compile Include="SqlTypes\SqlBitReadState.cs" />
+    <Compile Include="SqlTypes\SqlChar.cs" />
+    <Compile Include="SqlTypes\SqlDateTime.cs" />
+    <Compile Include="SqlTypes\SqlInt.cs" />
+    <Compile Include="SqlTypes\SqlNvarchar.cs" />
+    <Compile Include="SqlTypes\SqlTypeFactory.cs" />
+    <Compile Include="SqlTypes\SqlVarchar.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

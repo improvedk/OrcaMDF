@@ -1,7 +1,0 @@
-﻿- New columns not added to datapage untill new data is entered or table is rebuilt
-- NumberOfVariableLengthColumns not fixed - (x, x, x, x) = 4; (x, x, null, null) = 2
-- DateTime = 4 bytes for 10/3msec ticks since midnight, 4 bytes for #days since 1900-1-1
-- Metadata vs physical page changes
-
-References
-http://www.sqlskills.com/blogs/paul/post/Inside-The-Storage-Engine-GAM-SGAM-PFS-and-other-allocation-maps.aspx
