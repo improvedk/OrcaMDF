@@ -1,5 +1,0 @@
-D:\Webmentor Projekter\OrcaMDF\src\OrcaMDF.Core\obj\Debug\ResolveAssemblyReference.cache
-D:\Webmentor Projekter\OrcaMDF\src\OrcaMDF.Core\bin\Debug\OrcaMDF.Core.dll
-D:\Webmentor Projekter\OrcaMDF\src\OrcaMDF.Core\bin\Debug\OrcaMDF.Core.pdb
-D:\Webmentor Projekter\OrcaMDF\src\OrcaMDF.Core\obj\Debug\OrcaMDF.Core.dll
-D:\Webmentor Projekter\OrcaMDF\src\OrcaMDF.Core\obj\Debug\OrcaMDF.Core.pdb
