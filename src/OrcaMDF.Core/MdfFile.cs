@@ -57,7 +57,7 @@ namespace OrcaMDF.Core
 		{
 			return new DataPage(getPageBytes(index), this);
 		}
-
+		
 		public IamPage GetIamPage(int index)
 		{
 			return new IamPage(getPageBytes(index), this);

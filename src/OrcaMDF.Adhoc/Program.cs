@@ -16,17 +16,17 @@ namespace OrcaMDF.Adhoc
 			using (var file = new MdfFile(@"C:\MOW_Copy.mdf"))
 			{
 				// Data page
-				var dataPage = file.GetDataPage(22);
-				var slobs = dataPage.GetRecords<Person>();
-				EntityPrinter.Print(slobs);
+				//var dataPage = file.GetDataPage(22);
+				//var slobs = dataPage.GetEntities<Person>();
+				//EntityPrinter.Print(slobs);
 
 				//var dataPage2 = file.GetTextMixPage(79);
-				//var slobs = dataPage.GetRecords<Person>();
+				//var slobs = dataPage.GetEntities<Person>();
 				//EntityPrinter.Print(slobs);
 
 				// IAM page
-				//var iamPage = file.GetIamPage(55);
-				//Console.WriteLine(iamPage);
+				var iamPage = file.GetIamPage(55);
+				Console.WriteLine(iamPage);
 
 				// GAM page
 				//var gamPage = file.GetGamPage(2);

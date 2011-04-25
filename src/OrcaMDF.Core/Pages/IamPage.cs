@@ -17,26 +17,22 @@ namespace OrcaMDF.Core.Pages
 		public IamPage(byte[] bytes, MdfFile file)
 			: base(bytes, file)
 		{
-			parseBody();
+			parseHeader();
 		}
 
-		private void parseBody()
+		private void parseHeader()
 		{
-			// Bytes 0-43 is the IAM page header
+			byte[] header = Records[0].FixedLengthData;
 
 			// Read single page slot allocations
-			Slot0 = new PageLocation(BitConverter.ToInt16(RawBody, 44), BitConverter.ToInt32(RawBody, 46));
-			Slot1 = new PageLocation(BitConverter.ToInt16(RawBody, 50), BitConverter.ToInt32(RawBody, 52));
-			Slot2 = new PageLocation(BitConverter.ToInt16(RawBody, 56), BitConverter.ToInt32(RawBody, 58));
-			Slot3 = new PageLocation(BitConverter.ToInt16(RawBody, 62), BitConverter.ToInt32(RawBody, 64));
-			Slot4 = new PageLocation(BitConverter.ToInt16(RawBody, 68), BitConverter.ToInt32(RawBody, 70));
-			Slot5 = new PageLocation(BitConverter.ToInt16(RawBody, 74), BitConverter.ToInt32(RawBody, 76));
-			Slot6 = new PageLocation(BitConverter.ToInt16(RawBody, 80), BitConverter.ToInt32(RawBody, 82));
-			Slot7 = new PageLocation(BitConverter.ToInt16(RawBody, 86), BitConverter.ToInt32(RawBody, 88));
-
-			// Byte 88 - 98 = ???
-
-			// Rest is taken care of by ExtentAllocationMap
+			Slot0 = new PageLocation(BitConverter.ToInt16(header, 46), BitConverter.ToInt32(header, 42));
+			Slot1 = new PageLocation(BitConverter.ToInt16(header, 52), BitConverter.ToInt32(header, 48));
+			Slot2 = new PageLocation(BitConverter.ToInt16(header, 58), BitConverter.ToInt32(header, 54));
+			Slot3 = new PageLocation(BitConverter.ToInt16(header, 64), BitConverter.ToInt32(header, 60));
+			Slot4 = new PageLocation(BitConverter.ToInt16(header, 70), BitConverter.ToInt32(header, 66));
+			Slot5 = new PageLocation(BitConverter.ToInt16(header, 76), BitConverter.ToInt32(header, 72));
+			Slot6 = new PageLocation(BitConverter.ToInt16(header, 82), BitConverter.ToInt32(header, 78));
+			Slot7 = new PageLocation(BitConverter.ToInt16(header, 88), BitConverter.ToInt32(header, 84));
 		}
 
 		public override string ToString()
