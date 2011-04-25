@@ -13,7 +13,7 @@ namespace OrcaMDF.Core.Pages
 		{
 			var sb = new StringBuilder();
 
-			int currentRangeStartPageID = this.PageID == 3 ? 0 : this.PageID;
+			int currentRangeStartPageID = Header.PageID == 3 ? 0 : Header.PageID;
 			int currentRangeStartMapIndex = 0;
 			bool currentStatus = ExtentMap[0];
 			for (int i = 0; i < ExtentMap.Length; i++)

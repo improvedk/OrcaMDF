@@ -1,5 +1,4 @@
 ﻿using System;
-using OrcaMDF.Adhoc.Entities;
 using OrcaMDF.Core;
 
 namespace OrcaMDF.Adhoc
@@ -18,6 +17,7 @@ namespace OrcaMDF.Adhoc
 				// Data page
 				//var dataPage = file.GetDataPage(22);
 				//var slobs = dataPage.GetEntities<Person>();
+				//Console.WriteLine(dataPage);
 				//EntityPrinter.Print(slobs);
 
 				//var dataPage2 = file.GetTextMixPage(79);
@@ -25,8 +25,8 @@ namespace OrcaMDF.Adhoc
 				//EntityPrinter.Print(slobs);
 
 				// IAM page
-				var iamPage = file.GetIamPage(55);
-				Console.WriteLine(iamPage);
+				//var iamPage = file.GetIamPage(55);
+				//Console.WriteLine(iamPage);
 
 				// GAM page
 				//var gamPage = file.GetGamPage(2);

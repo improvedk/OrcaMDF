@@ -18,7 +18,7 @@ namespace OrcaMDF.Core.Pages.PFS
 		private void parseBody()
 		{
 			pageDescriptions = new Dictionary<int, PfsPageByte>();
-			int pageID = this.PageID == 1 ? 0 : this.PageID;
+			int pageID = Header.PageID == 1 ? 0 : Header.PageID;
 			
 			// Skip first 4 & last 4 bytes
 			foreach(byte pageByte in RawBody.Skip(4).Take(8088))

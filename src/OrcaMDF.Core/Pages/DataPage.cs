@@ -71,7 +71,7 @@ namespace OrcaMDF.Core.Pages
 			sb.AppendLine();
 			sb.AppendLine("Slot Array:");
 			sb.AppendLine("Row\tOffset");
-			for (int i = 0; i < SlotCnt; i++)
+			for (int i = 0; i < Header.SlotCnt; i++)
 				sb.AppendLine(i + "\t" + SlotArray[i]);
 
 			return sb.ToString();

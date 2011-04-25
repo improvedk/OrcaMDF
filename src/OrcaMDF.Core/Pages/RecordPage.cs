@@ -17,7 +17,7 @@ namespace OrcaMDF.Core.Pages
 
 		private void parseRecords()
 		{
-			Records = new Record[SlotCnt];
+			Records = new Record[Header.SlotCnt];
 
 			int cnt = 0;
 			foreach (short recordOffset in SlotArray)
@@ -26,9 +26,9 @@ namespace OrcaMDF.Core.Pages
 
 		private void parseSlotArray()
 		{
-			SlotArray = new short[SlotCnt];
+			SlotArray = new short[Header.SlotCnt];
 
-			for (int i = 0; i < SlotCnt; i++)
+			for (int i = 0; i < Header.SlotCnt; i++)
 				SlotArray[i] = BitConverter.ToInt16(RawBytes, RawBytes.Length - i * 2 - 2);
 		}
 	}
