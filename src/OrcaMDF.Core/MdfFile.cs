@@ -63,6 +63,11 @@ namespace OrcaMDF.Core
 			return new IamPage(getPageBytes(index), this);
 		}
 
+		public BootPage GetBootPage(int index)
+		{
+			return new BootPage(getPageBytes(index), this);
+		}
+
 		public SgamPage GetSgamPage(int index)
 		{
 			if(index % 511230 != 3)

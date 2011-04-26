@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text;
 using OrcaMDF.Core;
+using OrcaMDF.Core.SqlTypes;
 
 namespace OrcaMDF.Adhoc
 {
@@ -8,7 +10,8 @@ namespace OrcaMDF.Adhoc
         static void Main(string[] args)
         {
         	Console.WriteLine("VSS Copying...");
-        	VssHelper.CopyFile(@"C:\MOW.mdf", @"C:\MOW_Copy.mdf");
+			VssHelper.CopyFile(@"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\Test.mdf", @"C:\MOW_Copy.mdf");
+        	//VssHelper.CopyFile(@"C:\MOW.mdf", @"C:\MOW_Copy.mdf");
         	Console.WriteLine("Done");
         	Console.WriteLine();
 
@@ -39,6 +42,10 @@ namespace OrcaMDF.Adhoc
 				// PFS page
 				//var pfsPage = file.GetPfsPage(1);
 				//Console.WriteLine(pfsPage);
+
+				// Boot page
+				var bootPage = file.GetBootPage(9);
+				Console.WriteLine(bootPage);
 			}
 
         	Console.WriteLine("Done");

@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="MdfFile.cs" />
     <Compile Include="PageLocation.cs" />
+    <Compile Include="Pages\BootPage.cs" />
     <Compile Include="Pages\ExtentAllocationMap.cs" />
     <Compile Include="Pages\IamPage.cs" />
     <Compile Include="Pages\DataPage.cs" />
@@ -65,7 +66,8 @@
     <Compile Include="SqlTypes\SqlChar.cs" />
     <Compile Include="SqlTypes\SqlDateTime.cs" />
     <Compile Include="SqlTypes\SqlInt.cs" />
-    <Compile Include="SqlTypes\SqlNvarchar.cs" />
+    <Compile Include="SqlTypes\SqlNChar.cs" />
+    <Compile Include="SqlTypes\SqlNVarchar.cs" />
     <Compile Include="SqlTypes\SqlTypeFactory.cs" />
     <Compile Include="SqlTypes\SqlVarchar.cs" />
   </ItemGroup>

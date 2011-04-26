@@ -16,6 +16,9 @@ namespace OrcaMDF.Core.SqlTypes
 				case "char":
 					return new SqlChar(Convert.ToInt16(typeName.Split('(')[1].Split(')')[0]));
 
+				case "ncar":
+					return new SqlNChar(Convert.ToInt16(typeName.Split('(')[1].Split(')')[0]));
+
 				case "datetime":
 					return new SqlDateTime();
 
@@ -26,7 +29,7 @@ namespace OrcaMDF.Core.SqlTypes
 					return new SqlVarchar();
 
 				case "nvarchar":
-					return new SqlNvarchar();
+					return new SqlNVarchar();
 
 				default:
 					throw new ArgumentException("typeName: " + typeName);

@@ -2,16 +2,23 @@ using System.Text;
 
 namespace OrcaMDF.Core.SqlTypes
 {
-	public class SqlNVarchar : ISqlType
+	public class SqlNChar : ISqlType
 	{
+		private short length;
+
+		public SqlNChar(short length)
+		{
+			this.length = length;
+		}
+
 		public bool IsVariableLength
 		{
-			get { return true; }
+			get { return false; }
 		}
 
 		public short? FixedLength
 		{
-			get { return null; }
+			get { return length; }
 		}
 
 		public object GetValue(byte[] value)
