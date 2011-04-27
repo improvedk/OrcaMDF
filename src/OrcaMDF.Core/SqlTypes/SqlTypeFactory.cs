@@ -37,7 +37,6 @@ namespace OrcaMDF.Core.SqlTypes
 
 				case ColumnType.Varchar:
 					return new SqlVarchar();
-
 			}
 
 			throw new ArgumentException("Unsupported type: " + type);

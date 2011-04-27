@@ -7,7 +7,7 @@ namespace OrcaMDF.Core.Common
 	{
 		public static ColumnTypeDescription GetDescription(string type)
 		{
-			switch(type)
+			switch(type.Split('(')[0])
 			{
 				case "bigint":
 					return new ColumnTypeDescription(ColumnType.BigInt, null);

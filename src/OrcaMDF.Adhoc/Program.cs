@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using OrcaMDF.Adhoc.Entities;
 using OrcaMDF.Core;
 using OrcaMDF.Core.SqlTypes;
 
@@ -10,18 +11,18 @@ namespace OrcaMDF.Adhoc
         static void Main(string[] args)
         {
         	Console.WriteLine("VSS Copying...");
-			VssHelper.CopyFile(@"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\Test.mdf", @"C:\MOW_Copy.mdf");
-        	//VssHelper.CopyFile(@"C:\MOW.mdf", @"C:\MOW_Copy.mdf");
+			//VssHelper.CopyFile(@"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\Test.mdf", @"C:\MOW_Copy.mdf");
+        	VssHelper.CopyFile(@"C:\MOW.mdf", @"C:\MOW_Copy.mdf");
         	Console.WriteLine("Done");
         	Console.WriteLine();
 
 			using (var file = new MdfFile(@"C:\MOW_Copy.mdf"))
 			{
 				// Data page
-				//var dataPage = file.GetDataPage(22);
-				//var slobs = dataPage.GetEntities<Person>();
+				var dataPage = file.GetDataPage(22);
+				var slobs = dataPage.GetEntities<Person>();
 				//Console.WriteLine(dataPage);
-				//EntityPrinter.Print(slobs);
+				EntityPrinter.Print(slobs);
 
 				//var dataPage2 = file.GetTextMixPage(79);
 				//var slobs = dataPage.GetEntities<Person>();
