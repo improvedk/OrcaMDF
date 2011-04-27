@@ -1,4 +1,6 @@
 ﻿using System;
+using OrcaMDF.Core.Common;
+using OrcaMDF.Core.Engine;
 
 namespace OrcaMDF.Core.SqlTypes
 {
@@ -6,34 +8,39 @@ namespace OrcaMDF.Core.SqlTypes
 	{
 		internal SqlBitReadState BitReadState;
 
-		public ISqlType Create(string typeName)
+		public ISqlType Create(string type)
 		{
-			switch(typeName.ToLower().Split('(')[0])
+			var typeDesc = ColumnTypeDescriptionFactory.GetDescription(type);
+
+			switch(typeDesc.Type)
 			{
-				case "bit":
+				case ColumnType.BigInt:
+					return new SqlBigInt();
+
+				case ColumnType.Bit:
 					return new SqlBit(this);
 
-				case "char":
-					return new SqlChar(Convert.ToInt16(typeName.Split('(')[1].Split(')')[0]));
+				case ColumnType.Char:
+					return new SqlChar((short) typeDesc.VariableFixedLength);
 
-				case "ncar":
-					return new SqlNChar(Convert.ToInt16(typeName.Split('(')[1].Split(')')[0]));
-
-				case "datetime":
+				case ColumnType.DateTime:
 					return new SqlDateTime();
 
-				case "int":
+				case ColumnType.Int:
 					return new SqlInt();
 
-				case "varchar":
-					return new SqlVarchar();
+				case ColumnType.NChar:
+					return new SqlNChar((short) typeDesc.VariableFixedLength);
 
-				case "nvarchar":
+				case ColumnType.NVarchar:
 					return new SqlNVarchar();
 
-				default:
-					throw new ArgumentException("typeName: " + typeName);
+				case ColumnType.Varchar:
+					return new SqlVarchar();
+
 			}
+
+			throw new ArgumentException("Unsupported type: " + type);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿namespace OrcaMDF.Core.SqlTypes
 {
+	// TODO: This is fugly. Rewrite this logic so it isn't dependent on factory but uses a per-record temporary bit read state.
 	public class SqlBit : ISqlType
 	{
 		private SqlTypeFactory factory;
