@@ -41,11 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\ColumnTypeDescription.cs" />
-    <Compile Include="Common\ColumnTypeDescriptionFactory.cs" />
+    <Compile Include="Engine\ColumnTypeDescription.cs" />
+    <Compile Include="Engine\ColumnTypeDescriptionFactory.cs" />
     <Compile Include="Engine\ColumnType.cs" />
     <Compile Include="Engine\SystemEntities\AllocationUnit.cs" />
-    <Compile Include="Engine\TableColumnAttribute.cs" />
+    <Compile Include="Engine\ColumnAttribute.cs" />
     <Compile Include="MdfFile.cs" />
     <Compile Include="PageLocation.cs" />
     <Compile Include="Pages\BootPage.cs" />
@@ -65,6 +65,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Record.cs" />
     <Compile Include="RecordType.cs" />
+    <Compile Include="SqlTypes\SqlBinary.cs" />
+    <Compile Include="SqlTypes\SqlSmallInt.cs" />
+    <Compile Include="SqlTypes\SqlTinyInt.cs" />
     <Compile Include="SqlTypes\SqlBigInt.cs" />
     <Compile Include="SqlTypes\ISqlType.cs" />
     <Compile Include="SqlTypes\SqlBit.cs" />

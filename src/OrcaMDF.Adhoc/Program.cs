@@ -2,6 +2,7 @@
 using System.Text;
 using OrcaMDF.Adhoc.Entities;
 using OrcaMDF.Core;
+using OrcaMDF.Core.Engine.SystemEntities;
 using OrcaMDF.Core.SqlTypes;
 
 namespace OrcaMDF.Adhoc
@@ -19,10 +20,10 @@ namespace OrcaMDF.Adhoc
 			using (var file = new MdfFile(@"C:\MOW_Copy.mdf"))
 			{
 				// Data page
-				var dataPage = file.GetDataPage(22);
-				var slobs = dataPage.GetEntities<Person>();
+				//var dataPage = file.GetDataPage(22);
+				//var slobs = dataPage.GetEntities<Person>();
 				//Console.WriteLine(dataPage);
-				EntityPrinter.Print(slobs);
+				//EntityPrinter.Print(slobs);
 
 				//var dataPage2 = file.GetTextMixPage(79);
 				//var slobs = dataPage.GetEntities<Person>();
@@ -45,8 +46,12 @@ namespace OrcaMDF.Adhoc
 				//Console.WriteLine(pfsPage);
 
 				// Boot page
-				var bootPage = file.GetBootPage(9);
-				Console.WriteLine(bootPage);
+				//var bootPage = file.GetBootPage(9);
+				//Console.WriteLine(bootPage);
+
+				var allocUnitPage = file.GetDataPage(16);
+				var allocUnits = allocUnitPage.GetEntities<AllocationUnit>();
+				EntityPrinter.Print(allocUnits);
 			}
 
         	Console.WriteLine("Done");

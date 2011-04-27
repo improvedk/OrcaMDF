@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.SqlTypes;
 
 namespace OrcaMDF.Core.Pages
@@ -33,7 +33,7 @@ namespace OrcaMDF.Core.Pages
 
 					if(column != null)
 					{
-						var sqlType = sqlTypeFactory.Create(column.DbType);
+						var sqlType = sqlTypeFactory.Create(ColumnTypeDescriptionFactory.GetDescription(column.TypeString));
 						object columnValue = null;
 
 						if(sqlType.IsVariableLength)

@@ -1,6 +1,4 @@
-using OrcaMDF.Core.Engine;
-
-namespace OrcaMDF.Core.Common
+namespace OrcaMDF.Core.Engine
 {
 	public class ColumnTypeDescription
 	{
@@ -11,6 +9,14 @@ namespace OrcaMDF.Core.Common
 		{
 			Type = type;
 			VariableFixedLength = variableFixedLength;
+		}
+
+		public override string ToString()
+		{
+			if (VariableFixedLength != null)
+				return Type.ToString().ToLower() + "(" + VariableFixedLength + ")";
+			
+			return Type.ToString().ToLower();
 		}
 	}
 }
