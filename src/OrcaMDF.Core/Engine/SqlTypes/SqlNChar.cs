@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace OrcaMDF.Core.SqlTypes
+namespace OrcaMDF.Core.Engine.SqlTypes
 {
 	public class SqlNChar : ISqlType
 	{

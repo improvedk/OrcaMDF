@@ -2,7 +2,7 @@
 using OrcaMDF.Core.Engine.Records;
 using OrcaMDF.Core.MetaData;
 
-namespace OrcaMDF.Core.SqlTypes
+namespace OrcaMDF.Core.Engine.SqlTypes
 {
 	public static class SqlTypeFactory
 	{

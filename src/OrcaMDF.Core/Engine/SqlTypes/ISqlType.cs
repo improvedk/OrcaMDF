@@ -1,4 +1,4 @@
-namespace OrcaMDF.Core.SqlTypes
+namespace OrcaMDF.Core.Engine.SqlTypes
 {
 	public interface ISqlType
 	{

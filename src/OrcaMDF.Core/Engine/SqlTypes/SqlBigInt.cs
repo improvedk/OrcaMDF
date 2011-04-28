@@ -1,8 +1,8 @@
 using System;
 
-namespace OrcaMDF.Core.SqlTypes
+namespace OrcaMDF.Core.Engine.SqlTypes
 {
-	public class SqlSmallInt : ISqlType
+	public class SqlBigInt : ISqlType
 	{
 		public bool IsVariableLength
 		{
@@ -11,12 +11,12 @@ namespace OrcaMDF.Core.SqlTypes
 
 		public short? FixedLength
 		{
-			get { return 2; }
+			get { return 8; }
 		}
 
 		public object GetValue(byte[] value)
 		{
-			return BitConverter.ToInt16(value, 0);
+			return BitConverter.ToInt64(value, 0);
 		}
 	}
 }

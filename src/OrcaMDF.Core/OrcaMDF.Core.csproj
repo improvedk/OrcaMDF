@@ -65,19 +65,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Records\Record.cs" />
     <Compile Include="Engine\Records\RecordType.cs" />
-    <Compile Include="SqlTypes\SqlBinary.cs" />
-    <Compile Include="SqlTypes\SqlSmallInt.cs" />
-    <Compile Include="SqlTypes\SqlTinyInt.cs" />
-    <Compile Include="SqlTypes\SqlBigInt.cs" />
-    <Compile Include="SqlTypes\ISqlType.cs" />
-    <Compile Include="SqlTypes\SqlBit.cs" />
-    <Compile Include="SqlTypes\SqlChar.cs" />
-    <Compile Include="SqlTypes\SqlDateTime.cs" />
-    <Compile Include="SqlTypes\SqlInt.cs" />
-    <Compile Include="SqlTypes\SqlNChar.cs" />
-    <Compile Include="SqlTypes\SqlNVarchar.cs" />
-    <Compile Include="SqlTypes\SqlTypeFactory.cs" />
-    <Compile Include="SqlTypes\SqlVarchar.cs" />
+    <Compile Include="Engine\SqlTypes\SqlBinary.cs" />
+    <Compile Include="Engine\SqlTypes\SqlSmallInt.cs" />
+    <Compile Include="Engine\SqlTypes\SqlTinyInt.cs" />
+    <Compile Include="Engine\SqlTypes\SqlBigInt.cs" />
+    <Compile Include="Engine\SqlTypes\ISqlType.cs" />
+    <Compile Include="Engine\SqlTypes\SqlBit.cs" />
+    <Compile Include="Engine\SqlTypes\SqlChar.cs" />
+    <Compile Include="Engine\SqlTypes\SqlDateTime.cs" />
+    <Compile Include="Engine\SqlTypes\SqlInt.cs" />
+    <Compile Include="Engine\SqlTypes\SqlNChar.cs" />
+    <Compile Include="Engine\SqlTypes\SqlNVarchar.cs" />
+    <Compile Include="Engine\SqlTypes\SqlTypeFactory.cs" />
+    <Compile Include="Engine\SqlTypes\SqlVarchar.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

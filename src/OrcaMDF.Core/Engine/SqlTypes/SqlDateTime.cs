@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OrcaMDF.Core.SqlTypes
+namespace OrcaMDF.Core.Engine.SqlTypes
 {
 	public class SqlDateTime : ISqlType
 	{

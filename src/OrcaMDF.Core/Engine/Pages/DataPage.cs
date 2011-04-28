@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using OrcaMDF.Core.Engine.Records;
+using OrcaMDF.Core.Engine.SqlTypes;
 using OrcaMDF.Core.MetaData;
-using OrcaMDF.Core.SqlTypes;
 
 namespace OrcaMDF.Core.Engine.Pages
 {

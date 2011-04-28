@@ -1,6 +1,6 @@
 ﻿using OrcaMDF.Core.Engine.Records;
 
-namespace OrcaMDF.Core.SqlTypes
+namespace OrcaMDF.Core.Engine.SqlTypes
 {
 	public class SqlBit : ISqlType
 	{

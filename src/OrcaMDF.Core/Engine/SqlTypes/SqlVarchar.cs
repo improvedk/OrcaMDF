@@ -1,8 +1,8 @@
 using System.Text;
 
-namespace OrcaMDF.Core.SqlTypes
+namespace OrcaMDF.Core.Engine.SqlTypes
 {
-	public class SqlNVarchar : ISqlType
+	public class SqlVarchar : ISqlType
 	{
 		public bool IsVariableLength
 		{
@@ -16,7 +16,7 @@ namespace OrcaMDF.Core.SqlTypes
 
 		public object GetValue(byte[] value)
 		{
-			return Encoding.Unicode.GetString(value);
+			return Encoding.UTF7.GetString(value);
 		}
 	}
 }
