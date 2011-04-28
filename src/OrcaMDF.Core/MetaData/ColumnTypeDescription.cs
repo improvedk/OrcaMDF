@@ -58,6 +58,10 @@ namespace OrcaMDF.Core.MetaData
 					Type = ColumnType.TinyInt;
 					break;
 
+				case "varbinary":
+					Type = ColumnType.VarBinary;
+					break;
+
 				case "varchar":
 					Type = ColumnType.Varchar;
 					break;

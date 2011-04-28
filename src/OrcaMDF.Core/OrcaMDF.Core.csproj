@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\DataScanner.cs" />
     <Compile Include="Engine\Records\RecordReadState.cs" />
+    <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
     <Compile Include="MetaData\ColumnTypeDescription.cs" />
     <Compile Include="MetaData\ColumnType.cs" />
     <Compile Include="MetaData\SystemEntities\AllocationUnit.cs" />
@@ -62,6 +64,8 @@
     <Compile Include="Engine\Pages\RecordPage.cs" />
     <Compile Include="Engine\Pages\SgamPage.cs" />
     <Compile Include="Engine\Pages\TextMixPage.cs" />
+    <Compile Include="MetaData\SystemEntities\Rowset.cs" />
+    <Compile Include="MetaData\SystemFlags\RowsetStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Records\Record.cs" />
     <Compile Include="Engine\Records\RecordType.cs" />

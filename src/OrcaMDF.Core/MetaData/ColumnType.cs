@@ -12,6 +12,7 @@ namespace OrcaMDF.Core.MetaData
 		NVarchar,
 		SmallInt,
 		TinyInt,
+		VarBinary,
 		Varchar
 	}
 }

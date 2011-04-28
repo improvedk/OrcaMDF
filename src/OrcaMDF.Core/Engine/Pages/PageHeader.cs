@@ -17,10 +17,8 @@ namespace OrcaMDF.Core.Engine.Pages
 		public short IndexID { get; private set; }
 		public byte TypeFlagBits { get; private set; }
 		public short SlotCnt { get; private set; }
-		public int NextPageID { get; private set; }
-		public short NextPageFileID { get; private set; }
-		public int PreviousPageID { get; private set; }
-		public short PreviousFileID { get; private set; }
+		public PageLocation NextPage { get; private set; }
+		public PageLocation PreviousPage { get; private set; }
 		public string XdesID { get; private set; }
 		public short XactReserved { get; private set; }
 		public short ReservedCnt { get; private set; }
@@ -70,11 +68,9 @@ namespace OrcaMDF.Core.Engine.Pages
 			Level = header[3];
 			FlagBits = BitConverter.ToInt16(header, 4);
 			IndexID = BitConverter.ToInt16(header, 6);
-			PreviousPageID = BitConverter.ToInt32(header, 8);
-			PreviousFileID = BitConverter.ToInt16(header, 12);
+			PreviousPage = new PageLocation(BitConverter.ToInt16(header, 12), BitConverter.ToInt32(header, 8));
 			Pminlen = BitConverter.ToInt16(header, 14);
-			NextPageID = BitConverter.ToInt32(header, 16);
-			NextPageFileID = BitConverter.ToInt16(header, 20);
+			NextPage = new PageLocation(BitConverter.ToInt16(header, 20), BitConverter.ToInt32(header, 16));
 			SlotCnt = BitConverter.ToInt16(header, 22);
 			ObjectID = BitConverter.ToInt32(header, 24);
 			FreeCnt = BitConverter.ToInt16(header, 28);
@@ -102,8 +98,8 @@ namespace OrcaMDF.Core.Engine.Pages
 			sb.AppendLine("pminlen:\t" + Pminlen);
 			sb.AppendLine("m_indexId:\t" + IndexID);
 			sb.AppendLine("m_slotCnt:\t" + SlotCnt);
-			sb.AppendLine("m_nextPage:\t(" + NextPageFileID + ":" + NextPageID + ")");
-			sb.AppendLine("m_prevPage:\t(" + PreviousFileID + ":" + PreviousPageID + ")");
+			sb.AppendLine("m_nextPage:\t" + NextPage);
+			sb.AppendLine("m_prevPage:\t" + PreviousPage);
 			sb.AppendLine("m_xactReserved:\t" + XactReserved);
 			sb.AppendLine("m_xdesId:\t" + XdesID);
 			sb.AppendLine("m_reservedCnt:\t" + ReservedCnt);

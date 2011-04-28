@@ -15,10 +15,8 @@ namespace OrcaMDF.Core.Engine.Pages
 			: base(bytes, file)
 		{ }
 
-		public IList<T> GetEntities<T>() where T : new()
+		public IEnumerable<T> GetEntities<T>() where T : new()
 		{
-			var result = new List<T>();
-
 			for (int i = 0; i < Records.Length; i++)
 			{
 				var entity = new T();
@@ -60,10 +58,8 @@ namespace OrcaMDF.Core.Engine.Pages
 					}
 				}
 
-				result.Add(entity);
+				yield return entity;
 			}
-
-			return result;
 		}
 
 		public override string ToString()

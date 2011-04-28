@@ -40,6 +40,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 				case ColumnType.TinyInt:
 					return new SqlTinyInt();
 
+				case ColumnType.VarBinary:
+					return new SqlVarBinary();
+
 				case ColumnType.Varchar:
 					return new SqlVarchar();
 			}

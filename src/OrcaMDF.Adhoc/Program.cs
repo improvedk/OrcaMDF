@@ -1,6 +1,7 @@
 ﻿using System;
-using OrcaMDF.Adhoc.Entities;
 using OrcaMDF.Core;
+using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.MetaData.SystemEntities;
 
 namespace OrcaMDF.Adhoc
 {
@@ -23,9 +24,9 @@ namespace OrcaMDF.Adhoc
 				//EntityPrinter.Print(slobs);
 
 				// BitTest
-				var dataPage = file.GetDataPage(94);
-				var slobs = dataPage.GetEntities<BitTest>();
-				EntityPrinter.Print(slobs);
+				//var dataPage = file.GetDataPage(94);
+				//var slobs = dataPage.GetEntities<BitTest>();
+				//EntityPrinter.Print(slobs);
 
 				//var dataPage2 = file.GetTextMixPage(79);
 				//var slobs = dataPage.GetEntities<Person>();
@@ -54,6 +55,10 @@ namespace OrcaMDF.Adhoc
 				//var allocUnitPage = file.GetDataPage(16);
 				//var allocUnits = allocUnitPage.GetEntities<AllocationUnit>();
 				//EntityPrinter.Print(allocUnits);
+
+				var scanner = new DataScanner(file);
+				var slobs = scanner.ScanLinkedPages<Rowset>(new PageLocation(1, 18));
+				EntityPrinter.Print(slobs);
 			}
 
         	Console.WriteLine("Done");

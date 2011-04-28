@@ -6,9 +6,13 @@ namespace OrcaMDF.Adhoc
 {
 	class EntityPrinter
 	{
-		public static void Print<T>(IList<T> entities)
+		public static void Print<T>(IEnumerable<T> entities)
 		{
 			var propLengths = new Dictionary<string, int>();
+			
+			// Add row number column
+			propLengths.Add("#", 8);
+			Console.Write("#".PadRight(propLengths["#"]));
 
 			foreach (var prop in typeof(T).GetProperties())
 			{
@@ -24,8 +28,11 @@ namespace OrcaMDF.Adhoc
 
 			Console.WriteLine();
 
+			int cnt = 1;
 			foreach (var entity in entities)
 			{
+				Console.Write(cnt.ToString().PadRight(propLengths["#"]));
+
 				foreach (var prop in typeof(T).GetProperties())
 				{
 					object value = prop.GetValue(entity, null);
@@ -37,6 +44,7 @@ namespace OrcaMDF.Adhoc
 				}
 
 				Console.WriteLine();
+				cnt++;
 			}
 		}
 	}
