@@ -1,13 +1,12 @@
 ﻿using System;
-using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Engine.Records;
+using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Core.SqlTypes
 {
-	public class SqlTypeFactory
+	public static class SqlTypeFactory
 	{
-		internal SqlBitReadState BitReadState;
-
-		public ISqlType Create(ColumnTypeDescription typeDesc)
+		public static ISqlType Create(ColumnTypeDescription typeDesc, RecordReadState readState)
 		{
 			switch(typeDesc.Type)
 			{
@@ -18,7 +17,7 @@ namespace OrcaMDF.Core.SqlTypes
 					return new SqlBigInt();
 
 				case ColumnType.Bit:
-					return new SqlBit(this);
+					return new SqlBit(readState);
 
 				case ColumnType.Char:
 					return new SqlChar((short)typeDesc.VariableFixedLength);

@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace OrcaMDF.Core.Pages
+namespace OrcaMDF.Core.Engine.Pages
 {
 	public class IamPage : ExtentAllocationMap
 	{

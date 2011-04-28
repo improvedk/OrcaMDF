@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OrcaMDF.Core
+namespace OrcaMDF.Core.Engine.Records
 {
 	public class Record
 	{

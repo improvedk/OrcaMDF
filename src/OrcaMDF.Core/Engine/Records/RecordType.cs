@@ -1,4 +1,4 @@
-﻿namespace OrcaMDF.Core
+﻿namespace OrcaMDF.Core.Engine.Records
 {
 	public enum RecordType : byte
 	{

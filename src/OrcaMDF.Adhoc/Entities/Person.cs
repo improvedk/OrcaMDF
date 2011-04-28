@@ -1,26 +1,26 @@
 using System;
-using System.Data.Linq.Mapping;
+using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Adhoc.Entities
 {
 	public class Person
 	{
-		[Column(DbType = "int", CanBeNull = false)]
+		[Column("int")]
 		public int ID { get; set; }
 
-		[Column(DbType = "varchar", CanBeNull = false)]
+		[Column("varchar")]
 		public string Name { get; set; }
 
-		[Column(DbType = "char(1)",  CanBeNull = true)]
+		[Column("char(1)", Nullable = true)]
 		public string Sex { get; set; }
 
-		[Column(DbType = "int", CanBeNull = false)]
+		[Column("int")]
 		public int Age { get; set; }
 		
-		[Column(DbType = "nvarchar", CanBeNull = false)]
+		[Column("nvarchar")]
 		public string Country { get; set; }
 		
-		[Column(DbType = "datetime", CanBeNull = false)]
+		[Column("datetime")]
 		public DateTime Created { get; set; }
 	}
 }

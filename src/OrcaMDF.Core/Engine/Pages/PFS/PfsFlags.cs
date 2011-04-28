@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OrcaMDF.Core.Pages.PFS
+namespace OrcaMDF.Core.Engine.Pages.PFS
 {
 	[Flags]
 	public enum PfsFlags : byte

@@ -1,4 +1,4 @@
-﻿namespace OrcaMDF.Core.Pages
+﻿namespace OrcaMDF.Core.Engine.Pages
 {
 	public enum PageType : byte
 	{

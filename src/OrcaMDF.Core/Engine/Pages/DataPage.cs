@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Engine.Records;
+using OrcaMDF.Core.MetaData;
 using OrcaMDF.Core.SqlTypes;
 
-namespace OrcaMDF.Core.Pages
+namespace OrcaMDF.Core.Engine.Pages
 {
 	public class DataPage : RecordPage
 	{
@@ -25,7 +26,7 @@ namespace OrcaMDF.Core.Pages
 				short variableColumnIndex = 0;
 				var record = Records[i];
 				int columnIndex = 0;
-				var sqlTypeFactory = new SqlTypeFactory();
+				var readState = new RecordReadState();
 
 				foreach (PropertyInfo prop in typeof (T).GetProperties())
 				{
@@ -33,7 +34,7 @@ namespace OrcaMDF.Core.Pages
 
 					if(column != null)
 					{
-						var sqlType = sqlTypeFactory.Create(ColumnTypeDescriptionFactory.GetDescription(column.TypeString));
+						var sqlType = SqlTypeFactory.Create(column.Description, readState);
 						object columnValue = null;
 
 						if(sqlType.IsVariableLength)

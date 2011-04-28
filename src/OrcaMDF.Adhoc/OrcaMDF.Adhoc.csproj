@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\BitTest.cs" />
     <Compile Include="Entities\Person.cs" />
     <Compile Include="EntityPrinter.cs" />
     <Compile Include="Program.cs" />

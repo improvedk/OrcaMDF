@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace OrcaMDF.Core.Pages
+namespace OrcaMDF.Core.Engine.Pages
 {
 	public class ExtentAllocationMap : RecordPage
 	{

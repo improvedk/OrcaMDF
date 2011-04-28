@@ -1,4 +1,4 @@
-namespace OrcaMDF.Core.Engine
+namespace OrcaMDF.Core.MetaData
 {
 	public enum ColumnType
 	{

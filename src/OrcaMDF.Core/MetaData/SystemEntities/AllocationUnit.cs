@@ -1,4 +1,4 @@
-namespace OrcaMDF.Core.Engine.SystemEntities
+namespace OrcaMDF.Core.MetaData.SystemEntities
 {
 	public class AllocationUnit
 	{

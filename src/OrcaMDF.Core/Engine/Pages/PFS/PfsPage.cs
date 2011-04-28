@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OrcaMDF.Core.Pages.PFS
+namespace OrcaMDF.Core.Engine.Pages.PFS
 {
 	public class PfsPage : Page
 	{

@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
+using OrcaMDF.Core.Engine.Records;
 
-namespace OrcaMDF.Core.Pages
+namespace OrcaMDF.Core.Engine.Pages
 {
 	public abstract class RecordPage : Page
 	{

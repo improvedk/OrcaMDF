@@ -1,4 +1,4 @@
-namespace OrcaMDF.Core
+namespace OrcaMDF.Core.Engine
 {
 	public class PageLocation
 	{
