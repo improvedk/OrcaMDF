@@ -1,7 +1,5 @@
 ﻿using System;
 using OrcaMDF.Core;
-using OrcaMDF.Core.Engine;
-using OrcaMDF.Core.MetaData.SystemEntities;
 
 namespace OrcaMDF.Adhoc
 {
@@ -53,12 +51,29 @@ namespace OrcaMDF.Adhoc
 				//Console.WriteLine(bootPage);
 
 				//var allocUnitPage = file.GetDataPage(16);
-				//var allocUnits = allocUnitPage.GetEntities<AllocationUnit>();
+				//var allocUnits = allocUnitPage.GetEntities<SysAllocationUnit>();
 				//EntityPrinter.Print(allocUnits);
 
-				var scanner = new DataScanner(file);
-				var slobs = scanner.ScanLinkedPages<Rowset>(new PageLocation(1, 18));
-				EntityPrinter.Print(slobs);
+				//var scanner = new DataScanner(file);
+				//var slobs = scanner.ScanLinkedPages<SysObject>(new PageLocation(1, 116));
+				//EntityPrinter.Print(slobs);
+
+				var metaData = file.GetMetaData();
+				Console.WriteLine(metaData.SysAllocationUnits.Count);
+				Console.WriteLine(metaData.SysRowsets.Count);
+				Console.WriteLine(metaData.SysRowsetColumns.Count);
+				Console.WriteLine(metaData.SysObjects.Count);
+				Console.WriteLine();
+
+				Console.WriteLine("User tables:");
+				foreach(string table in metaData.UserTableNames)
+					Console.WriteLine(table);
+
+				Console.WriteLine();
+
+				Console.WriteLine("System tables:");
+				foreach (string table in metaData.TableNames)
+					Console.WriteLine(table);
 			}
 
         	Console.WriteLine("Done");

@@ -37,8 +37,14 @@ namespace OrcaMDF.Core.Engine.Pages
 
 						if(sqlType.IsVariableLength)
 						{
-							if(!record.NullBitmap[columnIndex])
-								columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex]);
+							if (!record.NullBitmap[columnIndex])
+							{
+								// If a nullable varlength column does not have a value, it may be not even appear in the varlength column array if it's at the tail
+								if (record.VariableLengthColumnData == null || record.VariableLengthColumnData.Count <= variableColumnIndex)
+									columnValue = sqlType.GetValue(new byte[] {});
+								else
+									columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex]);
+							}
 
 							variableColumnIndex++;
 						}

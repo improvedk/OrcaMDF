@@ -46,7 +46,10 @@
     <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
     <Compile Include="MetaData\ColumnTypeDescription.cs" />
     <Compile Include="MetaData\ColumnType.cs" />
-    <Compile Include="MetaData\SystemEntities\AllocationUnit.cs" />
+    <Compile Include="MetaData\DatabaseMetaData.cs" />
+    <Compile Include="MetaData\Enumerations\FixedSystemObjectAllocationUnits.cs" />
+    <Compile Include="MetaData\Enumerations\ObjectType.cs" />
+    <Compile Include="MetaData\SystemEntities\SysAllocationUnit.cs" />
     <Compile Include="MetaData\ColumnAttribute.cs" />
     <Compile Include="MdfFile.cs" />
     <Compile Include="Engine\PageLocation.cs" />
@@ -64,7 +67,10 @@
     <Compile Include="Engine\Pages\RecordPage.cs" />
     <Compile Include="Engine\Pages\SgamPage.cs" />
     <Compile Include="Engine\Pages\TextMixPage.cs" />
-    <Compile Include="MetaData\SystemEntities\Rowset.cs" />
+    <Compile Include="MetaData\SystemEntities\SysObject.cs" />
+    <Compile Include="MetaData\SystemEntities\SysRowset.cs" />
+    <Compile Include="MetaData\SystemEntities\SysRowsetColumn.cs" />
+    <Compile Include="MetaData\Enumerations\SystemObject.cs" />
     <Compile Include="MetaData\SystemFlags\RowsetStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Records\Record.cs" />

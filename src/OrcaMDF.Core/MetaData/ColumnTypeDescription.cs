@@ -47,6 +47,7 @@ namespace OrcaMDF.Core.MetaData
 					break;
 
 				case "nvarchar":
+				case "sysname":
 					Type = ColumnType.NVarchar;
 					break;
 

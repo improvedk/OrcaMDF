@@ -1,3 +1,5 @@
+using System;
+
 namespace OrcaMDF.Core.Engine
 {
 	public class PageLocation
@@ -9,6 +11,15 @@ namespace OrcaMDF.Core.Engine
 		{
 			this.FileID = fileID;
 			this.PageID = pageID;
+		}
+
+		public PageLocation(byte[] bytes)
+		{
+			if (bytes.Length != 6)
+				throw new ArgumentException("Input must be 6 bytes in the format pageID(4)fileID(2).");
+
+			PageID = BitConverter.ToInt32(bytes, 0);
+			FileID = BitConverter.ToInt16(bytes, 4);
 		}
 
 		public override string ToString()

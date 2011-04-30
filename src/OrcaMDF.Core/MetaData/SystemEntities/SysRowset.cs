@@ -1,7 +1,10 @@
 namespace OrcaMDF.Core.MetaData.SystemEntities
 {
-	// Column names inspired by http://www.g-productions.nl/index.php?name=system_internals_partitions&version=2008SP2
-	public class Rowset
+	/// <summary>
+	/// Matches sys.sysrowsets
+	/// Column names inspired by http://www.g-productions.nl/index.php?name=system_internals_partitions&version=2008SP2
+	/// </summary>
+	public class SysRowset
 	{
 		[Column("bigint")] // rowsetid
 		public long RowsetID { get; internal set; }

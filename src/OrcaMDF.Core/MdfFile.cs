@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using OrcaMDF.Core.Engine.Pages;
 using OrcaMDF.Core.Engine.Pages.PFS;
+using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Core
 {
@@ -10,6 +11,8 @@ namespace OrcaMDF.Core
 	{
 		private readonly FileStream fs;
 		private readonly IDictionary<int, byte[]> buffer = new Dictionary<int, byte[]>();
+		private object metaDataLock = new object();
+		private DatabaseMetaData metaData;
 
 		public long NumberOfPages { get; private set; }
 
@@ -43,6 +46,25 @@ namespace OrcaMDF.Core
 			}
 		}
 
+		public DatabaseMetaData GetMetaData()
+		{
+			if (metaData == null)
+			{
+				lock (metaDataLock)
+				{
+					parseMetaData();
+				}
+			}
+
+			return metaData;
+		}
+
+		private void parseMetaData()
+		{
+			if(metaData == null)
+				metaData = new DatabaseMetaData(this);
+		}
+
 		public Page GetPage(int index)
 		{
 			return new Page(getPageBytes(index), this);
@@ -63,9 +85,10 @@ namespace OrcaMDF.Core
 			return new IamPage(getPageBytes(index), this);
 		}
 
-		public BootPage GetBootPage(int index)
+		public BootPage GetBootPage()
 		{
-			return new BootPage(getPageBytes(index), this);
+			// TODO: Assert this file is file 1 in the PRIMARY filegroup
+			return new BootPage(getPageBytes(9), this);
 		}
 
 		public SgamPage GetSgamPage(int index)
