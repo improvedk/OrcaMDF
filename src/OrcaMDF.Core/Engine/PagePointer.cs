@@ -7,10 +7,12 @@ namespace OrcaMDF.Core.Engine
 		public short FileID;
 		public int PageID;
 
+		public static readonly PagePointer Zero = new PagePointer(0, 0);
+
 		public PagePointer(short fileID, int pageID)
 		{
-			this.FileID = fileID;
-			this.PageID = pageID;
+			FileID = fileID;
+			PageID = pageID;
 		}
 
 		public PagePointer(byte[] bytes)
@@ -20,6 +22,29 @@ namespace OrcaMDF.Core.Engine
 
 			PageID = BitConverter.ToInt32(bytes, 0);
 			FileID = BitConverter.ToInt16(bytes, 4);
+		}
+
+		public static bool operator ==(PagePointer a, PagePointer b)
+		{
+			return a.Equals(b);
+		}
+
+		public static bool operator !=(PagePointer a, PagePointer b)
+		{
+			return a.Equals(b);
+		}
+
+		public override bool Equals(object obj)
+		{
+			var b = (PagePointer)obj;
+
+			return b.FileID == FileID && b.PageID == PageID;
+		}
+
+		public override int GetHashCode()
+		{
+			// KISS
+			return (FileID + "_" + PageID).GetHashCode();
 		}
 
 		public override string ToString()

@@ -27,6 +27,12 @@ namespace OrcaMDF.Core.Engine.Pages
 
 				foreach(var col in ColumnAttribute.GetOrderedColumnProperties<T>())
 				{
+					if(Header.PreviousPage == PagePointer.Zero && i == 0)
+					{
+						col.Property.SetValue(entity, null, null);
+						continue;
+					}
+
 					var sqlType = SqlTypeFactory.Create(col.Column.Description, readState);
 					object columnValue = null;
 

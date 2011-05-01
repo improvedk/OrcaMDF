@@ -5,9 +5,9 @@ namespace OrcaMDF.Adhoc.Entities
 	public class PersonCIndex : ClusteredIndexEntity
 	{
 		[Column("int", 1)]
-		public int ID { get; set; }
+		public int? ID { get; set; }
 
 		[Column("int", 2, Nullable = true)]
-		public int Age { get; set; }
+		public int? Age { get; set; }
 	}
 }
