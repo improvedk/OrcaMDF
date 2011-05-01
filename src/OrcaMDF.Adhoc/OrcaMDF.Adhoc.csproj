@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\BitTest.cs" />
+    <Compile Include="Entities\HeapPerson.cs" />
     <Compile Include="Entities\Person.cs" />
     <Compile Include="Entities\PersonCIndex.cs" />
     <Compile Include="EntityPrinter.cs" />

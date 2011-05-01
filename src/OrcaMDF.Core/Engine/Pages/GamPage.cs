@@ -33,11 +33,11 @@ namespace OrcaMDF.Core.Engine.Pages
 
 			return sb.ToString();
 		}
-
+		
 		public static PagePointer GetGamPointerForPage(PagePointer loc)
 		{
 			// First gam page is at index 2 and every 511232 pages hereafter
-			return new PagePointer(loc.FileID, Math.Max(loc.PageID/511232*511232, 2));
+			return new PagePointer(loc.FileID, Math.Max(loc.PageID / 511232 * 511232, 2));
 		}
 	}
 }

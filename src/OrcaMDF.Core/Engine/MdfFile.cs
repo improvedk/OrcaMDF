@@ -15,6 +15,7 @@ namespace OrcaMDF.Core.Engine
 		private DatabaseMetaData metaData;
 
 		public long NumberOfPages { get; private set; }
+		public long NumberOfExtents { get; private set; }
 
 		public MdfFile(string path)
 		{
@@ -25,6 +26,7 @@ namespace OrcaMDF.Core.Engine
 				throw new ArgumentException("Invalid file length: " + fs.Length);
 
 			NumberOfPages = fs.Length / 8192;
+			NumberOfExtents = NumberOfPages / 8;
 		}
 
 		private byte[] getPageBytes(int index)

@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\DataScanner.cs" />
+    <Compile Include="Engine\ExtentPointer.cs" />
     <Compile Include="Engine\Pages\ClusteredIndexPage.cs" />
     <Compile Include="Engine\Pages\IndexRecordPage.cs" />
     <Compile Include="Engine\Pages\PrimaryRecordPage.cs" />

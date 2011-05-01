@@ -39,7 +39,7 @@ namespace OrcaMDF.Core.Engine.Pages.PFS
 		public static PagePointer GetPfsPointerForPage(PagePointer loc)
 		{
 			// First pfs page is at index 1 and every 8088 pages hereafter
-			return new PagePointer(loc.FileID, Math.Max(loc.PageID/8088*8088, 1));
+			return new PagePointer(loc.FileID, Math.Max(loc.PageID / 8088 * 8088, 1));
 		}
 
 		public override string ToString()

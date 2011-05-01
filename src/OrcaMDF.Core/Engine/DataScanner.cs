@@ -14,11 +14,57 @@ namespace OrcaMDF.Core.Engine
 		}
 
 		/// <summary>
+		/// Scans a heap beginning from the provided IAM page and onwards.
+		/// </summary>
+		public IEnumerable<TEntity> ScanHeap<TEntity>(PagePointer loc) where TEntity : new()
+		{
+			while (loc != PagePointer.Zero)
+			{
+				var iamPage = file.GetIamPage(loc);
+
+				// Gather results from header slots and yield them afterwards
+				var slotResults = new List<TEntity>();
+				scanIamSlotPage(iamPage.Slot0, slotResults);
+				scanIamSlotPage(iamPage.Slot1, slotResults);
+				scanIamSlotPage(iamPage.Slot2, slotResults);
+				scanIamSlotPage(iamPage.Slot3, slotResults);
+				scanIamSlotPage(iamPage.Slot4, slotResults);
+				scanIamSlotPage(iamPage.Slot5, slotResults);
+				scanIamSlotPage(iamPage.Slot6, slotResults);
+				scanIamSlotPage(iamPage.Slot7, slotResults);
+
+				foreach (var entity in slotResults)
+					yield return entity;
+
+				// Then loop through extents and yield results
+				foreach (var extent in iamPage.GetAllocatedExtents())
+					foreach (var page in extent.GetPagePointers())
+					{
+						var dataPage = file.GetDataPage(page);
+
+						foreach (var entity in dataPage.GetEntities<TEntity>())
+							yield return entity;
+					}
+
+				loc = iamPage.Header.NextPage;
+			}
+		}
+
+		private void scanIamSlotPage<TEntity>(PagePointer loc, List<TEntity> result) where TEntity : new()
+		{
+			if (loc != PagePointer.Zero)
+			{
+				var dataPage = file.GetDataPage(loc);
+				result.AddRange(dataPage.GetEntities<TEntity>());
+			}
+		}
+
+		/// <summary>
 		/// Starts at the clustered index page (loc) and uses the b-tree structure to find all leaf level data pages. Not as fast as ScanClusteredIndex.
 		/// </summary>
 		public IEnumerable<TEntity> ScanClusteredIndexUsingIndexStructure<TIndex, TEntity>(PagePointer loc) where TIndex : ClusteredIndexEntity, new() where TEntity : new()
 		{
-			while (loc.FileID != 0 && loc.PageID != 0)
+			while (loc != PagePointer.Zero)
 			{
 				var page = file.GetClusteredIndexPage(loc);
 
