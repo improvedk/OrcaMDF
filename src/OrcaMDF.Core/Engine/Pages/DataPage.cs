@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OrcaMDF.Core.Engine.Records;
@@ -59,18 +60,6 @@ namespace OrcaMDF.Core.Engine.Pages
 
 				yield return entity;
 			}
-		}
-
-		public override string ToString()
-		{
-			var sb = new StringBuilder(base.ToString());
-			sb.AppendLine();
-			sb.AppendLine("Slot Array:");
-			sb.AppendLine("Row\tOffset");
-			for (int i = 0; i < Header.SlotCnt; i++)
-				sb.AppendLine(i + "\t" + SlotArray[i]);
-
-			return sb.ToString();
 		}
 	}
 }

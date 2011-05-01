@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using OrcaMDF.Adhoc.Entities;
 using OrcaMDF.Core.Engine;
 
@@ -6,62 +8,25 @@ namespace OrcaMDF.Adhoc
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
         	Console.WriteLine("VSS Copying...");
-			//VssHelper.CopyFile(@"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\Test.mdf", @"C:\MOW_Copy.mdf");
         	VssHelper.CopyFile(@"C:\MOW.mdf", @"C:\MOW_Copy.mdf");
-        	Console.WriteLine("Done");
         	Console.WriteLine();
 
 			using (var file = new MdfFile(@"C:\MOW_Copy.mdf"))
 			{
-				// Data page
-				//var dataPage = file.GetDataPage(22);
-				//var slobs = dataPage.GetEntities<Person>();
-				//Console.WriteLine(dataPage);
-				//EntityPrinter.Print(slobs);
-
-				// BitTest
-				//var dataPage = file.GetDataPage(94);
-				//var slobs = dataPage.GetEntities<BitTest>();
-				//EntityPrinter.Print(slobs);
-
-				//var dataPage2 = file.GetTextMixPage(79);
-				//var slobs = dataPage.GetEntities<Person>();
-				//EntityPrinter.Print(slobs);
-
-				// IAM page
-				//var iamPage = file.GetIamPage(55);
-				//Console.WriteLine(iamPage);
-
-				// GAM page
-				//var gamPage = file.GetGamPage(2);
-				//Console.WriteLine(gamPage);
-
-				// SGAM page
-				//var sgamPage = file.GetSgamPage(3);
-				//Console.WriteLine(sgamPage);
-
-				// PFS page
-				//var pfsPage = file.GetPfsPage(1);
-				//Console.WriteLine(pfsPage);
-
-				// Boot page
-				//var bootPage = file.GetBootPage(9);
-				//Console.WriteLine(bootPage);
-
-				// Index page
-				var indexPage = file.GetClusteredIndexPage(new PagePointer(1, 126));
-				var slobs = indexPage.GetEntities<PersonCIndex>();
+				var scanner = new DataScanner(file);
+				var sw = new Stopwatch();
+				sw.Start();
+				var slobs = scanner.ScanClusteredIndexUsingIndexStructure<PersonCIndex, Person>(new PagePointer(1, 126)).Where(x => x.Name.StartsWith("M")).Take(10);
 				EntityPrinter.Print(slobs);
+				Console.WriteLine(sw.ElapsedTicks);
+				sw.Reset();
+				sw.Start();
+				scanner.ScanClusteredIndexUsingIndexStructure<PersonCIndex, Person>(new PagePointer(1, 126)).Take(10000);
+				Console.WriteLine(sw.ElapsedTicks);
 
-				//var dataPage = file.GetDataPage(new PagePointer(1, 2442));
-				//var slobs2 = dataPage.GetEntities<Person>();
-				//EntityPrinter.Print(slobs2);
-
-				//var scanner = new DataScanner(file);
-				//var slobs = scanner.ScanLinkedPages<SysObject>(new PagePointer(1, 116));
 				//EntityPrinter.Print(slobs);
 
 				/*var metaData = file.GetMetaData();

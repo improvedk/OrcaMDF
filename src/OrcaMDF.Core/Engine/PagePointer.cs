@@ -31,7 +31,7 @@ namespace OrcaMDF.Core.Engine
 
 		public static bool operator !=(PagePointer a, PagePointer b)
 		{
-			return a.Equals(b);
+			return !a.Equals(b);
 		}
 
 		public override bool Equals(object obj)

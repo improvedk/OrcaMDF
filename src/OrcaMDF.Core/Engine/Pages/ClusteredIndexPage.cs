@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Core.Engine.Records;
@@ -27,12 +28,6 @@ namespace OrcaMDF.Core.Engine.Pages
 
 				foreach(var col in ColumnAttribute.GetOrderedColumnProperties<T>())
 				{
-					if(Header.PreviousPage == PagePointer.Zero && i == 0)
-					{
-						col.Property.SetValue(entity, null, null);
-						continue;
-					}
-
 					var sqlType = SqlTypeFactory.Create(col.Column.Description, readState);
 					object columnValue = null;
 
@@ -61,7 +56,12 @@ namespace OrcaMDF.Core.Engine.Pages
 					}
 
 					columnIndex++;
-					col.Property.SetValue(entity, columnValue, null);
+
+					// First row of leftmost index page has undefined values
+					if(Header.PreviousPage == PagePointer.Zero && i == 0)
+						col.Property.SetValue(entity, null, null);
+					else
+						col.Property.SetValue(entity, columnValue, null);
 				}
 
 				// At the end of the clustered index record we'll have a 6 byte page pointer

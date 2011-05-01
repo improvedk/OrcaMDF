@@ -6,10 +6,17 @@ namespace OrcaMDF.Adhoc
 {
 	class EntityPrinter
 	{
-		public static void Print<T>(IEnumerable<T> entities)
+		public static void Print<T>(IEnumerable<T> input)
 		{
 			var propLengths = new Dictionary<string, int>();
-			
+			var entities = input.ToList();
+
+			if(entities.Count == 0)
+			{
+				Console.WriteLine("<Empty resultset>");
+				return;
+			}
+
 			// Add row number column
 			propLengths.Add("#", 8);
 			Console.Write("#".PadRight(propLengths["#"]));
