@@ -1,19 +1,20 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OrcaMDF.Core.Engine.Records;
 using OrcaMDF.Core.Engine.SqlTypes;
 using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class DataPage : PrimaryRecordPage
+	public class ClusteredIndexPage : IndexRecordPage
 	{
-		public DataPage(byte[] bytes, MdfFile file)
+		public ClusteredIndexPage(byte[] bytes, MdfFile file)
 			: base(bytes, file)
-		{ }
+		{
 
-		public IEnumerable<T> GetEntities<T>() where T : new()
+		}
+
+		public IEnumerable<T> GetEntities<T>() where T : ClusteredIndexEntity, new()
 		{
 			for (int i = 0; i < Records.Length; i++)
 			{
@@ -29,13 +30,13 @@ namespace OrcaMDF.Core.Engine.Pages
 					var sqlType = SqlTypeFactory.Create(col.Column.Description, readState);
 					object columnValue = null;
 
-					if(sqlType.IsVariableLength)
+					if (sqlType.IsVariableLength)
 					{
 						if (!record.HasNullBitmap || !record.NullBitmap[columnIndex])
 						{
 							// If a nullable varlength column does not have a value, it may be not even appear in the varlength column array if it's at the tail
 							if (record.VariableLengthColumnData == null || record.VariableLengthColumnData.Count <= variableColumnIndex)
-								columnValue = sqlType.GetValue(new byte[] {});
+								columnValue = sqlType.GetValue(new byte[] { });
 							else
 								columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex]);
 						}
@@ -57,20 +58,11 @@ namespace OrcaMDF.Core.Engine.Pages
 					col.Property.SetValue(entity, columnValue, null);
 				}
 
+				// At the end of the clustered index record we'll have a 6 byte page pointer
+				entity.ChildPage = new PagePointer(record.FixedLengthData.Skip(fixedOffset).Take(6).ToArray());
+
 				yield return entity;
 			}
-		}
-
-		public override string ToString()
-		{
-			var sb = new StringBuilder(base.ToString());
-			sb.AppendLine();
-			sb.AppendLine("Slot Array:");
-			sb.AppendLine("Row\tOffset");
-			for (int i = 0; i < Header.SlotCnt; i++)
-				sb.AppendLine(i + "\t" + SlotArray[i]);
-
-			return sb.ToString();
 		}
 	}
 }

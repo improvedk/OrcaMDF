@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class ExtentAllocationMap : RecordPage
+	public class ExtentAllocationMap : PrimaryRecordPage
 	{
 		protected bool[] ExtentMap = new bool[63904];
 

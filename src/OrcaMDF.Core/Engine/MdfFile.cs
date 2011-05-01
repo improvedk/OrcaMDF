@@ -5,7 +5,7 @@ using OrcaMDF.Core.Engine.Pages;
 using OrcaMDF.Core.Engine.Pages.PFS;
 using OrcaMDF.Core.MetaData;
 
-namespace OrcaMDF.Core
+namespace OrcaMDF.Core.Engine
 {
 	public class MdfFile : IDisposable
 	{
@@ -65,55 +65,77 @@ namespace OrcaMDF.Core
 				metaData = new DatabaseMetaData(this);
 		}
 
-		public Page GetPage(int index)
+		public Page GetPage(PagePointer loc)
 		{
-			return new Page(getPageBytes(index), this);
-		}
-		
-		public TextMixPage GetTextMixPage(int index)
-		{
-			return new TextMixPage(getPageBytes(index), this);
+			// TODO: Ensure loc.FileID matches
+
+			return new Page(getPageBytes(loc.PageID), this);
 		}
 
-		public DataPage GetDataPage(int index)
+		public ClusteredIndexPage GetClusteredIndexPage(PagePointer loc)
 		{
-			return new DataPage(getPageBytes(index), this);
+			// TODO: Ensure loc.FileID matches
+
+			return new ClusteredIndexPage(getPageBytes(loc.PageID), this);
 		}
-		
-		public IamPage GetIamPage(int index)
+
+		public TextMixPage GetTextMixPage(PagePointer loc)
 		{
-			return new IamPage(getPageBytes(index), this);
+			// TODO: Ensure loc.FileID matches
+
+			return new TextMixPage(getPageBytes(loc.PageID), this);
+		}
+
+		public DataPage GetDataPage(PagePointer loc)
+		{
+			// TODO: Ensure loc.FileID matches
+
+			return new DataPage(getPageBytes(loc.PageID), this);
+		}
+
+		public IamPage GetIamPage(PagePointer loc)
+		{
+			// TODO: Ensure loc.FileID matches
+
+			return new IamPage(getPageBytes(loc.PageID), this);
 		}
 
 		public BootPage GetBootPage()
 		{
 			// TODO: Assert this file is file 1 in the PRIMARY filegroup
+
 			return new BootPage(getPageBytes(9), this);
 		}
 
-		public SgamPage GetSgamPage(int index)
+		public SgamPage GetSgamPage(PagePointer loc)
 		{
-			if(index % 511230 != 3)
-				throw new ArgumentException("Invalid SGAM index: " + index);
+			// TODO: Ensure loc.FileID matches
 
-			return new SgamPage(getPageBytes(index), this);
+			if(loc.PageID % 511230 != 3)
+				throw new ArgumentException("Invalid SGAM index: " + loc.PageID);
+
+			return new SgamPage(getPageBytes(loc.PageID), this);
 		}
 
-		public GamPage GetGamPage(int index)
+		public GamPage GetGamPage(PagePointer loc)
 		{
-			if(index % 511230 != 2)
-				throw new ArgumentException("Invalid GAM index: " + index);
+			// TODO: Ensure loc.FileID matches
 
-			return new GamPage(getPageBytes(index), this);
+			if(loc.PageID % 511230 != 2)
+				throw new ArgumentException("Invalid GAM index: " + loc.PageID);
+
+			return new GamPage(getPageBytes(loc.PageID), this);
 		}
 
-		public PfsPage GetPfsPage(int index)
+		public PfsPage GetPfsPage(PagePointer loc)
 		{
+			// TODO: Ensure loc.FileID matches
+
 			// We know PFS pages are present every 8088th page, except for the very first one
-			if(index != 1 && index % 8088 != 0)
-				throw new ArgumentException("Invalid PFS index: " + index);
+			if(loc.PageID != 1 && loc.PageID % 8088 != 0)
+				throw new ArgumentException("Invalid PFS index: " + loc.PageID);
 
-			return new PfsPage(getPageBytes(index), this);
+			return new PfsPage(getPageBytes(loc.PageID), this);
 		}
 
 		public void Dispose()

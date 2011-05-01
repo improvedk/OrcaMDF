@@ -5,52 +5,52 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 	/// </summary>
 	public class SysRowsetColumn
 	{
-		[Column("int")] // id
+		[Column("int", 1)] // id
 		public int ObjectID { get; internal set; }
 
-		[Column("smallint")] // number
+		[Column("smallint", 2)] // number
 		public short Number { get; internal set; }
 
-		[Column("int")] // colid
+		[Column("int", 3)] // colid
 		public int ColumnID { get; internal set; }
 
-		[Column("sysname", Nullable = true)] // name
+		[Column("sysname", 4, Nullable = true)] // name
 		public string Name { get; internal set; }
 
-		[Column("tinyint")] // xtype
+		[Column("tinyint", 5)] // xtype
 		public byte XType { get; internal set; }
 
-		[Column("int")] // utype
+		[Column("int", 6)] // utype
 		public int UType { get; internal set; }
 
-		[Column("smallint")] // length
+		[Column("smallint", 7)] // length
 		public short Length { get; internal set; }
 
-		[Column("tinyint")] // prec
+		[Column("tinyint", 8)] // prec
 		public byte Prec { get; internal set; }
 
-		[Column("tinyint")]  // scale
+		[Column("tinyint", 9)]  // scale
 		public byte Scale { get; internal set; }
 		
-		[Column("int")] // collationid
+		[Column("int", 10)] // collationid
 		public int CollationID { get; internal set; }
 
-		[Column("int")] // status
+		[Column("int", 11)] // status
 		public int status { get; internal set; }
 
-		[Column("smallint")] // maxinrow
+		[Column("smallint", 12)] // maxinrow
 		public short MaxInRow { get; internal set; }
 
-		[Column("int")] // xmlns
+		[Column("int", 13)] // xmlns
 		public int XmlNS { get; internal set; }
 
-		[Column("int")] // dflt
+		[Column("int", 14)] // dflt
 		public int DFLT { get; internal set; }
 
-		[Column("int")] // chk
+		[Column("int", 15)] // chk
 		public int CHK { get; internal set; }
 
-		[Column("varbinary", Nullable = true)] // idtval
+		[Column("varbinary", 16, Nullable = true)] // idtval
 		public byte[] IDTval { get; internal set; }
 	}
 }

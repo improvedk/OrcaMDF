@@ -18,7 +18,7 @@ namespace OrcaMDF.Core.Engine.Pages.PFS
 		private void parseBody()
 		{
 			pageDescriptions = new Dictionary<int, PfsPageByte>();
-			int pageID = Header.PageID == 1 ? 0 : Header.PageID;
+			int pageID = Header.Pointer.PageID == 1 ? 0 : Header.Pointer.PageID;
 			
 			// Skip first 4 & last 4 bytes
 			foreach(byte pageByte in RawBody.Skip(4).Take(8088))
@@ -36,10 +36,10 @@ namespace OrcaMDF.Core.Engine.Pages.PFS
 			return pageDescriptions[pageID];
 		}
 
-		public static int GetPfsIndexByPageIndex(int index)
+		public static PagePointer GetPfsPointerForPage(PagePointer loc)
 		{
 			// First pfs page is at index 1 and every 8088 pages hereafter
-			return Math.Max(index / 8088 * 8088, 1);
+			return new PagePointer(loc.FileID, Math.Max(loc.PageID/8088*8088, 1));
 		}
 
 		public override string ToString()

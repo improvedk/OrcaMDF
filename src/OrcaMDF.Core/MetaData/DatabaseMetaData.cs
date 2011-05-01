@@ -61,7 +61,7 @@ namespace OrcaMDF.Core.MetaData
 				.Single()
 				.FirstPage;
 
-			SysObjects = scanner.ScanLinkedPages<SysObject>(new PageLocation(pageLoc)).ToList();
+			SysObjects = scanner.ScanLinkedPages<SysObject>(new PagePointer(pageLoc)).ToList();
 		}
 
 		private void parseSysRowsetColumns()
@@ -76,7 +76,7 @@ namespace OrcaMDF.Core.MetaData
 				.Single()
 				.FirstPage;
 
-			SysRowsetColumns = scanner.ScanLinkedPages<SysRowsetColumn>(new PageLocation(pageLoc)).ToList();
+			SysRowsetColumns = scanner.ScanLinkedPages<SysRowsetColumn>(new PagePointer(pageLoc)).ToList();
 		}
 
 		private void parseSysRowsets()
@@ -86,7 +86,7 @@ namespace OrcaMDF.Core.MetaData
 							.Single()
 							.FirstPage;
 
-			SysRowsets = scanner.ScanLinkedPages<SysRowset>(new PageLocation(pageLoc)).ToList();
+			SysRowsets = scanner.ScanLinkedPages<SysRowset>(new PagePointer(pageLoc)).ToList();
 		}
 
 		private void parseSysAllocationUnits()

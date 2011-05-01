@@ -1,5 +1,6 @@
 ﻿using System;
-using OrcaMDF.Core;
+using OrcaMDF.Adhoc.Entities;
+using OrcaMDF.Core.Engine;
 
 namespace OrcaMDF.Adhoc
 {
@@ -50,15 +51,20 @@ namespace OrcaMDF.Adhoc
 				//var bootPage = file.GetBootPage(9);
 				//Console.WriteLine(bootPage);
 
-				//var allocUnitPage = file.GetDataPage(16);
-				//var allocUnits = allocUnitPage.GetEntities<SysAllocationUnit>();
-				//EntityPrinter.Print(allocUnits);
+				// Index page
+				var indexPage = file.GetClusteredIndexPage(new PagePointer(1, 126));
+				var slobs = indexPage.GetEntities<PersonCIndex>();
+				EntityPrinter.Print(slobs);
+
+				//var dataPage = file.GetDataPage(new PagePointer(1, 2442));
+				//var slobs2 = dataPage.GetEntities<Person>();
+				//EntityPrinter.Print(slobs2);
 
 				//var scanner = new DataScanner(file);
-				//var slobs = scanner.ScanLinkedPages<SysObject>(new PageLocation(1, 116));
+				//var slobs = scanner.ScanLinkedPages<SysObject>(new PagePointer(1, 116));
 				//EntityPrinter.Print(slobs);
 
-				var metaData = file.GetMetaData();
+				/*var metaData = file.GetMetaData();
 				Console.WriteLine(metaData.SysAllocationUnits.Count);
 				Console.WriteLine(metaData.SysRowsets.Count);
 				Console.WriteLine(metaData.SysRowsetColumns.Count);
@@ -73,7 +79,7 @@ namespace OrcaMDF.Adhoc
 
 				Console.WriteLine("System tables:");
 				foreach (string table in metaData.TableNames)
-					Console.WriteLine(table);
+					Console.WriteLine(table);*/
 			}
 
         	Console.WriteLine("Done");

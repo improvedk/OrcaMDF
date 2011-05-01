@@ -3,10 +3,10 @@ using System.Text;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class BootPage : RecordPage
+	public class BootPage : PrimaryRecordPage
 	{
 		public string DatabaseName { get; private set; }
-		public PageLocation FirstSysIndexes { get; private set; }
+		public PagePointer FirstSysIndexes { get; private set; }
 		public short CreateVersion { get; private set; }
 		public short Version { get; private set; }
 		public int NextID { get; private set; }
@@ -56,7 +56,7 @@ namespace OrcaMDF.Core.Engine.Pages
 
 			DBID = BitConverter.ToInt16(bootRecord, 308);
 			MaxDBTimeStamp = BitConverter.ToInt64(bootRecord, 312);
-			FirstSysIndexes = new PageLocation(BitConverter.ToInt16(bootRecord, 516), BitConverter.ToInt32(bootRecord, 512));
+			FirstSysIndexes = new PagePointer(BitConverter.ToInt16(bootRecord, 516), BitConverter.ToInt32(bootRecord, 512));
 		}
 
 		public override string ToString()

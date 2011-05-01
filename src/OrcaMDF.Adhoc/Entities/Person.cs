@@ -5,22 +5,22 @@ namespace OrcaMDF.Adhoc.Entities
 {
 	public class Person
 	{
-		[Column("int")]
+		[Column("int", 1)]
 		public int ID { get; set; }
 
-		[Column("varchar")]
+		[Column("varchar", 3, Nullable = true)]
 		public string Name { get; set; }
 
-		[Column("char(1)", Nullable = true)]
+		[Column("char(1)", 4, Nullable = true)]
 		public string Sex { get; set; }
 
-		[Column("int")]
+		[Column("int", 2, Nullable = true)]
 		public int Age { get; set; }
 		
-		[Column("nvarchar")]
+		[Column("nvarchar", 5, Nullable = true)]
 		public string Country { get; set; }
 		
-		[Column("datetime")]
+		[Column("datetime", 6, Nullable = true)]
 		public DateTime Created { get; set; }
 	}
 }

@@ -6,12 +6,11 @@ namespace OrcaMDF.Core.Engine.Pages
 {
 	public class Page
 	{
-		protected MdfFile File;
+		public MdfFile File { get; private set; }
+		public PageHeader Header;
 
 		// Raw content of the page (8192 bytes)
 		public byte[] RawBytes { get; private set; }
-
-		public PageHeader Header;
 
 		public Page(byte[] bytes, MdfFile file)
 		{
@@ -25,17 +24,17 @@ namespace OrcaMDF.Core.Engine.Pages
 
 		public GamPage GetGamPage()
 		{
-			return File.GetGamPage(GamPage.GetGamIndexByPageIndex(Header.PageID));
+			return File.GetGamPage(GamPage.GetGamPointerForPage(Header.Pointer));
 		}
 
 		public SgamPage GetSgamPage()
 		{
-			return File.GetSgamPage(SgamPage.GetSgamIndexByPageIndex(Header.PageID));
+			return File.GetSgamPage(SgamPage.GetSgamPointerForPage(Header.Pointer));
 		}
 
 		public PfsPage GetPfsPage()
 		{
-			return File.GetPfsPage(PfsPage.GetPfsIndexByPageIndex(Header.PageID));
+			return File.GetPfsPage(PfsPage.GetPfsPointerForPage(Header.Pointer));
 		}
 
 		public byte[] RawHeader
@@ -50,7 +49,7 @@ namespace OrcaMDF.Core.Engine.Pages
 
 		public override string  ToString()
 		{
-			return Header.ToString();
+			return "{" + Header.Type + " (" + Header.Pointer.FileID + ":" + Header.Pointer.PageID + ")}";
 		}
 	}
 }

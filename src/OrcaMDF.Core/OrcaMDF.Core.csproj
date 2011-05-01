@@ -42,8 +42,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\DataScanner.cs" />
+    <Compile Include="Engine\Pages\ClusteredIndexPage.cs" />
+    <Compile Include="Engine\Pages\IndexRecordPage.cs" />
+    <Compile Include="Engine\Pages\PrimaryRecordPage.cs" />
+    <Compile Include="Engine\Records\IndexRecord.cs" />
+    <Compile Include="Engine\Records\PrimaryRecord.cs" />
     <Compile Include="Engine\Records\RecordReadState.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
+    <Compile Include="MetaData\ClusteredIndexEntity.cs" />
+    <Compile Include="MetaData\ColumnProperty.cs" />
     <Compile Include="MetaData\ColumnTypeDescription.cs" />
     <Compile Include="MetaData\ColumnType.cs" />
     <Compile Include="MetaData\DatabaseMetaData.cs" />
@@ -51,8 +58,8 @@
     <Compile Include="MetaData\Enumerations\ObjectType.cs" />
     <Compile Include="MetaData\SystemEntities\SysAllocationUnit.cs" />
     <Compile Include="MetaData\ColumnAttribute.cs" />
-    <Compile Include="MdfFile.cs" />
-    <Compile Include="Engine\PageLocation.cs" />
+    <Compile Include="Engine\MdfFile.cs" />
+    <Compile Include="Engine\PagePointer.cs" />
     <Compile Include="Engine\Pages\BootPage.cs" />
     <Compile Include="Engine\Pages\ExtentAllocationMap.cs" />
     <Compile Include="Engine\Pages\IamPage.cs" />

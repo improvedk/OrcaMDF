@@ -6,58 +6,58 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 	/// </summary>
 	public class SysRowset
 	{
-		[Column("bigint")] // rowsetid
+		[Column("bigint", 1)] // rowsetid
 		public long RowsetID { get; internal set; }
 
-		[Column("tinyint")] // ownertype
+		[Column("tinyint", 2)] // ownertype
 		public byte OwnerType { get; internal set; }
 
-		[Column("int")] // idmajor
+		[Column("int", 3)] // idmajor
 		public int ObjectID { get; internal set; }
 
-		[Column("int")] // idminor
+		[Column("int", 4)] // idminor
 		public int IndexID { get; internal set; }
 
-		[Column("int")] // numpart
+		[Column("int", 5)] // numpart
 		public int PartitionNumber { get; internal set; }
 
-		[Column("int")] // status
+		[Column("int", 6)] // status
 		public int Status { get; internal set; }
 
-		[Column("smallint")] // fgidfs
+		[Column("smallint", 7)] // fgidfs
 		public short FilestreamFilegroupID { get; internal set; }
 
-		[Column("bigint")] // rcrows
+		[Column("bigint", 8)] // rcrows
 		public long Rows { get; internal set; }
 
-		[Column("tinyint")] // cmprlevel
+		[Column("tinyint", 9)] // cmprlevel
 		public byte CompressionLevel { get; internal set; }
 
-		[Column("tinyint")] // fillfact
+		[Column("tinyint", 10)] // fillfact
 		public byte FillFactor { get; internal set; }
 
-		[Column("smallint")] // maxnullbit
+		[Column("smallint", 11)] // maxnullbit
 		public short MaxNullBit { get; internal set; }
 
-		[Column("int")] // maxleaf
+		[Column("int", 12)] // maxleaf
 		public int MaxLeafLength { get; internal set; }
 
-		[Column("smallint")] // maxint
+		[Column("smallint", 13)] // maxint
 		public short MaxInternalLength { get; internal set; }
 
-		[Column("smallint")] // minleaf
+		[Column("smallint", 14)] // minleaf
 		public short MinLeafLength { get; internal set; }
 
-		[Column("smallint")] // minint
+		[Column("smallint", 15)] // minint
 		public short MinInternalLength { get; internal set; }
 
-		[Column("varbinary", Nullable = true)] // rsguid
+		[Column("varbinary", 16, Nullable = true)] // rsguid
 		public byte[] FilestreamGUID { get; internal set; }
 
-		[Column("varbinary", Nullable = true)] // lockres
+		[Column("varbinary", 17, Nullable = true)] // lockres
 		public byte[] LockRes { get; internal set; }
 
-		[Column("int")] // dbfragid
+		[Column("int", 18)] // dbfragid
 		public int DBFragID { get; internal set; }
 	}
 }

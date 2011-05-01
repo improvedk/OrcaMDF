@@ -10,21 +10,20 @@ namespace OrcaMDF.Core.Engine.Pages
 		public short FlagBits { get; private set; }
 		public string Lsn { get; private set; }
 		public int ObjectID { get; private set; }
-		public int PageID { get; private set; }
-		public short FileID { get; private set; }
 		public PageType Type { get; private set; }
 		public short Pminlen { get; private set; }
 		public short IndexID { get; private set; }
 		public byte TypeFlagBits { get; private set; }
 		public short SlotCnt { get; private set; }
-		public PageLocation NextPage { get; private set; }
-		public PageLocation PreviousPage { get; private set; }
 		public string XdesID { get; private set; }
 		public short XactReserved { get; private set; }
 		public short ReservedCnt { get; private set; }
 		public byte Level { get; private set; }
 		public byte HeaderVersion { get; private set; }
 		public short GhostRecCnt { get; private set; }
+		public PagePointer NextPage { get; private set; }
+		public PagePointer PreviousPage { get; private set; }
+		public PagePointer Pointer { get; private set; }
 
 		public PageHeader(byte[] header)
 		{
@@ -68,15 +67,14 @@ namespace OrcaMDF.Core.Engine.Pages
 			Level = header[3];
 			FlagBits = BitConverter.ToInt16(header, 4);
 			IndexID = BitConverter.ToInt16(header, 6);
-			PreviousPage = new PageLocation(BitConverter.ToInt16(header, 12), BitConverter.ToInt32(header, 8));
+			PreviousPage = new PagePointer(BitConverter.ToInt16(header, 12), BitConverter.ToInt32(header, 8));
 			Pminlen = BitConverter.ToInt16(header, 14);
-			NextPage = new PageLocation(BitConverter.ToInt16(header, 20), BitConverter.ToInt32(header, 16));
+			NextPage = new PagePointer(BitConverter.ToInt16(header, 20), BitConverter.ToInt32(header, 16));
 			SlotCnt = BitConverter.ToInt16(header, 22);
 			ObjectID = BitConverter.ToInt32(header, 24);
 			FreeCnt = BitConverter.ToInt16(header, 28);
 			FreeData = BitConverter.ToInt16(header, 30);
-			PageID = BitConverter.ToInt32(header, 32);
-			FileID = BitConverter.ToInt16(header, 36);
+			Pointer = new PagePointer(BitConverter.ToInt16(header, 36), BitConverter.ToInt32(header, 32));
 			ReservedCnt = BitConverter.ToInt16(header, 38);
 			Lsn = "(" + BitConverter.ToInt32(header, 40) + ":" + BitConverter.ToInt32(header, 44) + ":" + BitConverter.ToInt16(header, 48) + ")";
 			XactReserved = BitConverter.ToInt16(header, 50);
@@ -92,7 +90,7 @@ namespace OrcaMDF.Core.Engine.Pages
 			sb.AppendLine("m_flagBits:\t0x" + FlagBits.ToString("x"));
 			sb.AppendLine("m_lsn:\t\t" + Lsn);
 			sb.AppendLine("m_objId:\t" + ObjectID);
-			sb.AppendLine("m_pageId:\t(" + FileID + ":" + PageID + ")");
+			sb.AppendLine("m_pageId:\t(" + Pointer.FileID + ":" + Pointer.PageID + ")");
 			sb.AppendLine("m_type:\t\t" + Type);
 			sb.AppendLine("m_typeFlagBits:\t" + "0x" + TypeFlagBits.ToString("x"));
 			sb.AppendLine("pminlen:\t" + Pminlen);

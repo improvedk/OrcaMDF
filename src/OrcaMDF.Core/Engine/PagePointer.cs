@@ -2,18 +2,18 @@ using System;
 
 namespace OrcaMDF.Core.Engine
 {
-	public class PageLocation
+	public class PagePointer
 	{
 		public short FileID;
 		public int PageID;
 
-		public PageLocation(short fileID, int pageID)
+		public PagePointer(short fileID, int pageID)
 		{
 			this.FileID = fileID;
 			this.PageID = pageID;
 		}
 
-		public PageLocation(byte[] bytes)
+		public PagePointer(byte[] bytes)
 		{
 			if (bytes.Length != 6)
 				throw new ArgumentException("Input must be 6 bytes in the format pageID(4)fileID(2).");

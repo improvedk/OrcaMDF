@@ -13,7 +13,7 @@ namespace OrcaMDF.Core.Engine.Pages
 		{
 			var sb = new StringBuilder();
 
-			int currentRangeStartPageID = Header.PageID == 3 ? 0 : Header.PageID;
+			int currentRangeStartPageID = Header.Pointer.PageID == 3 ? 0 : Header.Pointer.PageID;
 			int currentRangeStartMapIndex = 0;
 			bool currentStatus = ExtentMap[0];
 			for (int i = 0; i < ExtentMap.Length; i++)
@@ -34,10 +34,10 @@ namespace OrcaMDF.Core.Engine.Pages
 			return sb.ToString();
 		}
 
-		public static int GetSgamIndexByPageIndex(int index)
+		public static PagePointer GetSgamPointerForPage(PagePointer loc)
 		{
 			// First gam page is at index 3 and every 511232 pages hereafter
-			return Math.Max(index / 511232 * 511232, 3);
+			return new PagePointer(loc.FileID, Math.Max(loc.PageID/511232*511232, 3));
 		}
 	}
 }

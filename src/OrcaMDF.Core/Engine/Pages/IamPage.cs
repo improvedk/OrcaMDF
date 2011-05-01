@@ -10,15 +10,15 @@ namespace OrcaMDF.Core.Engine.Pages
 		public short IndexID { get; private set; }
 		public int ObjectID { get; private set; }
 		public uint SequenceNumber { get; private set; }
-		public PageLocation StartPage { get; private set; }
-		public PageLocation Slot0 { get; private set; }
-		public PageLocation Slot1 { get; private set; }
-		public PageLocation Slot2 { get; private set; }
-		public PageLocation Slot3 { get; private set; }
-		public PageLocation Slot4 { get; private set; }
-		public PageLocation Slot5 { get; private set; }
-		public PageLocation Slot6 { get; private set; }
-		public PageLocation Slot7 { get; private set; }
+		public PagePointer StartPage { get; private set; }
+		public PagePointer Slot0 { get; private set; }
+		public PagePointer Slot1 { get; private set; }
+		public PagePointer Slot2 { get; private set; }
+		public PagePointer Slot3 { get; private set; }
+		public PagePointer Slot4 { get; private set; }
+		public PagePointer Slot5 { get; private set; }
+		public PagePointer Slot6 { get; private set; }
+		public PagePointer Slot7 { get; private set; }
 
 		public IamPage(byte[] bytes, MdfFile file)
 			: base(bytes, file)
@@ -67,17 +67,17 @@ namespace OrcaMDF.Core.Engine.Pages
 			ObjectID = BitConverter.ToInt32(header, 28);
 			IndexID = BitConverter.ToInt16(header, 32);
 			PageCount = header[34];
-			StartPage = new PageLocation(BitConverter.ToInt16(header, 40), BitConverter.ToInt32(header, 36));
+			StartPage = new PagePointer(BitConverter.ToInt16(header, 40), BitConverter.ToInt32(header, 36));
 
 			// Read single page slot allocations
-			Slot0 = new PageLocation(BitConverter.ToInt16(header, 46), BitConverter.ToInt32(header, 42));
-			Slot1 = new PageLocation(BitConverter.ToInt16(header, 52), BitConverter.ToInt32(header, 48));
-			Slot2 = new PageLocation(BitConverter.ToInt16(header, 58), BitConverter.ToInt32(header, 54));
-			Slot3 = new PageLocation(BitConverter.ToInt16(header, 64), BitConverter.ToInt32(header, 60));
-			Slot4 = new PageLocation(BitConverter.ToInt16(header, 70), BitConverter.ToInt32(header, 66));
-			Slot5 = new PageLocation(BitConverter.ToInt16(header, 76), BitConverter.ToInt32(header, 72));
-			Slot6 = new PageLocation(BitConverter.ToInt16(header, 82), BitConverter.ToInt32(header, 78));
-			Slot7 = new PageLocation(BitConverter.ToInt16(header, 88), BitConverter.ToInt32(header, 84));
+			Slot0 = new PagePointer(BitConverter.ToInt16(header, 46), BitConverter.ToInt32(header, 42));
+			Slot1 = new PagePointer(BitConverter.ToInt16(header, 52), BitConverter.ToInt32(header, 48));
+			Slot2 = new PagePointer(BitConverter.ToInt16(header, 58), BitConverter.ToInt32(header, 54));
+			Slot3 = new PagePointer(BitConverter.ToInt16(header, 64), BitConverter.ToInt32(header, 60));
+			Slot4 = new PagePointer(BitConverter.ToInt16(header, 70), BitConverter.ToInt32(header, 66));
+			Slot5 = new PagePointer(BitConverter.ToInt16(header, 76), BitConverter.ToInt32(header, 72));
+			Slot6 = new PagePointer(BitConverter.ToInt16(header, 82), BitConverter.ToInt32(header, 78));
+			Slot7 = new PagePointer(BitConverter.ToInt16(header, 88), BitConverter.ToInt32(header, 84));
 		}
 
 		public override string ToString()
@@ -101,7 +101,7 @@ namespace OrcaMDF.Core.Engine.Pages
 			sb.AppendLine("Slot7: " + Slot7);
 			sb.AppendLine();
 
-			int currentRangeStartPageID = (Header.PageID / 511232) * 511232;
+			int currentRangeStartPageID = (Header.Pointer.PageID / 511232) * 511232;
 			int currentRangeStartMapIndex = 0;
 			bool currentStatus = ExtentMap[0];
 			for (int i = 0; i < ExtentMap.Length; i++)

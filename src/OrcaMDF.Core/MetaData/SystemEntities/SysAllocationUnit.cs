@@ -5,40 +5,40 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 	/// </summary>
 	public class SysAllocationUnit
 	{
-		[Column("bigint")] // auid
+		[Column("bigint", 1)] // auid
 		public long AllocationUnitID { get; internal set; }
 
-		[Column("tinyint")] // type
+		[Column("tinyint", 2)] // type
 		public byte Type { get; internal set; }
 
-		[Column("bigint")] // ownerid
+		[Column("bigint", 3)] // ownerid
 		public long OwnerID { get; internal set; }
 
-		[Column("int")] // status
+		[Column("int", 4)] // status
 		public int Status { get; internal set; }
 
-		[Column("smallint")] // fgid
+		[Column("smallint", 5)] // fgid
 		public short FilegroupID { get; internal set; }
 
-		[Column("binary(6)")] // pgfirst
+		[Column("binary(6)", 6)] // pgfirst
 		public byte[] FirstPage { get; internal set; }
 
-		[Column("binary(6)")] // pgroot
+		[Column("binary(6)", 7)] // pgroot
 		public byte[] RootPage { get; internal set; }
 
-		[Column("binary(6)")] // pgfirstiam
+		[Column("binary(6)", 8)] // pgfirstiam
 		public byte[] FirstIamPage { get; internal set; }
 
-		[Column("bigint")] // pcused
+		[Column("bigint", 9)] // pcused
 		public long PCUsed { get; internal set; }
 
-		[Column("bigint")] // pcdata
+		[Column("bigint", 10)] // pcdata
 		public long PCData { get; internal set; }
 
-		[Column("bigint")] // pcreserved
+		[Column("bigint", 11)] // pcreserved
 		public long PCReserved { get; internal set; }
 
-		[Column("int")] // dbfragid
+		[Column("int", 12)] // dbfragid
 		public int DBFragID { get; internal set; }
 	}
 }
