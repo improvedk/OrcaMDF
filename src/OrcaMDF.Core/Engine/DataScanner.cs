@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Core.MetaData;
+using OrcaMDF.Core.MetaData.Enumerations;
 
 namespace OrcaMDF.Core.Engine
 {
@@ -11,6 +13,39 @@ namespace OrcaMDF.Core.Engine
 		public DataScanner(MdfFile file)
 		{
 			this.file = file;
+		}
+
+		/// <summary>
+		/// Scans a table using it's name as origin.
+		/// TODO: Detect if table has clustered index and scan accordingly. Only supports heaps for now.
+		/// </summary>
+		public IEnumerable<TEntity> ScanTable<TEntity>(string tableName) where TEntity : new()
+		{
+			var metaData = file.GetMetaData();
+
+			// Get object
+			var tableObject = metaData.SysObjects
+				.Where(x => x.Name == tableName)
+				.Where(x => x.Type == ObjectType.INTERNAL_TABLE || x.Type == ObjectType.SYSTEM_TABLE || x.Type == ObjectType.USER_TABLE)
+				.SingleOrDefault();
+			if (tableObject == null)
+				throw new ArgumentException("Table does not exist.");
+
+			// Get rowset
+			var tableRowset = metaData.SysRowsets
+				.Where(x => x.ObjectID == tableObject.ObjectID)
+				.SingleOrDefault();
+			if (tableRowset == null)
+				throw new ArgumentException("Table has no rowsets.");
+
+			// Get allocation unit
+			var allocUnit = metaData.SysAllocationUnits
+				.Where(x => x.ContainerID == tableRowset.PartitionID)
+				.SingleOrDefault();
+			if (allocUnit == null)
+				throw new ArgumentException("Table has no allocation unit.");
+
+			return ScanHeap<TEntity>(new PagePointer(allocUnit.FirstIamPage));
 		}
 
 		/// <summary>

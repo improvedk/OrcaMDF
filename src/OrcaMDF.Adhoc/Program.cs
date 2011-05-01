@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using OrcaMDF.Adhoc.Entities;
 using OrcaMDF.Core.Engine;
 
 namespace OrcaMDF.Adhoc
@@ -13,7 +15,9 @@ namespace OrcaMDF.Adhoc
 
 			using (var file = new MdfFile(@"C:\MOW_Copy.mdf"))
 			{
-
+				var scanner = new DataScanner(file);
+				var slobs = scanner.ScanTable<HeapPerson>("HeapPersons").Take(100);
+				EntityPrinter.Print(slobs);
 			}
 
         	Console.WriteLine("Done");

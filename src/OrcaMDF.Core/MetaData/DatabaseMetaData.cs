@@ -54,7 +54,7 @@ namespace OrcaMDF.Core.MetaData
 			long rowsetID = SysRowsets
 								.Where(x => x.ObjectID == (int)SystemObject.sysschobjs && x.IndexID == 1)
 								.Single()
-								.RowsetID;
+								.PartitionID;
 
 			var pageLoc = SysAllocationUnits
 				.Where(x => x.AllocationUnitID == rowsetID && x.Type == 1)
@@ -69,7 +69,7 @@ namespace OrcaMDF.Core.MetaData
 			long rowsetID =	SysRowsets
 								.Where(x => x.ObjectID == (int)SystemObject.syscolpars && x.IndexID == 1)
 								.Single()
-								.RowsetID;
+								.PartitionID;
 
 			var pageLoc = SysAllocationUnits
 				.Where(x => x.AllocationUnitID == rowsetID && x.Type == 1)

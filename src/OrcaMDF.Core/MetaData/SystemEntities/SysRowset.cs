@@ -7,7 +7,7 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 	public class SysRowset
 	{
 		[Column("bigint", 1)] // rowsetid
-		public long RowsetID { get; internal set; }
+		public long PartitionID { get; internal set; }
 
 		[Column("tinyint", 2)] // ownertype
 		public byte OwnerType { get; internal set; }

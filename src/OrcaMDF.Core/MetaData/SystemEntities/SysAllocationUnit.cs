@@ -12,7 +12,7 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 		public byte Type { get; internal set; }
 
 		[Column("bigint", 3)] // ownerid
-		public long OwnerID { get; internal set; }
+		public long ContainerID { get; internal set; }
 
 		[Column("int", 4)] // status
 		public int Status { get; internal set; }
