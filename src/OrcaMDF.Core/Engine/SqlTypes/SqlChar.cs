@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Linq;
+using System.Text;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
@@ -23,7 +25,13 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 		public object GetValue(byte[] value)
 		{
-			return Encoding.UTF7.GetString(value);
+			if (value.Length < length)
+				throw new ArgumentException("Data too shart for char(" + length + ")");
+
+			if (value.Length > length)
+				return Encoding.UTF7.GetString(value.Take(length).ToArray());
+			else
+				return Encoding.UTF7.GetString(value);
 		}
 	}
 }

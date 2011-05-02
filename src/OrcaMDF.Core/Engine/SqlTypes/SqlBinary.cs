@@ -1,4 +1,7 @@
-﻿namespace OrcaMDF.Core.Engine.SqlTypes
+﻿using System;
+using System.Linq;
+
+namespace OrcaMDF.Core.Engine.SqlTypes
 {
 	public class SqlBinary : ISqlType
 	{
@@ -21,6 +24,12 @@
 
 		public object GetValue(byte[] value)
 		{
+			if (value.Length < length)
+				throw new ArgumentException("Data too shart for binary(" + length + ")");
+
+			if (value.Length > length)
+				return value.Take(length);
+
 			return value;
 		}
 	}
