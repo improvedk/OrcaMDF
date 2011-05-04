@@ -1,4 +1,6 @@
-﻿namespace OrcaMDF.Core.Engine.SqlTypes
+﻿using System;
+
+namespace OrcaMDF.Core.Engine.SqlTypes
 {
 	public class SqlTinyInt : ISqlType
 	{
@@ -14,6 +16,9 @@
 
 		public object GetValue(byte[] value)
 		{
+			if (value.Length != 1)
+				throw new ArgumentException("Invalid value length: " + value.Length);
+
 			return value[0];
 		}
 	}

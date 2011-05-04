@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
@@ -23,6 +24,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 		public object GetValue(byte[] value)
 		{
+			if (value.Length != length)
+				throw new ArgumentException("Invalid value length: " + value.Length);
+
 			return Encoding.Unicode.GetString(value);
 		}
 	}

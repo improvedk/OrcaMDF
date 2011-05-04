@@ -18,10 +18,13 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 		public object GetValue(byte[] value)
 		{
+			if (value.Length != 8)
+				throw new ArgumentException("Invalid value length: " + value.Length);
+
 			int time = BitConverter.ToInt32(value, 0);
 			int date = BitConverter.ToInt32(value, 4);
 
-			return new DateTime(1900, 1, 1, time/300/60/60, time/300/60%60, time/300%60, (int)(time%300*CLOCK_TICK_MS)).AddDays(date);
+			return new DateTime(1900, 1, 1, time/300/60/60, time/300/60%60, time/300%60, (int)Math.Round(time%300*CLOCK_TICK_MS)).AddDays(date);
 		}
 	}
 }

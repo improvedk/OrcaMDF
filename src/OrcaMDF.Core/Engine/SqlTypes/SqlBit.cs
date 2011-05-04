@@ -1,4 +1,5 @@
-﻿using OrcaMDF.Core.Engine.Records;
+﻿using System;
+using OrcaMDF.Core.Engine.Records;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
@@ -29,6 +30,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 		public object GetValue(byte[] value)
 		{
+			if(readState.AllBitsConsumed && value.Length != 1)
+				throw new ArgumentException("All bits consumed, invalid value length: " + value.Length);
+
 			if (value.Length == 1)
 				readState.LoadBitByte(value[0]);
 
