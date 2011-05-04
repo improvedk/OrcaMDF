@@ -46,6 +46,8 @@
     <Compile Include="Engine\Pages\GamPageTests.cs" />
     <Compile Include="Engine\Pages\PFS\PfsPageTests.cs" />
     <Compile Include="Engine\Pages\SgamPageTests.cs" />
+    <Compile Include="Engine\Records\IndexRecordTests.cs" />
+    <Compile Include="Engine\Records\PrimaryRecordTests.cs" />
     <Compile Include="Engine\Records\RecordReadStateTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlBigIntTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlBinaryTests.cs" />
