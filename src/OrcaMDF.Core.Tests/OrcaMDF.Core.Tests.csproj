@@ -52,11 +52,14 @@
     <Compile Include="Engine\SqlTypes\SqlBinaryTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlBitTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlCharTests.cs" />
+    <Compile Include="Engine\SqlTypes\SqlDateTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlDateTimeTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlIntTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlNCharTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlNvarcharTests.cs" />
+    <Compile Include="Engine\SqlTypes\SqlSmallDateTimeTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlSmallIntTests.cs" />
+    <Compile Include="Engine\SqlTypes\SqlTimeTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlTinyIntTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinaryTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarcharTests.cs" />

@@ -50,6 +50,9 @@
     <Compile Include="Engine\Records\IndexRecord.cs" />
     <Compile Include="Engine\Records\PrimaryRecord.cs" />
     <Compile Include="Engine\Records\RecordReadState.cs" />
+    <Compile Include="Engine\SqlTypes\SqlDate.cs" />
+    <Compile Include="Engine\SqlTypes\SqlSmallDateTime.cs" />
+    <Compile Include="Engine\SqlTypes\SqlTime.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
     <Compile Include="MetaData\ClusteredIndexEntity.cs" />
     <Compile Include="MetaData\ColumnProperty.cs" />

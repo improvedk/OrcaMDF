@@ -21,6 +21,9 @@ namespace OrcaMDF.Core.Tests.Engine.SqlTypes
 
 			input = new byte[] { 0x2d, 0xfd, 0x1c, 0x01, 0x4a, 0x75, 0x00, 0x00 };
 			Assert.AreEqual(new DateTime(1982, 03, 18, 17, 17, 36, 790), (DateTime)type.GetValue(input));
+
+			input = new byte[] { 0xff, 0x81, 0x8b, 0x01, 0x7f, 0x24, 0x2d, 0x00 };
+			Assert.AreEqual(new DateTime(9999, 12, 31, 23, 59, 59, 997), (DateTime)type.GetValue(input));
 		}
 
 		[Test]
