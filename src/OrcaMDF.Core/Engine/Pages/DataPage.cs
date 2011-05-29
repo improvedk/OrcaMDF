@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OrcaMDF.Core.Engine.Records;
 using OrcaMDF.Core.Engine.SqlTypes;
 using OrcaMDF.Core.MetaData;

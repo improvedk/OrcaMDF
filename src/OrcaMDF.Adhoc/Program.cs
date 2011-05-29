@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Adhoc.Entities;
 using OrcaMDF.Core.Engine;
@@ -11,13 +10,13 @@ namespace OrcaMDF.Adhoc
         static void Main()
         {
         	Console.WriteLine("VSS Copying...");
-        	VssHelper.CopyFile(@"C:\MOW.mdf", @"C:\MOW_Copy.mdf");
+			VssHelper.CopyFile(@"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\Test.mdf", @"C:\Test.mdf");
         	Console.WriteLine();
 
-			using (var file = new MdfFile(@"C:\MOW_Copy.mdf"))
+			using (var file = new MdfFile(@"C:\Test.mdf"))
 			{
 				var scanner = new DataScanner(file);
-				var slobs = scanner.ScanTable<HeapPerson>("HeapPersons").Take(100);
+				var slobs = scanner.ScanTable<Heaptest>("Heaptest");
 				EntityPrinter.Print(slobs);
 			}
 

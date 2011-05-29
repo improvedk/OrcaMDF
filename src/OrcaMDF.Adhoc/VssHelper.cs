@@ -24,7 +24,7 @@ namespace OrcaMDF.Adhoc
 				using (var async = vss.GatherWriterMetadata())
 					async.Wait();
 
-				Guid snapshotSet = vss.StartSnapshotSet();
+				vss.StartSnapshotSet();
 				string volume = new FileInfo(source).Directory.Root.Name;
 				var snapshot = vss.AddToSnapshotSet(volume, Guid.Empty);
 

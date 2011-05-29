@@ -16,13 +16,31 @@ namespace OrcaMDF.Core.Engine.Records
 			short offset = 0;
 			
 			parseStatusBitsA(new BitArray(new [] { bytes[offset++] }));
+
+			// TODO: Strategize this stuff to avoid ifs & switches
+			if(Type == RecordType.ForwardingStub)
+			{
+				// Forwarding stub only has one status byte. Remaining 8 bytes are for (PageID, FileID, Slot)
+				FixedLengthData = bytes.Skip(1).Take(8).ToArray();
+
+				int pageID = BitConverter.ToInt32(bytes, 1);
+				short fileID = BitConverter.ToInt16(bytes, 5);
+				short slot = BitConverter.ToInt16(bytes, 7);
+
+				var forwardPage = page.File.GetDataPage(new PagePointer(fileID, pageID));
+				byte[] forwardedRecordBytes = forwardPage.Records[slot].RawBytes;
+
+				parseStatusBitsA(new BitArray(new[] {forwardedRecordBytes[0]}));
+				bytes = forwardedRecordBytes;
+			}
+
 			parseStatusBitsB(bytes[offset++]);
 
 			short fixedLengthSize = BitConverter.ToInt16(bytes, offset);
 			fixedLengthSize -= 4;
 			offset += 2;
 
-			switch(Type)
+			switch (Type)
 			{
 				case RecordType.Forwarded:
 					// Ignore 10 byte forwarded record header
@@ -47,6 +65,9 @@ namespace OrcaMDF.Core.Engine.Records
 
 			if (HasVariableLengthColumns)
 				ParseVariableLengthColumns(bytes, ref offset);
+
+			// Saw complete record raw bytes
+			RawBytes = bytes.Take(offset).ToArray();
 		}
 
 		private void parseStatusBitsA(BitArray bits)

@@ -25,6 +25,8 @@ namespace OrcaMDF.Adhoc
 			{
 				int maxPropValueLength = entities.Max(x => Math.Max((prop.GetValue(x, null) ?? "").ToString().Length, 6));
 
+				maxPropValueLength = Math.Min(maxPropValueLength, 40);
+
 				if (prop.Name.Length > maxPropValueLength)
 					maxPropValueLength = prop.Name.Length;
 
@@ -47,7 +49,12 @@ namespace OrcaMDF.Adhoc
 					if (value == null)
 						Console.Write("<null>".PadRight(propLengths[prop.Name]));
 					else
-						Console.Write(prop.GetValue(entity, null).ToString().PadRight(propLengths[prop.Name]));
+					{
+						if (value.ToString().Length > propLengths[prop.Name])
+							Console.Write(("<" + value.ToString().Length.ToString().PadLeft(5, '0') + " chars>").PadRight(propLengths[prop.Name]));
+						else
+							Console.Write(value.ToString().PadRight(propLengths[prop.Name]));
+					}
 				}
 
 				Console.WriteLine();

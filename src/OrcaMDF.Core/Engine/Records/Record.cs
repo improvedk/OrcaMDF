@@ -18,6 +18,7 @@ namespace OrcaMDF.Core.Engine.Records
 		public BitArray NullBitmap { get; protected set; }
 		public short NumberOfVariableLengthColumns { get; protected set; }
 		public IDictionary<int, byte[]> VariableLengthColumnData { get; protected set; }
+		public byte[] RawBytes { get; protected set; }
 
 		protected Record(Page page)
 		{
@@ -52,8 +53,16 @@ namespace OrcaMDF.Core.Engine.Records
 				VariableLengthColumnData[i] = bytes.Skip(offset).Take(variableLengthColumnLengths[i] - offset).ToArray();
 				offset = variableLengthColumnLengths[i];
 
-				if (overflowData)
-					VariableLengthColumnData[i] = GetOverflowDataFromPointer(VariableLengthColumnData[i]);
+				// For blob fragments, the last varlength column is a backpointer and should thus not be interpreted as row-overflow pointer
+				if (Type == RecordType.BlobFragment && i == NumberOfVariableLengthColumns - 1)
+				{
+					// For now, don't do anything, we'll just store the back pointer bytes
+				}
+				else
+				{
+					if (overflowData)
+						VariableLengthColumnData[i] = GetOverflowDataFromPointer(VariableLengthColumnData[i]);
+				}
 			}
 		}
 

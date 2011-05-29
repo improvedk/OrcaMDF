@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using OrcaMDF.Core.Engine.Pages;
 using OrcaMDF.Core.Engine.Pages.PFS;
@@ -29,6 +30,7 @@ namespace OrcaMDF.Core.Engine
 			NumberOfExtents = NumberOfPages / 8;
 		}
 
+		[DebuggerStepThrough]
 		private byte[] getPageBytes(int index)
 		{
 			if(buffer.ContainsKey(index))

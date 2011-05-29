@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace OrcaMDF.Core.Engine
 {
@@ -9,6 +10,7 @@ namespace OrcaMDF.Core.Engine
 
 		public static readonly PagePointer Zero = new PagePointer(0, 0);
 
+		[DebuggerStepThrough]
 		public PagePointer(short fileID, int pageID)
 		{
 			FileID = fileID;
