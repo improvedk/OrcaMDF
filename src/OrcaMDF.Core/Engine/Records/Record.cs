@@ -53,10 +53,15 @@ namespace OrcaMDF.Core.Engine.Records
 				VariableLengthColumnData[i] = bytes.Skip(offset).Take(variableLengthColumnLengths[i] - offset).ToArray();
 				offset = variableLengthColumnLengths[i];
 
-				// For blob fragments, the last varlength column is a backpointer and should thus not be interpreted as row-overflow pointer
-				if (Type == RecordType.BlobFragment && i == NumberOfVariableLengthColumns - 1)
+				// For forwarding stubs, the data stems from the referenced forwarded record. For the forwarded record,
+				// the last varlength column is a backpointer and should thus not be interpreted as a row-overflow pointer.
+				// The same goes when processing the actual forwarded record (BlobFragment).
+				if ((Type == RecordType.ForwardingStub || Type == RecordType.BlobFragment) && i == NumberOfVariableLengthColumns - 1)
 				{
-					// For now, don't do anything, we'll just store the back pointer bytes
+					// Assert that this is a back pointer as expected. First two bytes should have a value of 1024 according to http://bit.ly/EzwT6
+					short columnID = BitConverter.ToInt16(VariableLengthColumnData[i], 0);
+					if (columnID != 1024)
+						throw new ArgumentException("Expected column " + (i + 1) + " to be a backpointer. First two bytes were expected to equal 1024, but were " + columnID);
 				}
 				else
 				{
@@ -69,9 +74,11 @@ namespace OrcaMDF.Core.Engine.Records
 		protected byte[] GetOverflowDataFromPointer(byte[] data)
 		{
 			byte spcialFieldType = data[0];
-			short indexLevel = BitConverter.ToInt16(data, 1);
+			byte link = data[1]; // Assumed though not sure as messing with bytes causes DBCC PAGE to puke.
+			byte indexLevel = data[2];
+			byte unused = data[3];
 			int sequence = BitConverter.ToInt32(data, 4);
-			int timestamp = BitConverter.ToInt32(data, 8);
+			long timestamp = BitConverter.ToUInt32(data, 8) << 16; // Technically a 6-byte long value. Low two bytes always zero, thus not stored (http://bit.ly/mdAQpm)
 
 			byte[] fieldData = new byte[0];
 			for(int i=12; i<data.Length; i += 12)

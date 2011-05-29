@@ -17,7 +17,7 @@ namespace OrcaMDF.Core.Engine.Records
 			
 			parseStatusBitsA(new BitArray(new [] { bytes[offset++] }));
 
-			// TODO: Strategize this stuff to avoid ifs & switches
+			// TODO: Strategize this stuff to avoid ifs, switches & impersonation
 			if(Type == RecordType.ForwardingStub)
 			{
 				// Forwarding stub only has one status byte. Remaining 8 bytes are for (PageID, FileID, Slot)
@@ -32,6 +32,10 @@ namespace OrcaMDF.Core.Engine.Records
 
 				parseStatusBitsA(new BitArray(new[] {forwardedRecordBytes[0]}));
 				bytes = forwardedRecordBytes;
+
+				// We'll impersonate the ForwardingStub record type that we originated from, this allows
+				// the engine to distinguish BlobFragments and the records that actually reference them.
+				Type = RecordType.ForwardingStub;
 			}
 
 			parseStatusBitsB(bytes[offset++]);

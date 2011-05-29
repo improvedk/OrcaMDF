@@ -16,10 +16,15 @@ namespace OrcaMDF.Core.Engine.Pages
 		{
 			for (int i = 0; i < Records.Length; i++)
 			{
+				var record = Records[i];
+
+				// Don't process forwarded blob fragments as they should only be processed from the referenced record
+				if (record.Type == RecordType.BlobFragment)
+					continue;
+
 				var entity = new T();
 				short fixedOffset = 0;
 				short variableColumnIndex = 0;
-				var record = Records[i];
 				int columnIndex = 0;
 				var readState = new RecordReadState();
 

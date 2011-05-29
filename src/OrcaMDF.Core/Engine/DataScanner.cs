@@ -38,9 +38,9 @@ namespace OrcaMDF.Core.Engine
 			if (tableRowset == null)
 				throw new ArgumentException("Table has no rowsets.");
 
-			// Get allocation unit
+			// Get allocation unit for in-row data
 			var allocUnit = metaData.SysAllocationUnits
-				.Where(x => x.ContainerID == tableRowset.PartitionID)
+				.Where(x => x.ContainerID == tableRowset.PartitionID && x.Type == 1)
 				.SingleOrDefault();
 			if (allocUnit == null)
 				throw new ArgumentException("Table has no allocation unit.");

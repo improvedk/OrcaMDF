@@ -71,6 +71,8 @@ namespace OrcaMDF.Core.Engine
 
 		public Page GetPage(PagePointer loc)
 		{
+			Debug.WriteLine("Loading Generic Page " + loc);
+
 			// TODO: Ensure loc.FileID matches
 
 			return new Page(getPageBytes(loc.PageID), this);
@@ -78,6 +80,8 @@ namespace OrcaMDF.Core.Engine
 
 		public ClusteredIndexPage GetClusteredIndexPage(PagePointer loc)
 		{
+			Debug.WriteLine("Loading Clustered Index Page " + loc);
+
 			// TODO: Ensure loc.FileID matches
 
 			return new ClusteredIndexPage(getPageBytes(loc.PageID), this);
@@ -85,6 +89,8 @@ namespace OrcaMDF.Core.Engine
 
 		public TextMixPage GetTextMixPage(PagePointer loc)
 		{
+			Debug.WriteLine("Loading TextMix Page " + loc);
+
 			// TODO: Ensure loc.FileID matches
 
 			return new TextMixPage(getPageBytes(loc.PageID), this);
@@ -92,6 +98,8 @@ namespace OrcaMDF.Core.Engine
 
 		public DataPage GetDataPage(PagePointer loc)
 		{
+			Debug.WriteLine("Loading Data Page " + loc);
+
 			// TODO: Ensure loc.FileID matches
 
 			return new DataPage(getPageBytes(loc.PageID), this);
@@ -99,6 +107,8 @@ namespace OrcaMDF.Core.Engine
 
 		public IamPage GetIamPage(PagePointer loc)
 		{
+			Debug.WriteLine("Loading IAM Page " + loc);
+
 			// TODO: Ensure loc.FileID matches
 
 			return new IamPage(getPageBytes(loc.PageID), this);
@@ -106,6 +116,8 @@ namespace OrcaMDF.Core.Engine
 
 		public BootPage GetBootPage()
 		{
+			Debug.WriteLine("Loading Boot Page");
+
 			// TODO: Assert this file is file 1 in the PRIMARY filegroup
 
 			return new BootPage(getPageBytes(9), this);
@@ -113,6 +125,8 @@ namespace OrcaMDF.Core.Engine
 
 		public SgamPage GetSgamPage(PagePointer loc)
 		{
+			Debug.WriteLine("Loading SGAM Page " + loc);
+
 			// TODO: Ensure loc.FileID matches
 
 			if(loc.PageID % 511230 != 3)
@@ -123,6 +137,8 @@ namespace OrcaMDF.Core.Engine
 
 		public GamPage GetGamPage(PagePointer loc)
 		{
+			Debug.WriteLine("Loading GAM Page " + loc);
+
 			// TODO: Ensure loc.FileID matches
 
 			if(loc.PageID % 511230 != 2)
@@ -133,6 +149,8 @@ namespace OrcaMDF.Core.Engine
 
 		public PfsPage GetPfsPage(PagePointer loc)
 		{
+			Debug.WriteLine("Loading PFS Page " + loc);
+
 			// TODO: Ensure loc.FileID matches
 
 			// We know PFS pages are present every 8088th page, except for the very first one
