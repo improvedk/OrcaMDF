@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using OrcaMDF.Core.Engine.Records;
 using OrcaMDF.Core.Engine.SqlTypes;
@@ -11,6 +12,60 @@ namespace OrcaMDF.Core.Engine.Pages
 		public DataPage(byte[] bytes, MdfFile file)
 			: base(bytes, file)
 		{ }
+
+		public void ReadEntities(DataTable dt)
+		{
+			for (int i = 0; i < Records.Length; i++)
+			{
+				var record = Records[i];
+
+				// Don't process forwarded blob fragments as they should only be processed from the referenced record
+				if (record.Type == RecordType.BlobFragment)
+					continue;
+
+				var datarow = dt.NewRow();
+				short fixedOffset = 0;
+				short variableColumnIndex = 0;
+				int columnIndex = 0;
+				var readState = new RecordReadState();
+
+				foreach(DataColumn col in dt.Columns)
+				{
+					var columnDescription = new ColumnTypeDescription(col);
+					var sqlType = SqlTypeFactory.Create(columnDescription, readState);
+					object columnValue = null;
+
+					if (sqlType.IsVariableLength)
+					{
+						if (!record.HasNullBitmap || !record.NullBitmap[columnIndex])
+						{
+							// If a nullable varlength column does not have a value, it may be not even appear in the varlength column array if it's at the tail
+							if (record.VariableLengthColumnData == null || record.VariableLengthColumnData.Count <= variableColumnIndex)
+								columnValue = sqlType.GetValue(new byte[] { });
+							else
+								columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex]);
+						}
+
+						variableColumnIndex++;
+					}
+					else
+					{
+						// Must cache type FixedLength as it may change after getting a value (e.g. SqlBit)
+						short fixedLength = sqlType.FixedLength.Value;
+
+						if (!record.HasNullBitmap || !record.NullBitmap[columnIndex])
+							columnValue = sqlType.GetValue(record.FixedLengthData.Skip(fixedOffset).Take(fixedLength).ToArray());
+
+						fixedOffset += fixedLength;
+					}
+
+					columnIndex++;
+					datarow[col] = columnValue;
+				}
+
+				dt.Rows.Add(datarow);
+			}
+		}
 
 		public IEnumerable<T> GetEntities<T>() where T : new()
 		{

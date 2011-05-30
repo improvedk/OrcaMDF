@@ -36,7 +36,7 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 		public int CollationID { get; internal set; }
 
 		[Column("int", 11)] // status
-		public int status { get; internal set; }
+		public int Status { get; internal set; }
 
 		[Column("smallint", 12)] // maxinrow
 		public short MaxInRow { get; internal set; }

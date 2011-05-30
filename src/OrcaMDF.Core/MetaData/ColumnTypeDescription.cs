@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 
 namespace OrcaMDF.Core.MetaData
 {
@@ -7,13 +8,17 @@ namespace OrcaMDF.Core.MetaData
 		public readonly ColumnType Type;
 		public readonly short? VariableFixedLength;
 
-		private readonly string typeString;
+		public ColumnTypeDescription(DataColumn col)
+			: this(col.Caption, col, x => (short)((DataColumn)x).MaxLength)
+		{ }
 
 		public ColumnTypeDescription(string type)
-		{
-			typeString = type;
+			: this(type.Split('(')[0], type, x => Convert.ToInt16(x.ToString().Split('(')[1].Split(')')[0]))
+		{ }
 
-			switch (type.Split('(')[0])
+		private ColumnTypeDescription(string type, object typeOrigin, Func<object, short> getColumnLength)
+		{
+			switch (type)
 			{
 				case "bigint":
 					Type = ColumnType.BigInt;
@@ -21,7 +26,7 @@ namespace OrcaMDF.Core.MetaData
 
 				case "binary":
 					Type = ColumnType.Binary;
-					VariableFixedLength = Convert.ToInt16(type.Split('(')[1].Split(')')[0]);
+					VariableFixedLength = getColumnLength(typeOrigin);
 					break;
 
 				case "bit":
@@ -30,7 +35,7 @@ namespace OrcaMDF.Core.MetaData
 
 				case "char":
 					Type = ColumnType.Char;
-					VariableFixedLength = Convert.ToInt16(type.Split('(')[1].Split(')')[0]);
+					VariableFixedLength = getColumnLength(typeOrigin);
 					break;
 
 				case "datetime":
@@ -43,7 +48,7 @@ namespace OrcaMDF.Core.MetaData
 
 				case "ncar":
 					Type = ColumnType.NChar;
-					VariableFixedLength = Convert.ToInt16(type.Split('(')[1].Split(')')[0]);
+					VariableFixedLength = getColumnLength(typeOrigin);
 					break;
 
 				case "nvarchar":
@@ -74,7 +79,7 @@ namespace OrcaMDF.Core.MetaData
 
 		public override string ToString()
 		{
-			return typeString;
+			return Type + "(" + VariableFixedLength + ")";
 		}
 	}
 }

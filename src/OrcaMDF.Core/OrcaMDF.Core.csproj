@@ -83,6 +83,7 @@
     <Compile Include="MetaData\SystemEntities\SysRowset.cs" />
     <Compile Include="MetaData\SystemEntities\SysRowsetColumn.cs" />
     <Compile Include="MetaData\Enumerations\SystemObject.cs" />
+    <Compile Include="MetaData\SystemEntities\SysScalarType.cs" />
     <Compile Include="MetaData\SystemFlags\RowsetStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Records\Record.cs" />
