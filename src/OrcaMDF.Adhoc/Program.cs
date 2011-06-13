@@ -17,6 +17,8 @@ namespace OrcaMDF.Adhoc
 				var scanner = new DataScanner(file);
 				DataTable dt = scanner.ScanTable("Heaptest");
 				EntityPrinter.Print(dt);
+
+				DataTable result = new DataScanner(file).ScanTable("MyTable");
 			}
 
         	Console.WriteLine("Done");

@@ -36,6 +36,7 @@
       <HintPath>..\..\lib\NUnit-2.5.10.11092\framework\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -63,6 +64,8 @@
     <Compile Include="Engine\SqlTypes\SqlTinyIntTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinaryTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarcharTests.cs" />
+    <Compile Include="MetaData\DatabaseMetaDataTests\ParseUserTableNamesTest.cs" />
+    <Compile Include="SqlServerSystemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +73,9 @@
       <Project>{829A5C51-CB21-4DE2-9021-44F6D804D231}</Project>
       <Name>OrcaMDF.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
