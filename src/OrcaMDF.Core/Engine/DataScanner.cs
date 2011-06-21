@@ -23,9 +23,6 @@ namespace OrcaMDF.Core.Engine
 		{
 			var metaData = file.GetMetaData();
 
-			// Get row with schema
-			var row = new T();
-
 			// Get object
 			var tableObject = metaData.SysObjects
 				.Where(x => x.Name == tableName)
