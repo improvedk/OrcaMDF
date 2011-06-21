@@ -4,60 +4,47 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 	/// Matches sys.sysrowsets
 	/// Column names inspired by http://www.g-productions.nl/index.php?name=system_internals_partitions&version=2008SP2
 	/// </summary>
-	public class SysRowset
+	public class SysRowset : DataRow
 	{
-		[Column("bigint", 1)] // rowsetid
-		public long PartitionID { get; internal set; }
+		public SysRowset()
+		{
+			Columns.Add(new DataColumn("rowsetid", "bigint"));
+			Columns.Add(new DataColumn("ownertype", "tinyint"));
+			Columns.Add(new DataColumn("idmajor", "int"));
+			Columns.Add(new DataColumn("idminor", "int"));
+			Columns.Add(new DataColumn("numpart", "int"));
+			Columns.Add(new DataColumn("status", "int"));
+			Columns.Add(new DataColumn("fgidfs", "smallint"));
+			Columns.Add(new DataColumn("rcrows", "bigint"));
+			Columns.Add(new DataColumn("cmprlevel", "tinyint"));
+			Columns.Add(new DataColumn("fillfact", "tinyint"));
+			Columns.Add(new DataColumn("maxnullbit", "smallint"));
+			Columns.Add(new DataColumn("maxleaf", "int"));
+			Columns.Add(new DataColumn("maxint", "smallint"));
+			Columns.Add(new DataColumn("minleaf", "smallint"));
+			Columns.Add(new DataColumn("minint", "smallint"));
+			Columns.Add(new DataColumn("rsguid", "varbinary", true));
+			Columns.Add(new DataColumn("lockres", "varbinary", true));
+			Columns.Add(new DataColumn("dbfragid", "int"));
+		}
 
-		[Column("tinyint", 2)] // ownertype
-		public byte OwnerType { get; internal set; }
-
-		[Column("int", 3)] // idmajor
-		public int ObjectID { get; internal set; }
-
-		[Column("int", 4)] // idminor
-		public int IndexID { get; internal set; }
-
-		[Column("int", 5)] // numpart
-		public int PartitionNumber { get; internal set; }
-
-		[Column("int", 6)] // status
-		public int Status { get; internal set; }
-
-		[Column("smallint", 7)] // fgidfs
-		public short FilestreamFilegroupID { get; internal set; }
-
-		[Column("bigint", 8)] // rcrows
-		public long Rows { get; internal set; }
-
-		[Column("tinyint", 9)] // cmprlevel
-		public byte CompressionLevel { get; internal set; }
-
-		[Column("tinyint", 10)] // fillfact
-		public byte FillFactor { get; internal set; }
-
-		[Column("smallint", 11)] // maxnullbit
-		public short MaxNullBit { get; internal set; }
-
-		[Column("int", 12)] // maxleaf
-		public int MaxLeafLength { get; internal set; }
-
-		[Column("smallint", 13)] // maxint
-		public short MaxInternalLength { get; internal set; }
-
-		[Column("smallint", 14)] // minleaf
-		public short MinLeafLength { get; internal set; }
-
-		[Column("smallint", 15)] // minint
-		public short MinInternalLength { get; internal set; }
-
-		[Column("varbinary", 16, Nullable = true)] // rsguid
-		public byte[] FilestreamGUID { get; internal set; }
-
-		[Column("varbinary", 17, Nullable = true)] // lockres
-		public byte[] LockRes { get; internal set; }
-
-		[Column("int", 18)] // dbfragid
-		public int DBFragID { get; internal set; }
+		public long PartitionID { get { return Field<long>("rowsetid"); } }
+		public byte OwnerType { get { return Field<byte>("ownertype"); } }
+		public int ObjectID { get { return Field<int>("idmajor"); } }
+		public int IndexID { get { return Field<int>("idminor"); } }
+		public int PartitionNumber { get { return Field<int>("numpart"); } }
+		public int Status { get { return Field<int>("status"); } }
+		public short FilestreamFilegroupID { get { return Field<short>("fgidfs"); } }
+		public long Rows { get { return Field<long>("rcrows"); } }
+		public byte CompressionLevel { get { return Field<byte>("cmprlevel"); } }
+		public byte FillFactor { get { return Field<byte>("fillfact"); } }
+		public short MaxNullBit { get { return Field<short>("maxnullbit"); } }
+		public int MaxLeafLength { get { return Field<int>("maxleaf"); } }
+		public short MaxInternalLength { get { return Field<short>("maxint"); } }
+		public short MinLeafLength { get { return Field<short>("minleaf"); } }
+		public short MinInternalLength { get { return Field<short>("minint"); } }
+		public byte[] FilestreamGUID { get { return Field<byte[]>("rsguid"); } }
+		public byte[] LockRes { get { return Field<byte[]>("lockres"); } }
+		public int DBFragID { get { return Field<int>("dbfragid"); } }
 	}
 }

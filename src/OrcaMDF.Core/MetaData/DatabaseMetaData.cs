@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.MetaData.Enumerations;
@@ -31,7 +30,7 @@ namespace OrcaMDF.Core.MetaData
 			parseSysScalarTypes();
 		}
 
-		public DataTable GetEmptyDataTableByName(string tableName)
+		public DataRow GetEmptyDataRowByName(string tableName)
 		{
 			// Get table
 			var sysobject = SysObjects
@@ -46,102 +45,19 @@ namespace OrcaMDF.Core.MetaData
 				.Where(x => x.ObjectID == sysobject.ObjectID);
 
 			// Create table and add columns
-			var dt = new DataTable();
+			var dataRow = new DataRow();
 			
 			foreach(var col in syscols)
 			{
 				var sqlType = SysScalarTypes.Where(x => x.ID == col.XType).Single();
-				var clrType = getManagedTypeFromSqlType(sqlType.Name);
 
-				var dc = new DataColumn(col.Name, clrType);
-				dc.AllowDBNull = sqlType.IsNullable;
-				dc.Caption = sqlType.Name; // Ugly hack, using caption to store original SQL Server type name, should subclass
+				var dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Length + ")");
+				dc.IsNullable = sqlType.IsNullable;
 
-				// Only string types should have length set, and only string types have a collation
-				if(sqlType.CollationID != 0)
-					dc.MaxLength = sqlType.Length;
-
-				dt.Columns.Add(dc);
+				dataRow.Columns.Add(dc);
 			}
 
-			return dt;
-		}
-
-		private Type getManagedTypeFromSqlType(string sqlType)
-		{
-			/*
-				Unsupported types as there is no direct CLR equivalent:
-				- hierarchyid
-				- geometry
-				- geography
-				- timestamp
-				- xml
-			*/
-
-			switch(sqlType)
-			{
-				case "image":
-				case "varbinary":
-				case "binary":
-					return typeof (byte[]);
-				
-				case "text":
-				case "ntext":
-				case "varchar":
-				case "char":
-				case "nvarchar":
-				case "nchar":
-				case "sysname":
-					return typeof (string);
-
-				case "uniqueidentifier":
-					return typeof (Guid);
-
-				case "date":
-				case "datetime2":
-				case "smalldatetime":
-				case "datetime":
-					return typeof (DateTime);
- 
-				case "time":
-					return typeof (TimeSpan);
-
-				case "bigint":
-					return typeof (long);
-
-				case "tinyint":
-					return typeof (byte);
-
-				case "smallint":
-					return typeof (short);
-
-				case "int":
-					return typeof (int);
-
-				case "bit":
-					return typeof (bool);
-				
-				case "smallmoney":
-				case "money":
-				case "numeric":
-				case "decimal":
-					return typeof (decimal);
-					
-				case "real":
-					return typeof (float);
-					
-				case "float":
-					return typeof (double);
-
-				case "sql_variant":
-					return typeof (object);
-
-				case "datetimeoffset":
-					return typeof (DateTimeOffset);
-
-				default:
-					throw new ArgumentException("Unknown type: " + sqlType);
-			}
+			return dataRow;
 		}
 
 		public string[] TableNames
@@ -178,7 +94,7 @@ namespace OrcaMDF.Core.MetaData
 				.Single()
 				.FirstPage;
 
-			SysObjects = scanner.ScanLinkedPages<SysObject>(new PagePointer(pageLoc)).ToList();
+			SysObjects = scanner.ScanLinkedPages<SysObject>(pageLoc).ToList();
 		}
 
 		private void parseSysScalarTypes()
@@ -193,7 +109,7 @@ namespace OrcaMDF.Core.MetaData
 				.Single()
 				.FirstPage;
 
-			SysScalarTypes = scanner.ScanLinkedPages<SysScalarType>(new PagePointer(pageLoc)).ToList();
+			SysScalarTypes = scanner.ScanLinkedPages<SysScalarType>(pageLoc).ToList();
 		}
 
 		private void parseSysRowsetColumns()
@@ -208,7 +124,7 @@ namespace OrcaMDF.Core.MetaData
 				.Single()
 				.FirstPage;
 
-			SysRowsetColumns = scanner.ScanLinkedPages<SysRowsetColumn>(new PagePointer(pageLoc)).ToList();
+			SysRowsetColumns = scanner.ScanLinkedPages<SysRowsetColumn>(pageLoc).ToList();
 		}
 
 		private void parseSysRowsets()
@@ -218,13 +134,12 @@ namespace OrcaMDF.Core.MetaData
 				.Single()
 				.FirstPage;
 
-			SysRowsets = scanner.ScanLinkedPages<SysRowset>(new PagePointer(pageLoc)).ToList();
+			SysRowsets = scanner.ScanLinkedPages<SysRowset>(pageLoc).ToList();
 		}
 
 		private void parseSysAllocationUnits()
 		{
 			var bootPage = file.GetBootPage();
-
 			SysAllocationUnits = scanner.ScanLinkedPages<SysAllocationUnit>(bootPage.FirstSysIndexes).ToList();
 		}
 	}

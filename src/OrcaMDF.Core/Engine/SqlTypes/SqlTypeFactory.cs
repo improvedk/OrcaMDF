@@ -6,12 +6,12 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 {
 	public static class SqlTypeFactory
 	{
-		public static ISqlType Create(ColumnTypeDescription typeDesc, RecordReadState readState)
+		public static ISqlType Create(DataColumn column, RecordReadState readState)
 		{
-			switch(typeDesc.Type)
+			switch(column.Type)
 			{
 				case ColumnType.Binary:
-					return new SqlBinary((short)typeDesc.VariableFixedLength);
+					return new SqlBinary((short)column.VariableFixedLength);
 
 				case ColumnType.BigInt:
 					return new SqlBigInt();
@@ -20,7 +20,7 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 					return new SqlBit(readState);
 
 				case ColumnType.Char:
-					return new SqlChar((short)typeDesc.VariableFixedLength);
+					return new SqlChar((short)column.VariableFixedLength);
 
 				case ColumnType.DateTime:
 					return new SqlDateTime();
@@ -29,7 +29,7 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 					return new SqlInt();
 
 				case ColumnType.NChar:
-					return new SqlNChar((short)typeDesc.VariableFixedLength);
+					return new SqlNChar((short)column.VariableFixedLength);
 
 				case ColumnType.NVarchar:
 					return new SqlNVarchar();
@@ -47,7 +47,7 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 					return new SqlVarchar();
 			}
 
-			throw new ArgumentException("Unsupported type: " + typeDesc);
+			throw new ArgumentException("Unsupported type: " + column);
 		}
 	}
 }

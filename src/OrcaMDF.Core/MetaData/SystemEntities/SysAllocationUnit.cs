@@ -1,44 +1,36 @@
+using OrcaMDF.Core.Engine;
+
 namespace OrcaMDF.Core.MetaData.SystemEntities
 {
-	/// <summary>
-	/// Matches sys.sysallocunits
-	/// </summary>
-	public class SysAllocationUnit
+	public class SysAllocationUnit : DataRow
 	{
-		[Column("bigint", 1)] // auid
-		public long AllocationUnitID { get; internal set; }
+		public SysAllocationUnit()
+		{
+			Columns.Add(new DataColumn("auid", "bigint"));
+			Columns.Add(new DataColumn("type", "tinyint"));
+			Columns.Add(new DataColumn("ownerid", "bigint"));
+			Columns.Add(new DataColumn("status", "int"));
+			Columns.Add(new DataColumn("fgid", "smallint"));
+			Columns.Add(new DataColumn("pgfirst", "binary(6)"));
+			Columns.Add(new DataColumn("pgroot", "binary(6)"));
+			Columns.Add(new DataColumn("pgfirstiam", "binary(6)"));
+			Columns.Add(new DataColumn("pcused", "bigint"));
+			Columns.Add(new DataColumn("pcdata", "bigint"));
+			Columns.Add(new DataColumn("pcreserved", "bigint"));
+			Columns.Add(new DataColumn("dbfragid", "int"));
+		}
 
-		[Column("tinyint", 2)] // type
-		public byte Type { get; internal set; }
-
-		[Column("bigint", 3)] // ownerid
-		public long ContainerID { get; internal set; }
-
-		[Column("int", 4)] // status
-		public int Status { get; internal set; }
-
-		[Column("smallint", 5)] // fgid
-		public short FilegroupID { get; internal set; }
-
-		[Column("binary(6)", 6)] // pgfirst
-		public byte[] FirstPage { get; internal set; }
-
-		[Column("binary(6)", 7)] // pgroot
-		public byte[] RootPage { get; internal set; }
-
-		[Column("binary(6)", 8)] // pgfirstiam
-		public byte[] FirstIamPage { get; internal set; }
-
-		[Column("bigint", 9)] // pcused
-		public long PCUsed { get; internal set; }
-
-		[Column("bigint", 10)] // pcdata
-		public long PCData { get; internal set; }
-
-		[Column("bigint", 11)] // pcreserved
-		public long PCReserved { get; internal set; }
-
-		[Column("int", 12)] // dbfragid
-		public int DBFragID { get; internal set; }
+		public long AllocationUnitID { get { return Field<long>("auid"); } }
+		public byte Type { get { return Field<byte>("type"); } }
+		public long ContainerID { get { return Field<long>("ownerid"); } }
+		public int Status { get { return Field<int>("status"); } }
+		public short FilegroupID { get { return Field<short>("fgid"); } }
+		public PagePointer FirstPage { get { return new PagePointer(Field<byte[]>("pgfirst")); } }
+		public PagePointer RootPage { get { return new PagePointer(Field<byte[]>("pgroot")); } }
+		public PagePointer FirstIamPage { get { return new PagePointer(Field<byte[]>("pgfirstiam")); } }
+		public long PCUsed { get { return Field<long>("pcused"); } }
+		public long PCData { get { return Field<long>("pcdata"); } }
+		public long PCReserved { get { return Field<long>("pcreserved"); } }
+		public int DBFragID { get { return Field<int>("dbfragid"); } }
 	}
 }

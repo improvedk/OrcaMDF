@@ -68,11 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\BitTest.cs" />
-    <Compile Include="Entities\HeapPerson.cs" />
     <Compile Include="Entities\Heaptest.cs" />
-    <Compile Include="Entities\Person.cs" />
-    <Compile Include="Entities\PersonCIndex.cs" />
     <Compile Include="EntityPrinter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -104,6 +100,7 @@
       <Name>OrcaMDF.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

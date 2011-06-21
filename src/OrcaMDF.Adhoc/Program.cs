@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Data;
+using OrcaMDF.Adhoc.Entities;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Adhoc
 {
@@ -15,10 +16,8 @@ namespace OrcaMDF.Adhoc
 			using (var file = new MdfFile(@"C:\Test.mdf"))
 			{
 				var scanner = new DataScanner(file);
-				DataTable dt = scanner.ScanTable("Heaptest");
-				EntityPrinter.Print(dt);
-
-				DataTable result = new DataScanner(file).ScanTable("MyTable");
+				var rows = scanner.ScanTable<Heaptest>("Heaptest");
+				EntityPrinter.Print(rows);
 			}
 
         	Console.WriteLine("Done");

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Core.Engine.Records;
@@ -11,24 +10,22 @@ namespace OrcaMDF.Core.Engine.Pages
 	{
 		public ClusteredIndexPage(byte[] bytes, MdfFile file)
 			: base(bytes, file)
-		{
+		{ }
 
-		}
-
-		public IEnumerable<T> GetEntities<T>() where T : ClusteredIndexEntity, new()
+		public IEnumerable<T> GetEntities<T>() where T : ClusteredTableIndexRow, new()
 		{
 			for (int i = 0; i < Records.Length; i++)
 			{
-				var entity = new T();
 				short fixedOffset = 0;
 				short variableColumnIndex = 0;
 				var record = Records[i];
 				int columnIndex = 0;
 				var readState = new RecordReadState();
+				var dataRow = new T();
 
-				foreach(var col in ColumnAttribute.GetOrderedColumnProperties<T>())
+				foreach (DataColumn col in dataRow.Columns)
 				{
-					var sqlType = SqlTypeFactory.Create(col.Column.Description, readState);
+					var sqlType = SqlTypeFactory.Create(col, readState);
 					object columnValue = null;
 
 					if (sqlType.IsVariableLength)
@@ -58,16 +55,16 @@ namespace OrcaMDF.Core.Engine.Pages
 					columnIndex++;
 
 					// First row of leftmost index page has undefined values
-					if(Header.PreviousPage == PagePointer.Zero && i == 0)
-						col.Property.SetValue(entity, null, null);
+					if (Header.PreviousPage == PagePointer.Zero && i == 0)
+						dataRow[col] = null;
 					else
-						col.Property.SetValue(entity, columnValue, null);
+						dataRow[col] = columnValue;
 				}
 
 				// At the end of the clustered index record we'll have a 6 byte page pointer
-				entity.ChildPage = new PagePointer(record.FixedLengthData.Skip(fixedOffset).Take(6).ToArray());
+				dataRow.PagePointer = new PagePointer(record.FixedLengthData.Skip(fixedOffset).Take(6).ToArray());
 
-				yield return entity;
+				yield return dataRow;
 			}
 		}
 	}

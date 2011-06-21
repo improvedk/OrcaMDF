@@ -3,54 +3,43 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 	/// <summary>
 	/// Matches sys.syscolpars
 	/// </summary>
-	public class SysRowsetColumn
+	public class SysRowsetColumn : DataRow
 	{
-		[Column("int", 1)] // id
-		public int ObjectID { get; internal set; }
+		public SysRowsetColumn()
+		{
+			Columns.Add(new DataColumn("id", "int"));
+			Columns.Add(new DataColumn("number", "smallint"));
+			Columns.Add(new DataColumn("colid", "int"));
+			Columns.Add(new DataColumn("name", "sysname", true));
+			Columns.Add(new DataColumn("xtype", "tinyint"));
+			Columns.Add(new DataColumn("utype", "int"));
+			Columns.Add(new DataColumn("length", "smallint"));
+			Columns.Add(new DataColumn("prec", "tinyint"));
+			Columns.Add(new DataColumn("scale", "tinyint"));
+			Columns.Add(new DataColumn("collationid", "int"));
+			Columns.Add(new DataColumn("status", "int"));
+			Columns.Add(new DataColumn("maxinrow", "smallint"));
+			Columns.Add(new DataColumn("xmlns", "int"));
+			Columns.Add(new DataColumn("dflt", "int"));
+			Columns.Add(new DataColumn("chk", "int"));
+			Columns.Add(new DataColumn("idtval", "varbinary", true));
+		}
 
-		[Column("smallint", 2)] // number
-		public short Number { get; internal set; }
-
-		[Column("int", 3)] // colid
-		public int ColumnID { get; internal set; }
-
-		[Column("sysname", 4, Nullable = true)] // name
-		public string Name { get; internal set; }
-
-		[Column("tinyint", 5)] // xtype
-		public byte XType { get; internal set; }
-
-		[Column("int", 6)] // utype
-		public int UType { get; internal set; }
-
-		[Column("smallint", 7)] // length
-		public short Length { get; internal set; }
-
-		[Column("tinyint", 8)] // prec
-		public byte Prec { get; internal set; }
-
-		[Column("tinyint", 9)]  // scale
-		public byte Scale { get; internal set; }
-		
-		[Column("int", 10)] // collationid
-		public int CollationID { get; internal set; }
-
-		[Column("int", 11)] // status
-		public int Status { get; internal set; }
-
-		[Column("smallint", 12)] // maxinrow
-		public short MaxInRow { get; internal set; }
-
-		[Column("int", 13)] // xmlns
-		public int XmlNS { get; internal set; }
-
-		[Column("int", 14)] // dflt
-		public int DFLT { get; internal set; }
-
-		[Column("int", 15)] // chk
-		public int CHK { get; internal set; }
-
-		[Column("varbinary", 16, Nullable = true)] // idtval
-		public byte[] IDTval { get; internal set; }
+		public int ObjectID { get { return Field<int>("id"); } }
+		public short Number { get { return Field<short>("number"); } }
+		public int ColumnID { get { return Field<int>("colid"); } }
+		public string Name { get { return Field<string>("name"); } }
+		public byte XType { get { return Field<byte>("xtype"); } }
+		public int UType { get { return Field<int>("utype"); } }
+		public short Length { get { return Field<short>("length"); } }
+		public byte Prec { get { return Field<byte>("prec"); } }
+		public byte Scale { get { return Field<byte>("scale"); } }
+		public int CollationID { get { return Field<int>("collationid"); } }
+		public int Status { get { return Field<int>("status"); } }
+		public short MaxInRow { get { return Field<short>("maxinrow"); } }
+		public int XmlNS { get { return Field<int>("xmlns"); } }
+		public int DFLT { get { return Field<int>("dflt"); } }
+		public int CHK { get { return Field<int>("chk"); } }
+		public byte[] IDTval { get { return Field<byte[]>("idtval"); } }
 	}
 }

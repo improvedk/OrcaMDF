@@ -2,46 +2,38 @@ using System;
 
 namespace OrcaMDF.Core.MetaData.SystemEntities
 {
-	public class SysScalarType
+	public class SysScalarType : DataRow
 	{
-		[Column("int", 1)]
-		public int ID { get; internal set; }
+		public SysScalarType()
+		{
+			Columns.Add(new DataColumn("id", "int"));
+			Columns.Add(new DataColumn("schid", "int"));
+			Columns.Add(new DataColumn("name", "sysname"));
+			Columns.Add(new DataColumn("xtype", "tinyint"));
+			Columns.Add(new DataColumn("length", "smallint"));
+			Columns.Add(new DataColumn("prec", "tinyint"));
+			Columns.Add(new DataColumn("scale", "tinyint"));
+			Columns.Add(new DataColumn("collationid", "int"));
+			Columns.Add(new DataColumn("status", "int"));
+			Columns.Add(new DataColumn("created", "datetime"));
+			Columns.Add(new DataColumn("modified", "datetime"));
+			Columns.Add(new DataColumn("dflt", "int"));
+			Columns.Add(new DataColumn("chk", "int"));
+		}
 
-		[Column("int", 2)]
-		public int SchemaID { get; internal set; }
-
-		[Column("sysname", 3)]
-		public string Name { get; internal set; }
-
-		[Column("tinyint", 4)]
-		public byte XType { get; internal set; }
-
-		[Column("smallint", 5)]
-		public short Length { get; internal set; }
-
-		[Column("tinyint", 6)]
-		public byte Precision { get; internal set; }
-
-		[Column("tinyint", 7)]
-		public byte Scale { get; internal set; }
-
-		[Column("int", 8)]
-		public int CollationID { get; internal set; }
-
-		[Column("int", 9)]
-		public int Status { get; internal set; }
-
-		[Column("datetime", 10)]
-		public DateTime Created { get; internal set; }
-
-		[Column("datetime", 11)]
-		public DateTime Modified { get; internal set; }
-
-		[Column("int", 12)]
-		public int Dflt { get; internal set; }
-
-		[Column("int", 13)]
-		public int Chk { get; internal set; }
+		public int ID { get { return Field<int>("id"); } }
+		public int SchemaID { get { return Field<int>("schid"); } }
+		public string Name { get { return Field<string>("name"); } }
+		public byte XType { get { return Field<byte>("xtype"); } }
+		public short Length { get { return Field<short>("length"); } }
+		public byte Precision { get { return Field<byte>("prec"); } }
+		public byte Scale { get { return Field<byte>("scale"); } }
+		public int CollationID { get { return Field<int>("collationid"); } }
+		public int Status { get { return Field<int>("status"); } }
+		public DateTime Created { get { return Field<DateTime>("created"); } }
+		public DateTime Modified { get { return Field<DateTime>("modified"); } }
+		public int Dflt { get { return Field<int>("dflt"); } }
+		public int Chk { get { return Field<int>("chk"); } }
 
 		public bool IsNullable
 		{

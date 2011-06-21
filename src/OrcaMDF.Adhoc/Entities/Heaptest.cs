@@ -2,15 +2,13 @@ using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Adhoc.Entities
 {
-	public class Heaptest
+	public class Heaptest : DataRow
 	{
-		[Column("int", 1)]
-		public int ID { get; set; }
-
-		[Column("varchar(8000)", 2)]
-		public string Filler { get; set; }
-
-		[Column("varchar(50)", 3)]
-		public string Name { get; set; }
+		public Heaptest()
+		{
+			Columns.Add(new DataColumn("ID", "int"));
+			Columns.Add(new DataColumn("Filler", "varchar(8000)", true));
+			Columns.Add(new DataColumn("Name", "varchar(max)", true));
+		}
 	}
 }

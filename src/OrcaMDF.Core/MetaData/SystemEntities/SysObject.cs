@@ -2,41 +2,35 @@ using System;
 
 namespace OrcaMDF.Core.MetaData.SystemEntities
 {
-	public class SysObject
+	public class SysObject : DataRow
 	{
-		[Column("int", 1)] // id
-		public int ObjectID { get; internal set; }
+		public SysObject()
+		{
+			Columns.Add(new DataColumn("id", "int"));
+			Columns.Add(new DataColumn("name", "sysname"));
+			Columns.Add(new DataColumn("nsid", "int"));
+			Columns.Add(new DataColumn("nsclass", "tinyint"));
+			Columns.Add(new DataColumn("status", "int"));
+			Columns.Add(new DataColumn("type", "char(2)"));
+			Columns.Add(new DataColumn("pid", "int"));
+			Columns.Add(new DataColumn("pclass", "tinyint"));
+			Columns.Add(new DataColumn("intprop", "int"));
+			Columns.Add(new DataColumn("created", "datetime"));
+			Columns.Add(new DataColumn("modified", "datetime"));
+		}
 
-		[Column("sysname", 2)] // name
-		public string Name { get; internal set; }
-
-		[Column("int", 3)] // nsid
-		public int NSID { get; internal set; }
-
-		[Column("tinyint", 4)] // nsclass
-		public byte NSClass { get; internal set; }
-
-		[Column("int", 4)] // status
-		public int Status { get; internal set; }
-
-		[Column("char(2)", 5)] // type
-		public string Type { get; internal set; }
-
-		[Column("int", 6)] // pid
-		public int PID { get; internal set; }
-
-		[Column("tinyint", 7)] // pclass
-		public byte PClass { get; internal set; }
-
-		[Column("int", 8)] // intprop
-		public int IntProp { get; internal set; }
-
-		[Column("datetime", 9)] // created
-		public DateTime Created { get; internal set; }
-
-		[Column("datetime", 10)] // modified
-		public DateTime Modified { get; internal set; }
-
+		public int ObjectID { get { return Field<int>("id"); } }
+		public string Name { get { return Field<string>("name"); } }
+		public int NSID { get { return Field<int>("nsid"); } }
+		public byte NSClass { get { return Field<byte>("nsclass"); } }
+		public int Status { get { return Field<int>("status"); } }
+		public string Type { get { return Field<string>("type"); } }
+		public int PID{ get { return Field<int>("pid"); } }
+		public byte PClass { get { return Field<byte>("pclass"); } }
+		public int IntProp { get { return Field<int>("intprop"); } }
+		public DateTime Created { get { return Field<DateTime>("created"); } }
+		public DateTime Modified { get { return Field<DateTime>("modified"); } }
+		
 		public override string ToString()
 		{
 			return Name + " (" + Type + ", " + ObjectID + ")";

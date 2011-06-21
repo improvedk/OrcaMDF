@@ -1,24 +1,27 @@
 using System;
-using System.Data;
 
 namespace OrcaMDF.Core.MetaData
 {
-	public class ColumnTypeDescription
+	public class DataColumn
 	{
-		public readonly ColumnType Type;
-		public readonly short? VariableFixedLength;
+		public short? MaxLength;
+		public short? VariableFixedLength;
+		public string Name;
+		public ColumnType Type;
+		public string TypeString;
+		public bool IsNullable;
 
-		public ColumnTypeDescription(DataColumn col)
-			: this(col.Caption, col, x => (short)((DataColumn)x).MaxLength)
+		public DataColumn(string name, string type)
+			: this(name, type, false)
 		{ }
 
-		public ColumnTypeDescription(string type)
-			: this(type.Split('(')[0], type, x => Convert.ToInt16(x.ToString().Split('(')[1].Split(')')[0]))
-		{ }
-
-		private ColumnTypeDescription(string type, object typeOrigin, Func<object, short> getColumnLength)
+		public DataColumn(string name, string type, bool nullable)
 		{
-			switch (type)
+			Name = name;
+			TypeString = type;
+			IsNullable = nullable;
+
+			switch (type.Split('(')[0])
 			{
 				case "bigint":
 					Type = ColumnType.BigInt;
@@ -26,7 +29,7 @@ namespace OrcaMDF.Core.MetaData
 
 				case "binary":
 					Type = ColumnType.Binary;
-					VariableFixedLength = getColumnLength(typeOrigin);
+					VariableFixedLength = Convert.ToInt16(type.Split('(')[1].Split(')')[0]);
 					break;
 
 				case "bit":
@@ -35,7 +38,7 @@ namespace OrcaMDF.Core.MetaData
 
 				case "char":
 					Type = ColumnType.Char;
-					VariableFixedLength = getColumnLength(typeOrigin);
+					VariableFixedLength = Convert.ToInt16(type.Split('(')[1].Split(')')[0]);
 					break;
 
 				case "datetime":
@@ -48,7 +51,7 @@ namespace OrcaMDF.Core.MetaData
 
 				case "ncar":
 					Type = ColumnType.NChar;
-					VariableFixedLength = getColumnLength(typeOrigin);
+					VariableFixedLength = Convert.ToInt16(type.Split('(')[1].Split(')')[0]);
 					break;
 
 				case "nvarchar":
@@ -79,7 +82,7 @@ namespace OrcaMDF.Core.MetaData
 
 		public override string ToString()
 		{
-			return Type + "(" + VariableFixedLength + ")";
+			return Name + " " + TypeString;
 		}
 	}
 }
