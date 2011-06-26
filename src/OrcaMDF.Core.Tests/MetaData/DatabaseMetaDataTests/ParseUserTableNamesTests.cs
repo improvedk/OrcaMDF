@@ -4,7 +4,7 @@ using OrcaMDF.Core.Engine;
 
 namespace OrcaMDF.Core.Tests.MetaData.DatabaseMetaDataTests
 {
-	public class ParseUserTableNamesTest : SqlServerSystemTest
+	public class ParseUserTableNamesTests : SqlServerSystemTest
 	{
 		[Test]
 		public void ParseTableNames()

@@ -62,6 +62,7 @@
     <Compile Include="MetaData\Enumerations\ObjectType.cs" />
     <Compile Include="MetaData\DataRow.cs" />
     <Compile Include="MetaData\DataColumn.cs" />
+    <Compile Include="MetaData\Enumerations\ReservedIndexID.cs" />
     <Compile Include="MetaData\SystemEntities\SysAllocationUnit.cs" />
     <Compile Include="Engine\MdfFile.cs" />
     <Compile Include="Engine\PagePointer.cs" />

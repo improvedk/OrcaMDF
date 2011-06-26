@@ -46,5 +46,10 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 		public byte[] FilestreamGUID { get { return Field<byte[]>("rsguid"); } }
 		public byte[] LockRes { get { return Field<byte[]>("lockres"); } }
 		public int DBFragID { get { return Field<int>("dbfragid"); } }
+
+		public override string ToString()
+		{
+			return "{rowsetid: " + PartitionID + ", idmajor: " + ObjectID + ", idminor: " + IndexID + "}";
+		}
 	}
 }

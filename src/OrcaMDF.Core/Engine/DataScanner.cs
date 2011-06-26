@@ -31,10 +31,11 @@ namespace OrcaMDF.Core.Engine
 			if (tableObject == null)
 				throw new ArgumentException("Table does not exist.");
 
-			// Get rowset
+			// Get rowset, prefer clustered index if exists
 			var tableRowset = metaData.SysRowsets
-				.Where(x => x.ObjectID == tableObject.ObjectID)
-				.SingleOrDefault();
+				.Where(x => x.ObjectID == tableObject.ObjectID && x.IndexID <= 1)
+				.OrderByDescending(x => x.IndexID)
+				.FirstOrDefault();
 			if (tableRowset == null)
 				throw new ArgumentException("Table has no rowsets.");
 
@@ -45,7 +46,10 @@ namespace OrcaMDF.Core.Engine
 			if (allocUnit == null)
 				throw new ArgumentException("Table has no allocation unit.");
 
-			return ScanHeap<T>(allocUnit.FirstIamPage);
+			if (tableRowset.IndexID == ReservedIndexID.Heap)
+				return ScanHeap<T>(allocUnit.FirstIamPage);
+			else
+				return ScanLinkedPages<T>(allocUnit.FirstPage);
 		}
 
 		/// <summary>
