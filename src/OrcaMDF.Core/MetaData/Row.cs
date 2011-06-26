@@ -22,6 +22,11 @@ namespace OrcaMDF.Core.MetaData
 			data = new Dictionary<string, object>();
 		}
 
+		public T Field<T>(DataColumn col)
+		{
+			return Field<T>(col.Name);
+		}
+
 		public T Field<T>(string name)
 		{
 			return (T)Convert.ChangeType(data[name], typeof(T));

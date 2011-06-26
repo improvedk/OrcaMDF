@@ -52,13 +52,23 @@ namespace OrcaMDF.Core.MetaData
 			if (sysobject == null)
 				throw new ArgumentException("Table " + tableName + " does not exist.");
 
+			// Get index
+			var clusteredIndex = SysIndexStats
+				.Where(x => x.ObjectID == sysobject.ObjectID && x.IndexID == 1)
+				.OrderByDescending(x => x.IndexID)
+				.SingleOrDefault();
+			
 			// Get columns
 			var syscols = SysRowsetColumns
 				.Where(x => x.ObjectID == sysobject.ObjectID);
 
 			// Create table and add columns
 			var dataRow = new DataRow();
-			
+
+			// If it's a non unique clustered index, add uniquifier column
+			if (clusteredIndex != null && !clusteredIndex.IsUnique)
+				dataRow.Columns.Add(DataColumn.Uniquifier);
+
 			foreach(var col in syscols)
 			{
 				var sqlType = SysScalarTypes.Where(x => x.ID == col.XType).Single();

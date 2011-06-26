@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Data.SqlClient;
 using System.Linq;
-using System.Data.SqlClient;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.MetaData;
@@ -35,11 +34,11 @@ namespace OrcaMDF.Core.Tests.Engine
 
 				Assert.AreEqual(112, rows[0].Field<int>("Num1"));
 				Assert.AreEqual("Doe", rows[0].Field<string>("Name"));
-				//Assert.AreEqual(0, BitConverter.ToInt32(rows[0].Field<byte[]>("Uniquifier"), 0));
+				Assert.AreEqual(0, rows[0].Field<int>(DataColumn.Uniquifier));
 				
 				Assert.AreEqual(112, rows[1].Field<int>("Num1"));
 				Assert.AreEqual("Doe", rows[1].Field<string>("Name"));
-				Assert.AreEqual(1, BitConverter.ToInt32(rows[1].Field<byte[]>("Uniquifier"), 0));
+				Assert.AreEqual(1, rows[1].Field<int>(DataColumn.Uniquifier));
 			}
 		}
 

@@ -53,6 +53,7 @@
     <Compile Include="Engine\SqlTypes\SqlDate.cs" />
     <Compile Include="Engine\SqlTypes\SqlSmallDateTime.cs" />
     <Compile Include="Engine\SqlTypes\SqlTime.cs" />
+    <Compile Include="Engine\SqlTypes\SqlUniquifier.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
     <Compile Include="MetaData\Row.cs" />
     <Compile Include="MetaData\ClusteredIndexDataRow.cs" />

@@ -67,6 +67,10 @@ namespace OrcaMDF.Core.MetaData
 					Type = ColumnType.TinyInt;
 					break;
 
+				case "uniquifier":
+					Type = ColumnType.Uniquifier;
+					break;
+
 				case "varbinary":
 					Type = ColumnType.VarBinary;
 					break;
@@ -78,6 +82,14 @@ namespace OrcaMDF.Core.MetaData
 				default:
 					throw new ArgumentException("Unsupported type: " + type);
 			}
+		}
+
+		/// <summary>
+		/// Standard DataColumn to be used for uniquifier column
+		/// </summary>
+		public static DataColumn Uniquifier
+		{
+			get { return new DataColumn("___Uniquifier", "uniquifier"); }
 		}
 
 		public override string ToString()
