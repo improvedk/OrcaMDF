@@ -15,6 +15,18 @@ namespace OrcaMDF.Core.MetaData
 		public IList<SysRowsetColumn> SysRowsetColumns { get; internal set; }
 		public IList<SysScalarType> SysScalarTypes { get; internal set; }
 
+		private IList<SysIndexStat> sysIndexStats;
+		public IList<SysIndexStat> SysIndexStats
+		{
+			get
+			{
+				if (sysIndexStats == null)
+					parseSysIndexStats();
+
+				return sysIndexStats;
+			}
+		}
+
 		private readonly MdfFile file;
 		private readonly DataScanner scanner;
 
@@ -127,10 +139,15 @@ namespace OrcaMDF.Core.MetaData
 			SysRowsetColumns = scanner.ScanLinkedDataPages<SysRowsetColumn>(pageLoc).ToList();
 		}
 
+		private void parseSysIndexStats()
+		{
+			sysIndexStats = scanner.ScanTable<SysIndexStat>("sysidxstats").ToList();
+		}
+
 		private void parseSysRowsets()
 		{
 			var pageLoc = SysAllocationUnits
-				.Where(x => x.AllocationUnitID == (long) FixedSystemObjectAllocationUnits.sysrowsets)
+				.Where(x => x.AllocationUnitID == FixedSystemObjectAllocationUnits.sysrowsets)
 				.Single()
 				.FirstPage;
 

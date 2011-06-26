@@ -20,7 +20,7 @@ namespace OrcaMDF.Core.MetaData.Enumerations
 		sysxprops			= 49,
 		sysscalartypes		= 50,
 		systypedsubobjs		= 51,
-		sysidxstats			= 54,
+		sysidxstats			= 54,	// Parsed
 		sysiscols			= 55,
 		sysbinobjs			= 58,
 		sysaudacts			= 59,

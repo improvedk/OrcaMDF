@@ -81,6 +81,7 @@
     <Compile Include="Engine\Pages\RecordPage.cs" />
     <Compile Include="Engine\Pages\SgamPage.cs" />
     <Compile Include="Engine\Pages\TextMixPage.cs" />
+    <Compile Include="MetaData\SystemEntities\SysIndexStat.cs" />
     <Compile Include="MetaData\SystemEntities\SysObject.cs" />
     <Compile Include="MetaData\SystemEntities\SysRowset.cs" />
     <Compile Include="MetaData\SystemEntities\SysRowsetColumn.cs" />
