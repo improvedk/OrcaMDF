@@ -2,7 +2,7 @@ using System;
 
 namespace OrcaMDF.Core.MetaData.SystemEntities
 {
-	public class SysObject : DataRow
+	public class SysObject : Row
 	{
 		public SysObject()
 		{
@@ -17,6 +17,11 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 			Columns.Add(new DataColumn("intprop", "int"));
 			Columns.Add(new DataColumn("created", "datetime"));
 			Columns.Add(new DataColumn("modified", "datetime"));
+		}
+
+		public override Row NewRow()
+		{
+			return new SysObject();
 		}
 
 		public int ObjectID { get { return Field<int>("id"); } }

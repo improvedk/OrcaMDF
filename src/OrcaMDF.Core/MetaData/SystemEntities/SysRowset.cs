@@ -4,7 +4,7 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 	/// Matches sys.sysrowsets
 	/// Column names inspired by http://www.g-productions.nl/index.php?name=system_internals_partitions&version=2008SP2
 	/// </summary>
-	public class SysRowset : DataRow
+	public class SysRowset : Row
 	{
 		public SysRowset()
 		{
@@ -26,6 +26,11 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 			Columns.Add(new DataColumn("rsguid", "varbinary", true));
 			Columns.Add(new DataColumn("lockres", "varbinary", true));
 			Columns.Add(new DataColumn("dbfragid", "int"));
+		}
+
+		public override Row NewRow()
+		{
+			return new SysRowset();
 		}
 
 		public long PartitionID { get { return Field<long>("rowsetid"); } }

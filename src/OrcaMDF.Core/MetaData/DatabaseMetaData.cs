@@ -30,7 +30,7 @@ namespace OrcaMDF.Core.MetaData
 			parseSysScalarTypes();
 		}
 
-		public DataRow GetEmptyDataRowByName(string tableName)
+		public DataRow GetEmptyDataRowByTableName(string tableName)
 		{
 			// Get table
 			var sysobject = SysObjects
@@ -94,7 +94,7 @@ namespace OrcaMDF.Core.MetaData
 				.Single()
 				.FirstPage;
 
-			SysObjects = scanner.ScanLinkedPages<SysObject>(pageLoc).ToList();
+			SysObjects = scanner.ScanLinkedDataPages<SysObject>(pageLoc).ToList();
 		}
 
 		private void parseSysScalarTypes()
@@ -109,7 +109,7 @@ namespace OrcaMDF.Core.MetaData
 				.Single()
 				.FirstPage;
 
-			SysScalarTypes = scanner.ScanLinkedPages<SysScalarType>(pageLoc).ToList();
+			SysScalarTypes = scanner.ScanLinkedDataPages<SysScalarType>(pageLoc).ToList();
 		}
 
 		private void parseSysRowsetColumns()
@@ -124,7 +124,7 @@ namespace OrcaMDF.Core.MetaData
 				.Single()
 				.FirstPage;
 
-			SysRowsetColumns = scanner.ScanLinkedPages<SysRowsetColumn>(pageLoc).ToList();
+			SysRowsetColumns = scanner.ScanLinkedDataPages<SysRowsetColumn>(pageLoc).ToList();
 		}
 
 		private void parseSysRowsets()
@@ -134,13 +134,14 @@ namespace OrcaMDF.Core.MetaData
 				.Single()
 				.FirstPage;
 
-			SysRowsets = scanner.ScanLinkedPages<SysRowset>(pageLoc).ToList();
+			SysRowsets = scanner.ScanLinkedDataPages<SysRowset>(pageLoc).ToList();
 		}
 
 		private void parseSysAllocationUnits()
 		{
+			// Though this has a fixed first-page location at (1:16) we'll read it from the boot page to be sure
 			var bootPage = file.GetBootPage();
-			SysAllocationUnits = scanner.ScanLinkedPages<SysAllocationUnit>(bootPage.FirstSysIndexes).ToList();
+			SysAllocationUnits = scanner.ScanLinkedDataPages<SysAllocationUnit>(bootPage.FirstSysIndexes).ToList();
 		}
 	}
 }

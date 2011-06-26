@@ -54,6 +54,7 @@
     <Compile Include="Engine\SqlTypes\SqlSmallDateTime.cs" />
     <Compile Include="Engine\SqlTypes\SqlTime.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
+    <Compile Include="MetaData\Row.cs" />
     <Compile Include="MetaData\ClusteredIndexDataRow.cs" />
     <Compile Include="MetaData\ClusteredIndexEntity.cs" />
     <Compile Include="MetaData\ColumnType.cs" />

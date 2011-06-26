@@ -3,7 +3,7 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 	/// <summary>
 	/// Matches sys.syscolpars
 	/// </summary>
-	public class SysRowsetColumn : DataRow
+	public class SysRowsetColumn : Row
 	{
 		public SysRowsetColumn()
 		{
@@ -23,6 +23,11 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 			Columns.Add(new DataColumn("dflt", "int"));
 			Columns.Add(new DataColumn("chk", "int"));
 			Columns.Add(new DataColumn("idtval", "varbinary", true));
+		}
+
+		public override Row NewRow()
+		{
+			return new SysRowsetColumn();
 		}
 
 		public int ObjectID { get { return Field<int>("id"); } }

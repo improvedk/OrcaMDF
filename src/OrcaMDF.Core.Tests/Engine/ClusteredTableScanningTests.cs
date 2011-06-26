@@ -15,7 +15,7 @@ namespace OrcaMDF.Core.Tests.Engine
 			using (var mdf = new MdfFile(MdfPath))
 			{
 				var scanner = new DataScanner(mdf);
-				var rows = scanner.ScanTable<UniqueClusteredTableRow>("UniqueClusteredTable").ToList();
+				var rows = scanner.ScanTable("UniqueClusteredTable").ToList();
 
 				Assert.AreEqual(112, rows[0].Field<int>("Num1"));
 				Assert.AreEqual("Doe", rows[0].Field<string>("Name"));
@@ -24,23 +24,14 @@ namespace OrcaMDF.Core.Tests.Engine
 				Assert.AreEqual("John", rows[1].Field<string>("Name"));
 			}
 		}
-
-		private class UniqueClusteredTableRow : DataRow
-		{
-			public UniqueClusteredTableRow()
-			{
-				Columns.Add(new DataColumn("Num1", "int"));
-				Columns.Add(new DataColumn("Name", "nvarchar(30)"));
-			}
-		}
-
+		
 		[Test]
 		public void ScanNonUniqueClusteredTable()
 		{
 			using (var mdf = new MdfFile(MdfPath))
 			{
 				var scanner = new DataScanner(mdf);
-				var rows = scanner.ScanTable<NonUniqueClusteredTableRow>("NonUniqueClusteredTable").ToList();
+				var rows = scanner.ScanTable("NonUniqueClusteredTable").ToList();
 
 				Assert.AreEqual(112, rows[0].Field<int>("Num1"));
 				Assert.AreEqual("Doe", rows[0].Field<string>("Name"));
@@ -49,16 +40,6 @@ namespace OrcaMDF.Core.Tests.Engine
 				Assert.AreEqual(112, rows[1].Field<int>("Num1"));
 				Assert.AreEqual("Doe", rows[1].Field<string>("Name"));
 				Assert.AreEqual(1, BitConverter.ToInt32(rows[1].Field<byte[]>("Uniquifier"), 0));
-			}
-		}
-
-		private class NonUniqueClusteredTableRow : DataRow
-		{
-			public NonUniqueClusteredTableRow()
-			{
-				Columns.Add(new DataColumn("Num1", "int"));
-				Columns.Add(new DataColumn("Uniquifier", "varbinary(4)"));
-				Columns.Add(new DataColumn("Name", "nvarchar(30)"));
 			}
 		}
 

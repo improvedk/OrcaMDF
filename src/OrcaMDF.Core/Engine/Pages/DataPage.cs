@@ -12,7 +12,7 @@ namespace OrcaMDF.Core.Engine.Pages
 			: base(bytes, file)
 		{ }
 
-		public IEnumerable<T> GetEntities<T>() where T : DataRow, new()
+		public IEnumerable<Row> GetEntities(Row schema)
 		{
 			for (int i = 0; i < Records.Length; i++)
 			{
@@ -26,7 +26,7 @@ namespace OrcaMDF.Core.Engine.Pages
 				short variableColumnIndex = 0;
 				int columnIndex = 0;
 				var readState = new RecordReadState();
-				var dataRow = new T();
+				var dataRow = schema.NewRow();
 
 				foreach (DataColumn col in dataRow.Columns)
 				{

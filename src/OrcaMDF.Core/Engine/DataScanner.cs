@@ -15,10 +15,23 @@ namespace OrcaMDF.Core.Engine
 			this.file = file;
 		}
 
-		/// <summary>
-		/// Scans a table using it's name as origin.
-		/// </summary>
-		public IEnumerable<T> ScanTable<T>(string tableName) where T : DataRow, new()
+		public IEnumerable<TDataRow> ScanTable<TDataRow>(string tableName) where TDataRow : Row, new()
+		{
+			var schema = new TDataRow();
+
+			return scanTable(tableName, schema).Cast<TDataRow>();
+		}
+
+		public IEnumerable<Row> ScanTable(string tableName)
+		{
+			var metaData = file.GetMetaData();
+
+			var schema = metaData.GetEmptyDataRowByTableName(tableName);
+
+			return scanTable(tableName, schema);
+		}
+
+		private IEnumerable<Row> scanTable(string tableName, Row schema)
 		{
 			var metaData = file.GetMetaData();
 
@@ -44,18 +57,18 @@ namespace OrcaMDF.Core.Engine
 				.SingleOrDefault();
 			if (allocUnit == null)
 				throw new ArgumentException("Table has no allocation unit.");
-
+			
 			// Either scan heap or linked list of pages, depending on index type
 			if (tableRowset.IndexID == ReservedIndexID.Heap)
-				return ScanHeap<T>(allocUnit.FirstIamPage);
+				return ScanHeap(allocUnit.FirstIamPage, schema);
 			else
-				return ScanLinkedPages<T>(allocUnit.FirstPage);
+				return ScanLinkedDataPages(allocUnit.FirstPage, schema);
 		}
 
 		/// <summary>
 		/// Scans a heap beginning from the provided IAM page and onwards.
 		/// </summary>
-		public IEnumerable<T> ScanHeap<T>(PagePointer loc) where T : DataRow, new()
+		public IEnumerable<Row> ScanHeap(PagePointer loc, Row schema)
 		{
 			while (loc != PagePointer.Zero)
 			{
@@ -75,7 +88,7 @@ namespace OrcaMDF.Core.Engine
 				               	};
 
 				foreach (var slot in iamPageSlots)
-					foreach (var dr in scanIamSlotPage<T>(slot))
+					foreach (var dr in scanIamSlotPage(slot, schema))
 						yield return dr;
 
 				// Then loop through extents and yield results
@@ -84,7 +97,7 @@ namespace OrcaMDF.Core.Engine
 					{
 						var dataPage = file.GetDataPage(pageLoc);
 
-						foreach (var dr in dataPage.GetEntities<T>())
+						foreach (var dr in dataPage.GetEntities(schema))
 							yield return dr;
 					}
 
@@ -92,13 +105,13 @@ namespace OrcaMDF.Core.Engine
 			}
 		}
 
-		private IEnumerable<T> scanIamSlotPage<T>(PagePointer loc) where T : DataRow, new()
+		private IEnumerable<Row> scanIamSlotPage(PagePointer loc, Row schema)
 		{
 			if (loc != PagePointer.Zero)
 			{
 				var dataPage = file.GetDataPage(loc);
 
-				foreach(var dr in dataPage.GetEntities<T>())
+				foreach(var dr in dataPage.GetEntities(schema))
 					yield return dr;
 			}
 		}
@@ -106,7 +119,7 @@ namespace OrcaMDF.Core.Engine
 		/// <summary>
 		/// Starts at the clustered index page (loc) and follows the b-tree structure till the first datapage, from where it'll do a linked page scan.
 		/// </summary>
-		public IEnumerable<TDataRow> ScanClusteredIndex<TIndexRow, TDataRow>(PagePointer loc) where TIndexRow : ClusteredTableIndexRow, new() where TDataRow : DataRow, new()
+		public IEnumerable<Row> ScanClusteredIndex<TIndexRow>(PagePointer loc, Row dataSchema) where TIndexRow : ClusteredTableIndexRow, new()
 		{
 			var page = file.GetClusteredIndexPage(loc);
 			var indexRecord = page.GetEntities<TIndexRow>().FirstOrDefault();
@@ -116,28 +129,33 @@ namespace OrcaMDF.Core.Engine
 				if(page.Header.Level > 1)
 				{
 					// Index level > 1 means next level is index as well. Follow chain.
-					foreach(var entity in ScanClusteredIndex<TIndexRow, TDataRow>(indexRecord.PagePointer))
+					foreach(var entity in ScanClusteredIndex<TIndexRow>(indexRecord.PagePointer, dataSchema))
 						yield return entity;
 				}
 				else
 				{
 					// Index level == 1 means next level is leaf - scan linked data pages.
-					foreach(var entity in ScanLinkedPages<TDataRow>(indexRecord.PagePointer))
+					foreach(var entity in ScanLinkedDataPages(indexRecord.PagePointer, dataSchema))
 						yield return entity;
 				}
 			}
 		}
 
+		public IEnumerable<TDataRow> ScanLinkedDataPages<TDataRow>(PagePointer loc) where TDataRow : Row, new()
+		{
+			return ScanLinkedDataPages(loc, new TDataRow()).Cast<TDataRow>();
+		}
+
 		/// <summary>
 		/// Starts at the data page (loc) and follows the NextPage pointer chain till the end.
 		/// </summary>
-		public IEnumerable<T> ScanLinkedPages<T>(PagePointer loc) where T : DataRow, new()
+		public IEnumerable<Row> ScanLinkedDataPages(PagePointer loc, Row schema)
 		{
 			while (loc != PagePointer.Zero)
 			{
 				var page = file.GetDataPage(loc);
 
-				foreach (var dr in page.GetEntities<T>())
+				foreach (var dr in page.GetEntities(schema))
 					yield return dr;
 				
 				loc = page.Header.NextPage;

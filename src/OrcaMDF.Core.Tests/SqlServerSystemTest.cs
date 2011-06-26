@@ -52,7 +52,7 @@ namespace OrcaMDF.Core.Tests
 				}
 
 				cmd.CommandText = replaceDBParameters(@"
-					ALTER DATABASE [<DBNAME>] SET SINGLE_USER WITH NO_WAIT;
+					ALTER DATABASE [<DBNAME>] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 					EXEC master.dbo.sp_detach_db @dbname = N'<DBNAME>'");
 				cmd.ExecuteNonQuery();
 			}

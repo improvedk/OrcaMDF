@@ -1,8 +1,9 @@
+using System;
 using OrcaMDF.Core.Engine;
 
 namespace OrcaMDF.Core.MetaData.SystemEntities
 {
-	public class SysAllocationUnit : DataRow
+	public class SysAllocationUnit : Row
 	{
 		public SysAllocationUnit()
 		{
@@ -20,6 +21,11 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 			Columns.Add(new DataColumn("dbfragid", "int"));
 		}
 
+		public override Row NewRow()
+		{
+			return new SysAllocationUnit();
+		}
+		
 		public long AllocationUnitID { get { return Field<long>("auid"); } }
 		public byte Type { get { return Field<byte>("type"); } }
 		public long ContainerID { get { return Field<long>("ownerid"); } }

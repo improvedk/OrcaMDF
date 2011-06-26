@@ -1,38 +1,19 @@
-using System;
 using System.Collections.Generic;
 
 namespace OrcaMDF.Core.MetaData
 {
-	/// <summary>
-	/// Most inefficient to store schema with each and every row. Simplicity wins over efficiency for now. Can be optimized later.
-	/// </summary>
-	public class DataRow
+	public class DataRow : Row
 	{
-		public IList<DataColumn> Columns { get; private set; }
-
-		protected IDictionary<string, object> data;
+		protected DataRow(IList<DataColumn> columns)
+			: base(columns)
+		{ }
 
 		public DataRow()
-		{
-			Columns = new List<DataColumn>();
-			data = new Dictionary<string, object>();
-		}
+		{ }
 
-		public T Field<T>(string name)
+		public override Row NewRow()
 		{
-			return (T)Convert.ChangeType(data[name], typeof(T));
-		}
-
-		public object this[string name]
-		{
-			get { return data[name]; }
-			set { data[name] = value; }
-		}
-
-		public object this[DataColumn col]
-		{
-			get { return data[col.Name]; }
-			set { data[col.Name] = value; }
+			return new DataRow(Columns);
 		}
 	}
 }
