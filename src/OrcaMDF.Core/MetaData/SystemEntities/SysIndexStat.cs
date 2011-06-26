@@ -1,3 +1,5 @@
+using System;
+
 namespace OrcaMDF.Core.MetaData.SystemEntities
 {
 	public class SysIndexStat : Row
@@ -30,8 +32,20 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 		public short FillFactor { get { return Field<short>("fillfact"); } }
 		public short Type { get { return Field<short>("type"); } }
 		public short TinyProp { get { return Field<short>("tinyprop"); } }
-		public int Dataspace { get { return Field<int>("dataspace"); } }
+		public int DataSpaceID { get { return Field<int>("dataspace"); } }
 		public int LobDS { get { return Field<int>("lobds"); } }
 		public long Rowset { get { return Field<long>("rowset"); } }
+
+		// Calculated fields
+		public bool IsUnique { get { return Convert.ToBoolean(Status & 0x8); } }
+		public bool IgnoreDuplicateKey { get { return Convert.ToBoolean(Status & 0x4); } }
+		public bool IsPrimaryKey { get { return Convert.ToBoolean(Status & 0x20); } }
+		public bool IsUniqueConstraint { get { return Convert.ToBoolean(Status & 0x40); } }
+		public bool IsPadded { get { return Convert.ToBoolean(Status & 0x10); } }
+		public bool IsDisabled { get { return Convert.ToBoolean(Status & 0x80); } }
+		public bool IsHypotehtical { get { return Convert.ToBoolean(Status & 0x100); } }
+		public bool AllowRowLocks { get { return Convert.ToBoolean(1 - (Status & 512) / 512); } }
+		public bool AllowPageLocks { get { return Convert.ToBoolean(1 - (Status & 1024) / 1024); } }
+		public bool HasFilter { get { return Convert.ToBoolean(Status & 0x20000); } }
 	}
 }
