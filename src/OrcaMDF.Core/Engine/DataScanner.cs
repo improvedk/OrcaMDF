@@ -17,7 +17,6 @@ namespace OrcaMDF.Core.Engine
 
 		/// <summary>
 		/// Scans a table using it's name as origin.
-		/// TODO: Detect if table has clustered index and scan accordingly. Only supports heaps for now.
 		/// </summary>
 		public IEnumerable<T> ScanTable<T>(string tableName) where T : DataRow, new()
 		{
@@ -46,6 +45,7 @@ namespace OrcaMDF.Core.Engine
 			if (allocUnit == null)
 				throw new ArgumentException("Table has no allocation unit.");
 
+			// Either scan heap or linked list of pages, depending on index type
 			if (tableRowset.IndexID == ReservedIndexID.Heap)
 				return ScanHeap<T>(allocUnit.FirstIamPage);
 			else

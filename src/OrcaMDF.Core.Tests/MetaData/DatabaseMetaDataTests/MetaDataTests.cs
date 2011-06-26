@@ -4,10 +4,10 @@ using OrcaMDF.Core.Engine;
 
 namespace OrcaMDF.Core.Tests.MetaData.DatabaseMetaDataTests
 {
-	public class ParseUserTableNamesTests : SqlServerSystemTest
+	public class MetaDataTests : SqlServerSystemTest
 	{
 		[Test]
-		public void ParseTableNames()
+		public void ParseUserTableNames()
 		{
 			using(var mdf = new MdfFile(MdfPath))
 			{
