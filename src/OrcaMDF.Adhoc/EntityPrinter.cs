@@ -7,7 +7,7 @@ namespace OrcaMDF.Adhoc
 {
 	class EntityPrinter
 	{
-		public static void Print<T>(IEnumerable<T> input) where T : DataRow, new()
+		public static void Print(IEnumerable<Row> input)
 		{
 			var propLengths = new Dictionary<string, int>();
 			var entities = input.ToList();
@@ -22,10 +22,7 @@ namespace OrcaMDF.Adhoc
 			propLengths.Add("#", 8);
 			Console.Write("#".PadRight(propLengths["#"]));
 
-			// Get schema row
-			var dr = new T();
-
-			foreach (var col in dr.Columns)
+			foreach (var col in input.First().Columns)
 			{
 				int maxPropValueLength = entities.Max(x => Math.Max(x[col].ToString().Length, 6));
 
