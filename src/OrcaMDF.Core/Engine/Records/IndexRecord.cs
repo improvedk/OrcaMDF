@@ -39,7 +39,7 @@ namespace OrcaMDF.Core.Engine.Records
 			// Bit 5 determines whether there are variable length columns
 			HasVariableLengthColumns = bits[5];
 
-			// Bits 6-7 assumed not to be in use
+			// Bits 6-7 not used
 		}
 	}
 }

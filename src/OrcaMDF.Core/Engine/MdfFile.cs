@@ -56,17 +56,12 @@ namespace OrcaMDF.Core.Engine
 			{
 				lock (metaDataLock)
 				{
-					parseMetaData();
+					if (metaData == null)
+						metaData = new DatabaseMetaData(this);
 				}
 			}
 
 			return metaData;
-		}
-
-		private void parseMetaData()
-		{
-			if(metaData == null)
-				metaData = new DatabaseMetaData(this);
 		}
 
 		public Page GetPage(PagePointer loc)
@@ -76,6 +71,15 @@ namespace OrcaMDF.Core.Engine
 			// TODO: Ensure loc.FileID matches
 
 			return new Page(getPageBytes(loc.PageID), this);
+		}
+
+		public NonclusteredIndexPage GetNonclusteredIndexPage(PagePointer loc)
+		{
+			Debug.WriteLine("Loading Nonclustered Index Page " + loc);
+
+			// TODO: Ensure loc.FileID matches
+
+			return new NonclusteredIndexPage(getPageBytes(loc.PageID), this);
 		}
 
 		public ClusteredIndexPage GetClusteredIndexPage(PagePointer loc)

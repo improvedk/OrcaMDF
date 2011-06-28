@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.MetaData.Enumerations;
+using OrcaMDF.Core.MetaData.Exceptions;
 using OrcaMDF.Core.MetaData.SystemEntities;
 
 namespace OrcaMDF.Core.MetaData
@@ -27,6 +28,18 @@ namespace OrcaMDF.Core.MetaData
 			}
 		}
 
+		private IList<SysIsCol> sysIsCols;
+		public IList<SysIsCol> SysIsCols
+		{
+			get
+			{
+				if (sysIsCols == null)
+					parseSysIsCols();
+
+				return sysIsCols;
+			}
+		}
+
 		private readonly MdfFile file;
 		private readonly DataScanner scanner;
 
@@ -42,25 +55,75 @@ namespace OrcaMDF.Core.MetaData
 			parseSysScalarTypes();
 		}
 
-		public DataRow GetEmptyDataRowByTableName(string tableName)
+		public DataRow GetEmptyIndexRow(string tableName, string indexName)
 		{
 			// Get table
-			var sysobject = SysObjects
+			var table = SysObjects
 				.Where(x => x.Name == tableName && (x.Type == "U " || x.Type == "S "))
 				.SingleOrDefault();
 
-			if (sysobject == null)
-				throw new ArgumentException("Table " + tableName + " does not exist.");
+			if (table == null)
+				throw new UnknownTableException(tableName);
+
+			// Get index
+			var index = SysIndexStats
+				.Where(x => x.ObjectID == table.ObjectID && x.Name == indexName)
+				.SingleOrDefault();
+
+			if (index == null)
+				throw new UnknownIndexException(tableName, indexName);
+
+			if (index.IndexID == 0)
+				throw new ArgumentException("Can't create DataRow for heaps.");
+
+			// Get index columns
+			var columns = SysIsCols
+				.Join(SysRowsetColumns, x => new { x.ColumnID, x.ObjectID }, y => new { y.ColumnID, y.ObjectID }, (x, y) => new { x.ObjectID, x.IndexID, x.KeyOrdinal, Included = x.IsIncluded, y.XType, y.Name, y.Length })
+				.Where(x => x.ObjectID == table.ObjectID && x.IndexID == index.IndexID)
+				.OrderBy(x => x.KeyOrdinal);
+
+			if (columns.Count() == 0)
+				throw new Exception("No columns found for index '" + indexName + "'");
+
+			// Depending on index type, add required pointer
+			var dataRow = new DataRow();
+
+			// TODO: If table is heap and index is nonclustered - add RID pointer to dataRow
+
+			// Add columns as specified in sysiscols
+			foreach(var col in columns)
+			{
+				var sqlType = SysScalarTypes.Where(x => x.ID == col.XType).Single();
+
+				var dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Length + ")");
+				dc.IsNullable = sqlType.IsNullable;
+				dc.IsIncluded = col.Included;
+
+				dataRow.Columns.Add(dc);
+			}
+
+			return dataRow;
+		}
+
+		public DataRow GetEmptyDataRow(string tableName)
+		{
+			// Get table
+			var table = SysObjects
+				.Where(x => x.Name == tableName && (x.Type == "U " || x.Type == "S "))
+				.SingleOrDefault();
+
+			if (table == null)
+				throw new UnknownTableException(tableName);
 
 			// Get index
 			var clusteredIndex = SysIndexStats
-				.Where(x => x.ObjectID == sysobject.ObjectID && x.IndexID == 1)
+				.Where(x => x.ObjectID == table.ObjectID && x.IndexID == 1)
 				.OrderByDescending(x => x.IndexID)
 				.SingleOrDefault();
 			
 			// Get columns
 			var syscols = SysRowsetColumns
-				.Where(x => x.ObjectID == sysobject.ObjectID);
+				.Where(x => x.ObjectID == table.ObjectID);
 
 			// Create table and add columns
 			var dataRow = new DataRow();
@@ -152,6 +215,11 @@ namespace OrcaMDF.Core.MetaData
 		private void parseSysIndexStats()
 		{
 			sysIndexStats = scanner.ScanTable<SysIndexStat>("sysidxstats").ToList();
+		}
+
+		private void parseSysIsCols()
+		{
+			sysIsCols = scanner.ScanTable<SysIsCol>("sysiscols").ToList();
 		}
 
 		private void parseSysRowsets()

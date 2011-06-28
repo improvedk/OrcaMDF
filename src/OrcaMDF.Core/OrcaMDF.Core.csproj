@@ -44,17 +44,23 @@
   <ItemGroup>
     <Compile Include="Engine\DataScanner.cs" />
     <Compile Include="Engine\ExtentPointer.cs" />
+    <Compile Include="Engine\IndexScanner.cs" />
     <Compile Include="Engine\Pages\ClusteredIndexPage.cs" />
     <Compile Include="Engine\Pages\IndexRecordPage.cs" />
+    <Compile Include="Engine\Pages\NonclusteredIndexPage.cs" />
     <Compile Include="Engine\Pages\PrimaryRecordPage.cs" />
     <Compile Include="Engine\Records\IndexRecord.cs" />
     <Compile Include="Engine\Records\PrimaryRecord.cs" />
     <Compile Include="Engine\Records\RecordReadState.cs" />
+    <Compile Include="Engine\Scanner.cs" />
     <Compile Include="Engine\SqlTypes\SqlDate.cs" />
     <Compile Include="Engine\SqlTypes\SqlSmallDateTime.cs" />
     <Compile Include="Engine\SqlTypes\SqlTime.cs" />
     <Compile Include="Engine\SqlTypes\SqlUniquifier.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
+    <Compile Include="MetaData\Enumerations\IndexType.cs" />
+    <Compile Include="MetaData\Exceptions\UnknownIndexException.cs" />
+    <Compile Include="MetaData\Exceptions\UnknownTableException.cs" />
     <Compile Include="MetaData\Row.cs" />
     <Compile Include="MetaData\ClusteredIndexDataRow.cs" />
     <Compile Include="MetaData\ClusteredIndexEntity.cs" />
@@ -83,6 +89,7 @@
     <Compile Include="Engine\Pages\SgamPage.cs" />
     <Compile Include="Engine\Pages\TextMixPage.cs" />
     <Compile Include="MetaData\SystemEntities\SysIndexStat.cs" />
+    <Compile Include="MetaData\SystemEntities\SysIsCol.cs" />
     <Compile Include="MetaData\SystemEntities\SysObject.cs" />
     <Compile Include="MetaData\SystemEntities\SysRowset.cs" />
     <Compile Include="MetaData\SystemEntities\SysRowsetColumn.cs" />

@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using NUnit.Framework;
+using OrcaMDF.Core.Engine;
 
 namespace OrcaMDF.Core.Tests
 {

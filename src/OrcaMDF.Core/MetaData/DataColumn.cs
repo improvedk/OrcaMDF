@@ -10,6 +10,7 @@ namespace OrcaMDF.Core.MetaData
 		public ColumnType Type;
 		public string TypeString;
 		public bool IsNullable;
+		public bool IsIncluded;
 
 		public DataColumn(string name, string type)
 			: this(name, type, false)
@@ -90,6 +91,14 @@ namespace OrcaMDF.Core.MetaData
 		public static DataColumn Uniquifier
 		{
 			get { return new DataColumn("___Uniquifier", "uniquifier"); }
+		}
+
+		/// <summary>
+		/// Standard DataColumn to be used for page pointers in nonclustered indexes on clustered tables
+		/// </summary>
+		public static DataColumn IndexPagePointer
+		{
+			get { return new DataColumn("___PagePointer", "pagepointer"); }
 		}
 
 		public override string ToString()

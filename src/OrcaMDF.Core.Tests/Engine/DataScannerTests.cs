@@ -6,7 +6,7 @@ using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Core.Tests.Engine
 {
-	public class ClusteredTableScanningTests : SqlServerSystemTest
+	public class DataScannerTests : SqlServerSystemTest
 	{
 		[Test]
 		public void ScanUniqueClusteredTable()

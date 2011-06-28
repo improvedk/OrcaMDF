@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\IndexScannerTests.cs" />
     <Compile Include="Engine\Pages\GamPageTests.cs" />
     <Compile Include="Engine\Pages\PFS\PfsPageTests.cs" />
     <Compile Include="Engine\Pages\SgamPageTests.cs" />
@@ -64,7 +65,7 @@
     <Compile Include="Engine\SqlTypes\SqlTinyIntTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinaryTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarcharTests.cs" />
-    <Compile Include="Engine\ClusteredTableScanningTests.cs" />
+    <Compile Include="Engine\DataScannerTests.cs" />
     <Compile Include="MetaData\DatabaseMetaDataTests\MetaDataTests.cs" />
     <Compile Include="SqlServerSystemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
