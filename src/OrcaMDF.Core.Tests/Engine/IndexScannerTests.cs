@@ -19,10 +19,25 @@ namespace OrcaMDF.Core.Tests.Engine
 			using (var mdf = new MdfFile(MdfPath))
 			{
 				var scanner = new IndexScanner(mdf);
-				var result = scanner.ScanClusteredTableIndex("UniqueClusteredTable", "IDX_Num1").ToList();
+				var result = scanner.ScanIndex("UniqueClusteredTable", "IDX_Num1").ToList();
 
 				Assert.AreEqual(112, result[0]["Num1"]);
 				Assert.AreEqual(382, result[1]["Num1"]);
+			}
+		}
+
+		[Test]
+		public void ScanHeapAsIndex()
+		{
+			using (var mdf = new MdfFile(MdfPath))
+			{
+				var scanner = new IndexScanner(mdf);
+				var result = scanner.ScanIndex("Heap", null).ToList();
+
+				Assert.AreEqual(382, result[0]["Num1"]);
+				Assert.AreEqual("John", result[0]["Name"]);
+				Assert.AreEqual(112, result[1]["Num1"]);
+				Assert.AreEqual("Doe", result[1]["Name"]);
 			}
 		}
 
@@ -52,6 +67,21 @@ namespace OrcaMDF.Core.Tests.Engine
 
 				INSERT INTO
 					UniqueClusteredTable (Num1, Name)
+				VALUES
+					(382, 'John'),
+					(112, 'Doe')", conn);
+			cmd.ExecuteNonQuery();
+
+			// Create heap
+			cmd = new SqlCommand(@"
+				CREATE TABLE Heap
+				(
+					Num1 int NOT NULL,
+					Name nvarchar(30)
+				)
+
+				INSERT INTO
+					Heap (Num1, Name)
 				VALUES
 					(382, 'John'),
 					(112, 'Doe')", conn);

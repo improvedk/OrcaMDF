@@ -13,7 +13,7 @@ namespace OrcaMDF.Core.Engine
 			: base(file)
 		{ }
 
-		public IEnumerable<Row> ScanClusteredTableIndex(string tableName, string indexName)
+		public IEnumerable<Row> ScanIndex(string tableName, string indexName)
 		{
 			// Get table
 			var table = MetaData.SysObjects
