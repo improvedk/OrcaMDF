@@ -2,6 +2,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Core.Tests.Engine
 {
@@ -10,7 +11,16 @@ namespace OrcaMDF.Core.Tests.Engine
 		[Test]
 		public void ScanClusteredIndexOnUniqueClusteredTable()
 		{
-			
+			using (var mdf = new MdfFile(MdfPath))
+			{
+				var scanner = new IndexScanner(mdf);
+				var result = scanner.ScanIndex("UniqueClusteredTable", "CX_Num1_Name").ToList();
+
+				Assert.AreEqual(112, result[0]["Num1"]);
+				Assert.AreEqual("Doe", result[0]["Name"]);
+				Assert.AreEqual(382, result[1]["Num1"]);
+				Assert.AreEqual("John", result[1]["Name"]);
+			}
 		}
 
 		[Test]
@@ -44,7 +54,18 @@ namespace OrcaMDF.Core.Tests.Engine
 		[Test]
 		public void ScanNonclusteredIndexOnNonUniqueClusteredTable()
 		{
-			
+			using (var mdf = new MdfFile(MdfPath))
+			{
+				var scanner = new IndexScanner(mdf);
+				var result = scanner.ScanIndex("NonUniqueClusteredTable", "IDX_Num1").ToList();
+
+				Assert.AreEqual(112, result[0]["Num1"]);
+				Assert.AreEqual(0, result[0][DataColumn.Uniquifier]);
+				Assert.AreEqual(382, result[1]["Num1"]);
+				Assert.AreEqual(0, result[1][DataColumn.Uniquifier]);
+				Assert.AreEqual(382, result[2]["Num1"]);
+				Assert.AreEqual(1, result[2][DataColumn.Uniquifier]);
+			}
 		}
 
 		[Test]
@@ -85,6 +106,24 @@ namespace OrcaMDF.Core.Tests.Engine
 				VALUES
 					(382, 'John'),
 					(112, 'Doe')", conn);
+			cmd.ExecuteNonQuery();
+
+			// Create heap
+			cmd = new SqlCommand(@"
+				CREATE TABLE NonUniqueClusteredTable
+				(
+					Num1 int NOT NULL,
+					Name nvarchar(30)
+				)
+				CREATE CLUSTERED INDEX CX_Num1_Name ON NonUniqueClusteredTable (Num1, Name)
+				CREATE NONCLUSTERED INDEX IDX_Num1 ON NonUniqueClusteredTable (Num1)
+
+				INSERT INTO
+					NonUniqueClusteredTable (Num1, Name)
+				VALUES
+					(382, 'John'),
+					(112, 'Doe'),
+					(382, 'John')", conn);
 			cmd.ExecuteNonQuery();
 		}
 	}

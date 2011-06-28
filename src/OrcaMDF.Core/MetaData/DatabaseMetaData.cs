@@ -88,6 +88,20 @@ namespace OrcaMDF.Core.MetaData
 			// Depending on index type, add required pointer
 			var dataRow = new DataRow();
 
+			// For clustered tables we need to add a uniquifier if the clustered index isn't unique.
+			// Though only if we're not scanning the clustered index itself.
+			if(index.IndexID != 1)
+			{
+				// Get index
+				var clusteredIndex = SysIndexStats
+					.Where(x => x.ObjectID == table.ObjectID && x.IndexID == 1)
+					.OrderByDescending(x => x.IndexID)
+					.SingleOrDefault();
+
+				if (clusteredIndex != null && !clusteredIndex.IsUnique)
+					dataRow.Columns.Add(DataColumn.Uniquifier);
+			}
+
 			// TODO: If table is heap and index is nonclustered - add RID pointer to dataRow
 
 			// Add columns as specified in sysiscols
