@@ -1,3 +1,5 @@
 # Indexes
 	# Nonclustered
 		- Support parsing of included columns
+
+- Support sparse columns in indexes

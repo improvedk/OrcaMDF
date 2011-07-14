@@ -12,6 +12,7 @@ namespace OrcaMDF.Core.MetaData
 		public bool IsNullable;
 		public bool IsIncluded;
 		public bool IsVariableLength;
+		public bool IsSparse;
 
 		public DataColumn(string name, string type)
 			: this(name, type, false)
