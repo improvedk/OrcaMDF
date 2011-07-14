@@ -13,7 +13,7 @@ namespace OrcaMDF.Core.MetaData
 		public IList<SysAllocationUnit> SysAllocationUnits { get; internal set; }
 		public IList<SysObject> SysObjects { get; internal set; }
 		public IList<SysRowset> SysRowsets { get; internal set; }
-		public IList<SysRowsetColumn> SysRowsetColumns { get; internal set; }
+		public IList<SysColPar> SysColPars { get; internal set; }
 		public IList<SysScalarType> SysScalarTypes { get; internal set; }
 
 		private IList<SysIndexStat> sysIndexStats;
@@ -40,6 +40,18 @@ namespace OrcaMDF.Core.MetaData
 			}
 		}
 
+		private IList<Sysrscol> sysrscols;
+		public IList<Sysrscol> Sysrscols
+		{
+			get
+			{
+				if (sysrscols == null)
+					parseSysrscols();
+
+				return sysrscols;
+			}
+		}
+
 		private readonly MdfFile file;
 		private readonly DataScanner scanner;
 
@@ -50,9 +62,14 @@ namespace OrcaMDF.Core.MetaData
 
 			parseSysAllocationUnits();
 			parseSysRowsets();
-			parseSysRowsetColumns();
+			parseSysColPars();
 			parseSysObjects();
 			parseSysScalarTypes();
+		}
+
+		private void parseSysrscols()
+		{
+			sysrscols = scanner.ScanTable<Sysrscol>("sysrscols").ToList();
 		}
 
 		public DataRow GetEmptyIndexRow(string tableName, string indexName)
@@ -76,42 +93,68 @@ namespace OrcaMDF.Core.MetaData
 			if (index.IndexID == 0)
 				throw new ArgumentException("Can't create DataRow for heaps.");
 
+			// Determine if table is clustered or a heap. If we're not scanning the clustered index itself, see if
+			// table has a clustered index. If not, it's a heap.
+			bool isHeap = true;
+			if (index.IndexID == 1 || SysIndexStats.Any(x => x.ObjectID == table.ObjectID && x.IndexID == 1))
+				isHeap = false;
+
 			// Get index columns
-			var columns = SysIsCols
-				.Join(SysRowsetColumns, x => new { x.ColumnID, x.ObjectID }, y => new { y.ColumnID, y.ObjectID }, (x, y) => new { x.ObjectID, x.IndexID, x.KeyOrdinal, Included = x.IsIncluded, y.XType, y.Name, y.Length })
+			var idxColumns = SysIsCols
+				.Join(SysColPars, x => new { x.ColumnID, x.ObjectID }, y => new { y.ColumnID, y.ObjectID }, (x, y) => new { x.ObjectID, x.IndexID, x.KeyOrdinal, y.IsNullable, x.IsIncluded, y.XType, y.Name, y.Length })
 				.Where(x => x.ObjectID == table.ObjectID && x.IndexID == index.IndexID)
 				.OrderBy(x => x.KeyOrdinal);
 
-			if (columns.Count() == 0)
+			if (idxColumns.Count() == 0)
 				throw new Exception("No columns found for index '" + indexName + "'");
 
-			// Depending on index type, add required pointer
-			var dataRow = new DataRow();
-
-			// For clustered tables we need to add a uniquifier if the clustered index isn't unique.
-			// Though only if we're not scanning the clustered index itself.
-			if(index.IndexID != 1)
-			{
-				// Get index
-				var clusteredIndex = SysIndexStats
-					.Where(x => x.ObjectID == table.ObjectID && x.IndexID == 1)
-					.OrderByDescending(x => x.IndexID)
-					.SingleOrDefault();
-
-				if (clusteredIndex != null && !clusteredIndex.IsUnique)
-					dataRow.Columns.Add(DataColumn.Uniquifier);
-			}
-
-			// TODO: If table is heap and index is nonclustered - add RID pointer to dataRow
+			// Get rowset columns
+			var rsColumns = Sysrscols
+				.Where(x => x.RowsetID == index.RowsetID && x.KeyOrdinal > idxColumns.Max(y => y.KeyOrdinal))
+				.OrderBy(x => x.KeyOrdinal);
 
 			// Add columns as specified in sysiscols
-			foreach(var col in columns)
+			var dataRow = new DataRow();
+			foreach(var col in idxColumns)
 			{
 				var sqlType = SysScalarTypes.Where(x => x.ID == col.XType).Single();
 
 				var dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Length + ")");
-				dc.IsNullable = sqlType.IsNullable;
-				dc.IsIncluded = col.Included;
+				dc.IsNullable = col.IsNullable;
+				dc.IsIncluded = col.IsIncluded;
+
+				dataRow.Columns.Add(dc);
+			}
+			
+			// Add remaining columns as specified in sysrscols
+			foreach(var col in rsColumns)
+			{
+				var sqlType = SysScalarTypes.Where(x => x.ID == col.SystemTypeID).Single();
+
+				// The uniquifier for clustered tables needs special treatment. Uniquifier is detected by the system type and
+				// the fact that it's stored in the variable length section of the record (LeafOffset < 0).
+				if (!isHeap && col.SystemTypeID == (int)SystemType.Int && col.LeafOffset < 0)
+				{
+					dataRow.Columns.Add(DataColumn.Uniquifier);
+					continue;
+				}
+
+				// The RID for heaps needs special treatment. RID is detected by system type (binary(8)) and by
+				// being the last column in the record.
+				if(isHeap && col.SystemTypeID == (int)SystemType.Binary && col.MaxLength == 8 && col.KeyOrdinal == rsColumns.Max(x => x.KeyOrdinal))
+				{
+					dataRow.Columns.Add(DataColumn.RID);
+					continue;
+				}
+
+				// We don't have the corresponding column name from the clustered key (though it could be queried).
+				// Thus we'll just give them an internal name for now.
+				var dc = new DataColumn("__rscol_" + col.KeyOrdinal, sqlType.Name + "(" + col.MaxLength + ")");
+				dc.IsNullable = col.IsNullable;
+
+				// Clustered index columns that are not explicitly included in the nonclustered index will be
+				// implicitly included.
+				dc.IsIncluded = true;
 
 				dataRow.Columns.Add(dc);
 			}
@@ -136,7 +179,7 @@ namespace OrcaMDF.Core.MetaData
 				.SingleOrDefault();
 			
 			// Get columns
-			var syscols = SysRowsetColumns
+			var syscols = SysColPars
 				.Where(x => x.ObjectID == table.ObjectID);
 
 			// Create table and add columns
@@ -211,7 +254,7 @@ namespace OrcaMDF.Core.MetaData
 			SysScalarTypes = scanner.ScanLinkedDataPages<SysScalarType>(pageLoc).ToList();
 		}
 
-		private void parseSysRowsetColumns()
+		private void parseSysColPars()
 		{
 			long rowsetID =	SysRowsets
 				.Where(x => x.ObjectID == (int)SystemObject.syscolpars && x.IndexID == 1)
@@ -223,7 +266,7 @@ namespace OrcaMDF.Core.MetaData
 				.Single()
 				.FirstPage;
 
-			SysRowsetColumns = scanner.ScanLinkedDataPages<SysRowsetColumn>(pageLoc).ToList();
+			SysColPars = scanner.ScanLinkedDataPages<SysColPar>(pageLoc).ToList();
 		}
 
 		private void parseSysIndexStats()

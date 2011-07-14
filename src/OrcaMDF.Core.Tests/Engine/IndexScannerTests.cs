@@ -71,7 +71,26 @@ namespace OrcaMDF.Core.Tests.Engine
 		[Test]
 		public void ScanNonclusteredIndexOnHeap()
 		{
-			
+			using (var mdf = new MdfFile(MdfPath))
+			{
+				// Index stored in sorted order
+				var scanner = new IndexScanner(mdf);
+				var result = scanner.ScanIndex("Heap", "IDX_Num1").ToList();
+
+				Assert.AreEqual(112, result[0]["Num1"]);
+				Assert.AreEqual(1, ((SlotPointer)result[0][DataColumn.RID]).FileID);
+				Assert.AreEqual(1, ((SlotPointer)result[0][DataColumn.RID]).SlotID);
+				Assert.AreEqual(382, result[1]["Num1"]);
+				Assert.AreEqual(1, ((SlotPointer)result[1][DataColumn.RID]).FileID);
+				Assert.AreEqual(0, ((SlotPointer)result[1][DataColumn.RID]).SlotID);
+
+				// Data stored in insertion order
+				var dataScanner = new DataScanner(mdf);
+				var dataResult = dataScanner.ScanTable("Heap").ToList();
+
+				Assert.AreEqual(382, dataResult[0]["Num1"]);
+				Assert.AreEqual(112, dataResult[1]["Num1"]);
+			}
 		}
 
 		protected override void RunSetupQueries(SqlConnection conn)
@@ -93,22 +112,7 @@ namespace OrcaMDF.Core.Tests.Engine
 					(112, 'Doe')", conn);
 			cmd.ExecuteNonQuery();
 
-			// Create heap
-			cmd = new SqlCommand(@"
-				CREATE TABLE Heap
-				(
-					Num1 int NOT NULL,
-					Name nvarchar(30)
-				)
-
-				INSERT INTO
-					Heap (Num1, Name)
-				VALUES
-					(382, 'John'),
-					(112, 'Doe')", conn);
-			cmd.ExecuteNonQuery();
-
-			// Create heap
+			// Create non unique clustered table
 			cmd = new SqlCommand(@"
 				CREATE TABLE NonUniqueClusteredTable
 				(
@@ -124,6 +128,22 @@ namespace OrcaMDF.Core.Tests.Engine
 					(382, 'John'),
 					(112, 'Doe'),
 					(382, 'John')", conn);
+			cmd.ExecuteNonQuery();
+
+			// Create heap
+			cmd = new SqlCommand(@"
+				CREATE TABLE Heap
+				(
+					Num1 int NOT NULL,
+					Name nvarchar(30)
+				)
+				CREATE NONCLUSTERED INDEX IDX_Num1 ON Heap (Num1)
+
+				INSERT INTO
+					Heap (Num1, Name)
+				VALUES
+					(382, 'John'),
+					(112, 'Doe')", conn);
 			cmd.ExecuteNonQuery();
 		}
 	}

@@ -34,6 +34,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 				case ColumnType.NVarchar:
 					return new SqlNVarchar();
 
+				case ColumnType.RID:
+					return new SqlRID();
+
 				case ColumnType.SmallInt:
 					return new SqlSmallInt();
 

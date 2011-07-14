@@ -11,6 +11,7 @@ namespace OrcaMDF.Core.MetaData
 		public string TypeString;
 		public bool IsNullable;
 		public bool IsIncluded;
+		public bool IsVariableLength;
 
 		public DataColumn(string name, string type)
 			: this(name, type, false)
@@ -58,6 +59,7 @@ namespace OrcaMDF.Core.MetaData
 				case "nvarchar":
 				case "sysname":
 					Type = ColumnType.NVarchar;
+					IsVariableLength = true;
 					break;
 
 				case "smallint":
@@ -70,14 +72,22 @@ namespace OrcaMDF.Core.MetaData
 
 				case "uniquifier":
 					Type = ColumnType.Uniquifier;
+					IsVariableLength = true;
+					break;
+
+				case "rid":
+					Type = ColumnType.RID;
+					IsVariableLength = false;
 					break;
 
 				case "varbinary":
 					Type = ColumnType.VarBinary;
+					IsVariableLength = true;
 					break;
 
 				case "varchar":
 					Type = ColumnType.Varchar;
+					IsVariableLength = true;
 					break;
 
 				default:
@@ -94,11 +104,11 @@ namespace OrcaMDF.Core.MetaData
 		}
 
 		/// <summary>
-		/// Standard DataColumn to be used for page pointers in nonclustered indexes on clustered tables
+		/// Standard DataColumn to be used for rid column
 		/// </summary>
-		public static DataColumn IndexPagePointer
+		public static DataColumn RID
 		{
-			get { return new DataColumn("___PagePointer", "pagepointer"); }
+			get { return new DataColumn("___RID", "rid"); }
 		}
 
 		public override string ToString()

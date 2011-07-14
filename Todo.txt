@@ -1,4 +1,3 @@
 # Indexes
 	# Nonclustered
 		- Support parsing of included columns
-		- Proper parsing of uniquifiers - seems inconsistent with data pages. Failing test.

@@ -67,6 +67,7 @@
     <Compile Include="Engine\SqlTypes\SqlVarcharTests.cs" />
     <Compile Include="Engine\DataScannerTests.cs" />
     <Compile Include="MetaData\DatabaseMetaDataTests\MetaDataTests.cs" />
+    <Compile Include="MetaData\SysrscolTIParserTests.cs" />
     <Compile Include="SqlServerSystemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -10,6 +10,7 @@ namespace OrcaMDF.Core.MetaData
 		Int,
 		NChar,
 		NVarchar,
+		RID,
 		SmallInt,
 		TinyInt,
 		Uniquifier,

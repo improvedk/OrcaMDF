@@ -1,11 +1,13 @@
+using System;
+
 namespace OrcaMDF.Core.MetaData.SystemEntities
 {
 	/// <summary>
 	/// Matches sys.syscolpars
 	/// </summary>
-	public class SysRowsetColumn : Row
+	public class SysColPar : Row
 	{
-		public SysRowsetColumn()
+		public SysColPar()
 		{
 			Columns.Add(new DataColumn("id", "int"));
 			Columns.Add(new DataColumn("number", "smallint"));
@@ -27,7 +29,7 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 
 		public override Row NewRow()
 		{
-			return new SysRowsetColumn();
+			return new SysColPar();
 		}
 
 		public int ObjectID { get { return Field<int>("id"); } }
@@ -46,5 +48,20 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 		public int DFLT { get { return Field<int>("dflt"); } }
 		public int CHK { get { return Field<int>("chk"); } }
 		public byte[] IDTval { get { return Field<byte[]>("idtval"); } }
+
+		// Calculated fields
+		public bool IsNullable { get { return Convert.ToBoolean(1 - (Status & 1)); } }
+		public bool IsAnsiPadded { get { return Convert.ToBoolean(Status & 2); } }
+		public bool IsRowGuidCol { get { return Convert.ToBoolean(Status & 8); } }
+		public bool IsIdentity { get { return Convert.ToBoolean(Status & 4); } }
+		public bool IsComputed { get { return Convert.ToBoolean(Status & 16); } }
+		public bool IsFilestream { get { return Convert.ToBoolean(Status & 32); } }
+		public bool IsReplicated { get { return Convert.ToBoolean(Status & 0x020000); } }
+		public bool IsNonSqlSubscribed { get { return Convert.ToBoolean(Status & 0x040000); } }
+		public bool IsMergePublished { get { return Convert.ToBoolean(Status & 0x080000); } }
+		public bool IsDtsReplicated { get { return Convert.ToBoolean(Status & 0x100000); } }
+		public bool IsXmlDocument { get { return Convert.ToBoolean(Status & 2048); } }
+		public bool IsSparse { get { return Convert.ToBoolean(Status & 0x01000000); } }
+		public bool IsColumnSet { get { return Convert.ToBoolean(Status & 0x02000000); } }
 	}
 }

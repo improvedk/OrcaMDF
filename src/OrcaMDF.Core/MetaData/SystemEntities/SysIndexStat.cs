@@ -34,7 +34,7 @@ namespace OrcaMDF.Core.MetaData.SystemEntities
 		public short TinyProp { get { return Field<short>("tinyprop"); } }
 		public int DataSpaceID { get { return Field<int>("dataspace"); } }
 		public int LobDS { get { return Field<int>("lobds"); } }
-		public long Rowset { get { return Field<long>("rowset"); } }
+		public long RowsetID { get { return Field<long>("rowset"); } }
 
 		// Calculated fields
 		public bool IsUnique { get { return Convert.ToBoolean(Status & 0x8); } }
