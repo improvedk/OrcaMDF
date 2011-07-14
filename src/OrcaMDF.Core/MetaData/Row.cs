@@ -29,7 +29,19 @@ namespace OrcaMDF.Core.MetaData
 
 		public T Field<T>(string name)
 		{
-			return (T)Convert.ChangeType(data[name], typeof(T));
+			// Wee need to handle nullables explicitly
+			Type t = typeof (T);
+			Type u = Nullable.GetUnderlyingType(t);
+
+			if(u != null)
+			{
+				if (data[name] == null)
+					return default(T);
+
+				return (T)Convert.ChangeType(data[name], u);
+			}
+
+			return (T)Convert.ChangeType(data[name], t);
 		}
 
 		public object this[string name]
