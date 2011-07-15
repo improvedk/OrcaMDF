@@ -49,7 +49,9 @@
     <Compile Include="Engine\Pages\PFS\PfsPageTests.cs" />
     <Compile Include="Engine\Pages\SgamPageTests.cs" />
     <Compile Include="Engine\Records\PrimaryRecordTests.cs" />
+    <Compile Include="Engine\Records\RecordTests.cs" />
     <Compile Include="Engine\Records\RecordReadStateTests.cs" />
+    <Compile Include="Engine\SparseVectorParserTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlBigIntTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlBinaryTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlBitTests.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="Engine\SqlTypes\SqlVarBinaryTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarcharTests.cs" />
     <Compile Include="Engine\DataScannerTests.cs" />
+    <Compile Include="Features\SparseColumns\SparseColumnTests.cs" />
     <Compile Include="MetaData\DatabaseMetaDataTests\MetaDataTests.cs" />
     <Compile Include="MetaData\SysrscolTIParserTests.cs" />
     <Compile Include="SqlServerSystemTest.cs" />

@@ -196,6 +196,7 @@ namespace OrcaMDF.Core.MetaData
 				var dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Length + ")");
 				dc.IsNullable = sqlType.IsNullable;
 				dc.IsSparse = col.IsSparse;
+				dc.ColumnID = col.ColumnID;
 
 				dataRow.Columns.Add(dc);
 			}

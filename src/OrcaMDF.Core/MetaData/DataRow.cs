@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 
 namespace OrcaMDF.Core.MetaData
@@ -14,6 +15,11 @@ namespace OrcaMDF.Core.MetaData
 		public override Row NewRow()
 		{
 			return new DataRow(Columns);
+		}
+
+		public bool HasSparseColumns
+		{
+			get { return Columns.Any(x => x.IsSparse); }
 		}
 	}
 }

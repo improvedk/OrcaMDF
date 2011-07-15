@@ -95,6 +95,9 @@ namespace OrcaMDF.Core.Engine.Records
 
 		private void parseStatusBitsB(byte bits)
 		{
+			// As the 'Ghost forwarded record' bit is the only one stored in the second byte,
+			// we can simply read the whole byte value instead of extracting the first
+			// bit explicitly.
 			IsGhostForwardedRecord = bits == 1;
 		}
 	}

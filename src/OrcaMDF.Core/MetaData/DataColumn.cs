@@ -6,6 +6,7 @@ namespace OrcaMDF.Core.MetaData
 	{
 		public short? MaxLength;
 		public short? VariableFixedLength;
+		public int? ColumnID;
 		public string Name;
 		public ColumnType Type;
 		public string TypeString;

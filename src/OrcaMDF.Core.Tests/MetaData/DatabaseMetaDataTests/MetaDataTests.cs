@@ -14,9 +14,10 @@ namespace OrcaMDF.Core.Tests.MetaData.DatabaseMetaDataTests
 			{
 				var metaData = mdf.GetMetaData();
 
-				Assert.AreEqual(2, metaData.UserTableNames.Length);
+				Assert.AreEqual(3, metaData.UserTableNames.Length);
 				Assert.AreEqual("MyTable", metaData.UserTableNames[0]);
 				Assert.AreEqual("XYZ", metaData.UserTableNames[1]);
+				Assert.AreEqual("Sparse", metaData.UserTableNames[2]);
 			}
 		}
 

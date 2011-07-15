@@ -42,26 +42,6 @@ namespace OrcaMDF.Core.Tests.Engine
 			}
 		}
 
-		[Test]
-		public void ScanNonSparseInts()
-		{
-			using (var mdf = new MdfFile(MdfPath))
-			{
-				var scanner = new DataScanner(mdf);
-				var rows = scanner.ScanTable("NonSparseInts").ToList();
-
-				Assert.AreEqual(123, rows[0].Field<int?>("A"));
-				Assert.AreEqual(null, rows[0].Field<int?>("B"));
-				Assert.AreEqual(null, rows[0].Field<int?>("C"));
-				Assert.AreEqual(127, rows[0].Field<int?>("D"));
-
-				Assert.AreEqual(null, rows[1].Field<int?>("A"));
-				Assert.AreEqual(null, rows[1].Field<int?>("B"));
-				Assert.AreEqual(123982, rows[1].Field<int?>("C"));
-				Assert.AreEqual(null, rows[1].Field<int?>("D"));
-			}
-		}
-
 		protected override void RunSetupQueries(SqlConnection conn)
 		{
 			// Create unique clustered table
@@ -94,22 +74,6 @@ namespace OrcaMDF.Core.Tests.Engine
 				VALUES
 					(112, 'Doe'),
 					(112, 'Doe')", conn);
-			cmd.ExecuteNonQuery();
-
-			// Scanning of non-sparse ints
-			cmd = new SqlCommand(@"
-				CREATE TABLE NonSparseInts
-				(
-					A int,
-					B int,
-					C int,
-					D int
-				)
-				INSERT INTO
-					NonSparseInts
-				VALUES
-					(123, NULL, NULL, 127),
-					(NULL, NULL, 123982, NULL)", conn);
 			cmd.ExecuteNonQuery();
 		}
 	}
