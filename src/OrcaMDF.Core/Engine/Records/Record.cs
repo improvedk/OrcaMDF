@@ -46,36 +46,54 @@ namespace OrcaMDF.Core.Engine.Records
 			VariableLengthColumnData = new Dictionary<int, byte[]>();
 			for(int i=0; i<NumberOfVariableLengthColumns; i++)
 			{
-				bool overflowData = false;
-
-				// The high order sign bit is used to indicate whether data is stored off-row (http://bit.ly/gtFC8P).
-				// However, if the table includes sparse columns, the last variable length slot will contain the sparse vector
-				// and this also has the high order sign bit set - though not indicating an off-row pointer. For now we'll
-				// distinguish between an offrow pointer and a sparse vector by checking the length (offrow pointer = 24 bytes).
-				// This won't work though as the sparse vector might also be 24 bytes. Solution is probably to know schema at this point.
-				short varLengthWithNegatedSignBit = (short)(variableLengthColumnLengths[i] & Int16.MaxValue);
-				if ((variableLengthColumnLengths[i] & 32768) == 32768 && (i < NumberOfVariableLengthColumns - 1 || varLengthWithNegatedSignBit - offset == 24))
+				// The high order bit is used to indicate a complex column (or a row-overflow pointer).
+				bool complexColumn = false;
+				if ((variableLengthColumnLengths[i] & 32768) == 32768)
 				{
-					// Strip the sign bit and remember that we're dealing with row overflow data
-					variableLengthColumnLengths[i] = varLengthWithNegatedSignBit;
-					overflowData = true;
+					// Flip the sign bit && remember that this is a complex column
+					variableLengthColumnLengths[i] = (short)(variableLengthColumnLengths[i] & Int16.MaxValue);
+					complexColumn = true;
 				}
 
-				VariableLengthColumnData[i] = bytes.Skip(offset).Take(varLengthWithNegatedSignBit - offset).ToArray();
+				VariableLengthColumnData[i] = bytes.Skip(offset).Take(variableLengthColumnLengths[i] - offset).ToArray();
 				offset = variableLengthColumnLengths[i];
 
-				// For forwarding stubs, the data stems from the referenced forwarded record. For the forwarded record,
-				// the last varlength column is a backpointer and should thus not be interpreted as a row-overflow pointer.
-				// The same goes when processing the actual forwarded record (BlobFragment).
-				if ((Type == RecordType.ForwardingStub || Type == RecordType.BlobFragment) && i == NumberOfVariableLengthColumns - 1)
+				// Complex columns store special values and may need to be read elsewhere. In this case I'm using somewhat of a hack to detect
+				// row-overflow pointers the same way as normal complex columns. See http://improve.dk/archive/2011/07/15/identifying-complex-columns-in-records.aspx
+				// for a better description of the issue. Currently there are three cases:
+				// - Back pointers (two-byte value of 1024)
+				// - Sparse vectors (two-byte value of 5)
+				// - Row-overflow pointer (one-byte value of 2)
+				// As all of these differ by just the first byte (a value of 4, 5 and 2 respectively), I'm using this to detect the
+				// complex column type. The only way around this, as I see it, would be to know the scema and thus know what to look for/expect.
+				// As I don't want to refactor that yet, hack away!
+				if(complexColumn)
 				{
-					// Assert that this is a back pointer as expected. First two bytes should have a value of 1024 according to http://bit.ly/EzwT6
-					short columnID = BitConverter.ToInt16(VariableLengthColumnData[i], 0);
-					if (columnID != 1024)
-						throw new ArgumentException("Expected column " + (i + 1) + " to be a backpointer. First two bytes were expected to equal 1024, but were " + columnID);
+					byte complexColumnID = VariableLengthColumnData[i][0];
+					
+					switch(complexColumnID)
+					{
+						// Row-overflow pointer, get referenced data
+						case 0x02:
+							VariableLengthColumnData[i] = GetOverflowDataFromPointer(VariableLengthColumnData[i]);
+							break;
+
+						// Forwarded record back pointer (http://improve.dk/archive/2011/06/09/anatomy-of-a-forwarded-record-ndash-the-back-pointer.aspx)
+						// Ensure we expect a back pointer at this location. For forwarding stubs, the data stems from the referenced forwarded record. For the forwarded record,
+						// the last varlength column is a backpointer.
+						case 0x04:
+							if((Type != RecordType.ForwardingStub || Type != RecordType.BlobFragment) || i != NumberOfVariableLengthColumns - 1)
+								throw new ArgumentException("Unexpected back pointer found at column index " + i);
+							break;
+
+						// Sparse vectors will be processed at a later stage
+						case 0x05:
+							break;
+
+						default:
+							throw new ArgumentException("Invalid complex column ID encountered: 0x" + BitConverter.ToInt16(VariableLengthColumnData[i], 0).ToString("X"));
+					}
 				}
-				else if(overflowData)
-					VariableLengthColumnData[i] = GetOverflowDataFromPointer(VariableLengthColumnData[i]);
 			}
 		}
 
