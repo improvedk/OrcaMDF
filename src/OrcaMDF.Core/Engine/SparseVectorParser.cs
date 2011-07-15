@@ -6,6 +6,7 @@ namespace OrcaMDF.Core.Engine
 {
 	/// <summary>
 	/// Parses sparse vectors as stored in records for tables containing sparse columns.
+	/// See http://improve.dk/archive/2011/07/15/sparse-column-storage-ndash-the-sparse-vector.aspx
 	/// </summary>
 	public class SparseVectorParser
 	{
