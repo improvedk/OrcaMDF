@@ -24,10 +24,9 @@ namespace OrcaMDF.Core.Engine.Pages
 
 				short fixedOffset = 0;
 				short variableColumnIndex = 0;
-				int columnIndex = 0;
+				short nullBitmapColumnIndex = 0;
 				var readState = new RecordReadState();
 				var dataRow = schema.NewRow();
-				SparseVectorParser sparseVectorParser = null;
 
 				foreach (DataColumn col in dataRow.Columns)
 				{
@@ -38,24 +37,29 @@ namespace OrcaMDF.Core.Engine.Pages
 					// variable length column in the record.
 					if (col.IsSparse)
 					{
-						if (sparseVectorParser == null)
-							sparseVectorParser = new SparseVectorParser(record.VariableLengthColumnData[record.VariableLengthColumnData.Count - 1]);
-
-						// Column ID's are stored as ints in general. In the sparse vector though, they're stored as shorts.
-						if (sparseVectorParser.ColumnValues.ContainsKey((short)col.ColumnID))
-							columnValue = sqlType.GetValue(sparseVectorParser.ColumnValues[(short)col.ColumnID]);
+						// We may encounter records that don't have any sparse vectors, for instance if no sparse columns have values
+						if (record.SparseVector != null)
+						{
+							// Column ID's are stored as ints in general. In the sparse vector though, they're stored as shorts.
+							if (record.SparseVector.ColumnValues.ContainsKey((short)col.ColumnID))
+								columnValue = sqlType.GetValue(record.SparseVector.ColumnValues[(short)col.ColumnID]);
+						}
 					}
 					else
 					{
 						if (sqlType.IsVariableLength)
 						{
-							if (!record.HasNullBitmap || !record.NullBitmap[columnIndex])
+							if (!record.HasNullBitmap || !record.NullBitmap[nullBitmapColumnIndex])
 							{
-								// If a nullable varlength column does not have a value, it may be not even appear in the varlength column array if it's at the tail
-								if (record.VariableLengthColumnData == null || record.VariableLengthColumnData.Count <= variableColumnIndex)
-									columnValue = sqlType.GetValue(new byte[] {});
-								else
-									columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex]);
+								// Records may not even have a variable length part even though null variable length columns exit in the schema
+								if (record.HasVariableLengthColumns)
+								{
+									// If a nullable varlength column does not have a value, it may be not even appear in the varlength column array if it's at the tail
+									if (record.VariableLengthColumnData == null || record.VariableLengthColumnData.Count <= variableColumnIndex)
+										columnValue = sqlType.GetValue(new byte[] {});
+									else
+										columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex]);
+								}
 							}
 
 							variableColumnIndex++;
@@ -65,14 +69,25 @@ namespace OrcaMDF.Core.Engine.Pages
 							// Must cache type FixedLength as it may change after getting a value (e.g. SqlBit)
 							short fixedLength = sqlType.FixedLength.Value;
 
-							if (!record.HasNullBitmap || !record.NullBitmap[columnIndex])
-								columnValue = sqlType.GetValue(record.FixedLengthData.Skip(fixedOffset).Take(fixedLength).ToArray());
+							if (!record.HasNullBitmap || !record.NullBitmap[nullBitmapColumnIndex])
+							{
+								byte[] valueBytes = record.FixedLengthData.Skip(fixedOffset).Take(fixedLength).ToArray();
+
+								// We may run out of fixed length bytes. In certain conditions a null integer may have been added without
+								// there being a null bitmap. In such a case, we detect the null condition by there not being enough fixed
+								// length bytes to process.
+								if(valueBytes.Length > 0)
+									columnValue = sqlType.GetValue(valueBytes);
+							}
 
 							fixedOffset += fixedLength;
 						}
+
+						// Sparse columns don't have an entry in the null bitmap, thus we should only increment it if the current
+						// column was not a sparse column.
+						nullBitmapColumnIndex++;
 					}
 
-					columnIndex++;
 					dataRow[col] = columnValue;
 				}
 

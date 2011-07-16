@@ -73,10 +73,84 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 			}
 		}
 
+		[Test]
+		public void ScanAllNullSparse()
+		{
+			using (var mdf = new MdfFile(MdfPath))
+			{
+				var scanner = new DataScanner(mdf);
+				var rows = scanner.ScanTable("ScanAllNullSparse").ToList();
+
+				Assert.AreEqual(null, rows[0].Field<int?>("A"));
+				Assert.AreEqual(null, rows[0].Field<int?>("B"));
+			}
+		}
+
+		[Test]
+		public void ScanRecordWithoutSparseVector()
+		{
+			using (var mdf = new MdfFile(MdfPath))
+			{
+				var scanner = new DataScanner(mdf);
+				var rows = scanner.ScanTable("ScanRecordWithoutSparseVector").ToList();
+
+				Assert.AreEqual(null, rows[0].Field<int?>("A"));
+				Assert.AreEqual("xyz", rows[0].Field<string>("B"));
+
+				Assert.AreEqual(null, rows[1].Field<int?>("A"));
+				Assert.AreEqual(null, rows[1].Field<string>("B"));
+			}
+		}
+
+		[Test]
+		public void DifferingRecordFormats()
+		{
+			using (var mdf = new MdfFile(MdfPath))
+			{
+				var scanner = new DataScanner(mdf);
+				var rows = scanner.ScanTable("DifferingRecordFormats").ToList();
+
+				Assert.AreEqual(5, rows[0].Field<int?>("A"));
+				Assert.AreEqual(2, rows[0].Field<int?>("B"));
+				Assert.AreEqual(6, rows[1].Field<int?>("A"));
+				Assert.AreEqual(null, rows[1].Field<int?>("B"));
+			}
+		}
+
 		protected override void RunSetupQueries(SqlConnection conn)
 		{
+			SqlCommand cmd;
+
+			// Scanning of records with differing record formats
+			cmd = new SqlCommand(@"
+				CREATE TABLE DifferingRecordFormats (A int SPARSE)
+				INSERT INTO DifferingRecordFormats VALUES (5), (6)
+				ALTER TABLE DifferingRecordFormats ADD B int NULL
+				UPDATE DifferingRecordFormats SET B = 2 WHERE A = 5", conn);
+			cmd.ExecuteNonQuery();
+			
+			// Scanning of records with no sparse vector
+			cmd = new SqlCommand(@"
+				CREATE TABLE ScanRecordWithoutSparseVector
+				(
+					A int SPARSE,
+					B varchar(10)
+				)
+				INSERT INTO ScanRecordWithoutSparseVector (B) VALUES ('xyz'), (NULL)", conn);
+			cmd.ExecuteNonQuery();
+
+			// Scanning of all-sparse tables with no values
+			cmd = new SqlCommand(@"
+				CREATE TABLE ScanAllNullSparse
+				(
+					A int SPARSE,
+					B int SPARSE
+				)
+				INSERT INTO ScanAllNullSparse DEFAULT VALUES", conn);
+			cmd.ExecuteNonQuery();
+
 			// Scanning of non-sparse ints
-			var cmd = new SqlCommand(@"
+			cmd = new SqlCommand(@"
 				CREATE TABLE ScanNonSparseInts
 				(
 					A int,

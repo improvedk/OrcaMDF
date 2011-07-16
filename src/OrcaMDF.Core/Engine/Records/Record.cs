@@ -8,8 +8,6 @@ namespace OrcaMDF.Core.Engine.Records
 {
 	public abstract class Record
 	{
-		protected Page Page;
-
 		public RecordType Type { get; protected set; }
 		public bool HasNullBitmap { get; protected set; }
 		public bool HasVariableLengthColumns { get; protected set; }
@@ -19,6 +17,9 @@ namespace OrcaMDF.Core.Engine.Records
 		public short NumberOfVariableLengthColumns { get; protected set; }
 		public IDictionary<int, byte[]> VariableLengthColumnData { get; protected set; }
 		public byte[] RawBytes { get; protected set; }
+		public SparseVectorParser SparseVector { get; private set; }
+
+		protected Page Page;
 
 		protected Record(Page page)
 		{
@@ -88,6 +89,7 @@ namespace OrcaMDF.Core.Engine.Records
 
 						// Sparse vectors will be processed at a later stage
 						case 0x05:
+							SparseVector = new SparseVectorParser(VariableLengthColumnData[i]);
 							break;
 
 						default:
