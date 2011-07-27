@@ -68,6 +68,11 @@ namespace OrcaMDF.Core.MetaData
 					Type = ColumnType.SmallInt;
 					break;
 
+				case "text":
+					Type = ColumnType.Text;
+					IsVariableLength = true;
+					break;
+
 				case "tinyint":
 					Type = ColumnType.TinyInt;
 					break;

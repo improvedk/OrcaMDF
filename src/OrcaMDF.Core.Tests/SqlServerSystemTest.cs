@@ -65,6 +65,12 @@ namespace OrcaMDF.Core.Tests
 
 		protected abstract void RunSetupQueries(SqlConnection conn);
 
+		protected void RunQuery(string sql, SqlConnection conn)
+		{
+			var cmd = new SqlCommand(sql, conn);
+			cmd.ExecuteNonQuery();
+		}
+
 		[TestFixtureTearDown]
 		public void TearDown()
 		{

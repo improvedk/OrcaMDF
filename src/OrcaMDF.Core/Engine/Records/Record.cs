@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Core.Engine.Pages;
+using OrcaMDF.Core.Engine.Records.VariableLengthDataProxies;
 
 namespace OrcaMDF.Core.Engine.Records
 {
@@ -15,15 +16,20 @@ namespace OrcaMDF.Core.Engine.Records
 		public short NumberOfColumns { get; protected set; }
 		public BitArray NullBitmap { get; protected set; }
 		public short NumberOfVariableLengthColumns { get; protected set; }
-		public IDictionary<int, byte[]> VariableLengthColumnData { get; protected set; }
 		public byte[] RawBytes { get; protected set; }
 		public SparseVectorParser SparseVector { get; private set; }
+		public IDictionary<int, IVariableLengthDataProxy> VariableLengthColumnData { get; set; }
 
 		protected Page Page;
+		protected IDictionary<int, byte[]> RawVariableLengthColumnData { get; set; }
 
 		protected Record(Page page)
 		{
 			Page = page;
+
+			// Initialize variable length data dictionaries
+			RawVariableLengthColumnData = new Dictionary<int, byte[]>();
+			VariableLengthColumnData = new Dictionary<int, IVariableLengthDataProxy>();
 		}
 
 		protected void ParseVariableLengthColumns(byte[] bytes, ref short offset)
@@ -44,7 +50,7 @@ namespace OrcaMDF.Core.Engine.Records
 				offset += 2;
 			}
 
-			VariableLengthColumnData = new Dictionary<int, byte[]>();
+			// Loop variable length columns
 			for(int i=0; i<NumberOfVariableLengthColumns; i++)
 			{
 				// The high order bit is used to indicate a complex column (or a row-overflow pointer).
@@ -56,7 +62,7 @@ namespace OrcaMDF.Core.Engine.Records
 					complexColumn = true;
 				}
 
-				VariableLengthColumnData[i] = bytes.Skip(offset).Take(variableLengthColumnLengths[i] - offset).ToArray();
+				RawVariableLengthColumnData[i] = bytes.Skip(offset).Take(variableLengthColumnLengths[i] - offset).ToArray();
 				offset = variableLengthColumnLengths[i];
 
 				// Complex columns store special values and may need to be read elsewhere. In this case I'm using somewhat of a hack to detect
@@ -68,62 +74,45 @@ namespace OrcaMDF.Core.Engine.Records
 				// As all of these differ by just the first byte (a value of 4, 5 and 2 respectively), I'm using this to detect the
 				// complex column type. The only way around this, as I see it, would be to know the scema and thus know what to look for/expect.
 				// As I don't want to refactor that yet, hack away!
-				if(complexColumn)
+				// Finally complex columns also store 16 byte LOB pointers. Since these are the only 16-byte length complex columns we'll use that fact
+				// to detect them and retrieve the referenced data.
+				if (complexColumn)
 				{
-					byte complexColumnID = VariableLengthColumnData[i][0];
-					
-					switch(complexColumnID)
+					// If length == 16 then we're dealing with a LOB pointer, otherwise it's a regular complex column
+					if (RawVariableLengthColumnData[i].Length == 16)
+						VariableLengthColumnData[i] = new LobDataProxy(Page, RawVariableLengthColumnData[i]);
+					else
 					{
-						// Row-overflow pointer, get referenced data
-						case 0x02:
-							VariableLengthColumnData[i] = GetOverflowDataFromPointer(VariableLengthColumnData[i]);
-							break;
+						byte complexColumnID = RawVariableLengthColumnData[i][0];
 
-						// Forwarded record back pointer (http://improve.dk/archive/2011/06/09/anatomy-of-a-forwarded-record-ndash-the-back-pointer.aspx)
-						// Ensure we expect a back pointer at this location. For forwarding stubs, the data stems from the referenced forwarded record. For the forwarded record,
-						// the last varlength column is a backpointer.
-						case 0x04:
-							if((Type != RecordType.ForwardingStub || Type != RecordType.BlobFragment) || i != NumberOfVariableLengthColumns - 1)
-								throw new ArgumentException("Unexpected back pointer found at column index " + i);
-							break;
+						switch (complexColumnID)
+						{
+							// Row-overflow pointer, get referenced data
+							case 0x02:
+								VariableLengthColumnData[i] = new OverflowDataProxy(Page, RawVariableLengthColumnData[i]);
+								break;
 
-						// Sparse vectors will be processed at a later stage
-						case 0x05:
-							SparseVector = new SparseVectorParser(VariableLengthColumnData[i]);
-							break;
+							// Forwarded record back pointer (http://improve.dk/archive/2011/06/09/anatomy-of-a-forwarded-record-ndash-the-back-pointer.aspx)
+							// Ensure we expect a back pointer at this location. For forwarding stubs, the data stems from the referenced forwarded record. For the forwarded record,
+							// the last varlength column is a backpointer. No public option for accessing raw bytes.
+							case 0x04:
+								if ((Type != RecordType.ForwardingStub || Type != RecordType.BlobFragment) || i != NumberOfVariableLengthColumns - 1)
+									throw new ArgumentException("Unexpected back pointer found at column index " + i);
+								break;
 
-						default:
-							throw new ArgumentException("Invalid complex column ID encountered: 0x" + BitConverter.ToInt16(VariableLengthColumnData[i], 0).ToString("X"));
+							// Sparse vectors will be processed at a later stage - no public option for accessing raw bytes
+							case 0x05:
+								SparseVector = new SparseVectorParser(RawVariableLengthColumnData[i]);
+								break;
+
+							default:
+								throw new ArgumentException("Invalid complex column ID encountered: 0x" + BitConverter.ToInt16(RawVariableLengthColumnData[i], 0).ToString("X"));
+						}
 					}
 				}
+				else
+					VariableLengthColumnData[i] = new RawByteProxy(RawVariableLengthColumnData[i]);
 			}
-		}
-
-		protected byte[] GetOverflowDataFromPointer(byte[] data)
-		{
-			// Parsed according to table 7-1 (p. 378) in [SQL Server 2008 Internals]
-			byte complexColumnType = data[0];
-			short indexLevel = BitConverter.ToInt16(data, 1);
-			byte unused = data[3];
-			int sequence = BitConverter.ToInt32(data, 4);
-
-			// Technically a 6-byte long value. Low two bytes always zero, thus not stored (http://bit.ly/mdAQpm)
-			long timestamp = BitConverter.ToUInt32(data, 8) << 16;
-
-			byte[] fieldData = new byte[0];
-			for(int i=12; i<data.Length; i += 12)
-			{
-				int length = BitConverter.ToInt32(data, i);
-				int pageID = BitConverter.ToInt32(data, i + 4);
-				short fileID = BitConverter.ToInt16(data, i + 8);
-				short slot = BitConverter.ToInt16(data, i + 10);
-
-				// Get referenced page
-				var textMixPage = Page.File.GetTextMixPage(new PagePointer(fileID, pageID));
-				fieldData = fieldData.Concat(textMixPage.Records[slot].FixedLengthData).ToArray();
-			}
-			
-			return fieldData;
 		}
 
 		protected short ParseNullBitmap(byte[] bytes, ref short offset)

@@ -40,6 +40,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 				case ColumnType.SmallInt:
 					return new SqlSmallInt();
 
+				case ColumnType.Text:
+					return new SqlText();
+
 				case ColumnType.TinyInt:
 					return new SqlTinyInt();
 

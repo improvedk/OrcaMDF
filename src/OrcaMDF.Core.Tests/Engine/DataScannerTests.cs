@@ -45,36 +45,32 @@ namespace OrcaMDF.Core.Tests.Engine
 		protected override void RunSetupQueries(SqlConnection conn)
 		{
 			// Create unique clustered table
-			var cmd = new SqlCommand(@"
-				CREATE TABLE UniqueClusteredTable
-				(
-					Num1 int NOT NULL,
-					Name nvarchar(30)
-				)
-				CREATE UNIQUE CLUSTERED INDEX CX_Num1_Name ON UniqueClusteredTable (Num1, Name)
+			RunQuery(@"	CREATE TABLE UniqueClusteredTable
+						(
+							Num1 int NOT NULL,
+							Name nvarchar(30)
+						)
+						CREATE UNIQUE CLUSTERED INDEX CX_Num1_Name ON UniqueClusteredTable (Num1, Name)
 
-				INSERT INTO
-					UniqueClusteredTable (Num1, Name)
-				VALUES
-					(382, 'John'),
-					(112, 'Doe')", conn);
-			cmd.ExecuteNonQuery();
+						INSERT INTO
+							UniqueClusteredTable (Num1, Name)
+						VALUES
+							(382, 'John'),
+							(112, 'Doe')", conn);
 			
 			// Create non-unique clustered table with uniquifier
-			cmd = new SqlCommand(@"
-				CREATE TABLE NonUniqueClusteredTable
-				(
-					Num1 int NOT NULL,
-					Name nvarchar(30)
-				)
-				CREATE CLUSTERED INDEX CX_Num1_Name ON NonUniqueClusteredTable (Num1, Name)
+			RunQuery(@"	CREATE TABLE NonUniqueClusteredTable
+						(
+							Num1 int NOT NULL,
+							Name nvarchar(30)
+						)
+						CREATE CLUSTERED INDEX CX_Num1_Name ON NonUniqueClusteredTable (Num1, Name)
 
-				INSERT INTO
-					NonUniqueClusteredTable (Num1, Name)
-				VALUES
-					(112, 'Doe'),
-					(112, 'Doe')", conn);
-			cmd.ExecuteNonQuery();
+						INSERT INTO
+							NonUniqueClusteredTable (Num1, Name)
+						VALUES
+							(112, 'Doe'),
+							(112, 'Doe')", conn);
 		}
 	}
 }
