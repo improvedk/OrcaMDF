@@ -22,6 +22,7 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 			 * 4-7		?
 			 * 8-16		Slot pointer
 			*/
+
 			timestamp = BitConverter.ToInt32(data, 0);
 			slotPointer = new SlotPointer(data.Skip(8).ToArray());
 		}
@@ -37,14 +38,21 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 			 * Byte		Content
 			 * 0-1		Status bits
 			 * 2-3		Fixed data length (short) - complete record length
-			 * 4-7		Small blob ID (int)
-			 * 8-11		? (All observations so far == 0)
+			 * 4-11		Small blob ID (long)
 			 * 12-13	Type (short)
 			 * 14-15	Length (short)
 			 * 16-19	?
 			 * 20-83	Data (everything above [Length] is to be considered garbage). Max SMALL_ROOT data storage = 64 bytes
 			*/
 
+			/* LARGE_ROOT (type: 1)
+			 * ? No idea
+			*/
+
+			/* INTERNAL (type: 2)
+			 * ? No idea
+			*/
+			
 			/* DATA (type: 3)
 			 * Used to store data. Variable length size, in practice always > 64 + overhead bytes
 			 * as it'll otherwise be stored in a SMALL_ROOT.
@@ -56,11 +64,14 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 			 * Byte		Content
 			 * 0-1		Status bits
 			 * 2-3		Fixed data length (short) - complete record length
-			 * 4-7		Blob ID (int)
-			 * 8-11		? (All oservations so far == 0)
+			 * 4-11		Blob ID (long)
 			 * 12-13	Type (short)
 			 * 14-X		Data
 			 */
+
+			/* LARGE_ROOT_SHILOH (type: 4)
+			 * Used in SQL Server 2000 (code name SHILOH)
+			*/
 
 			/* LARGE_ROOT_YUKON (type: 5)
 			 * Used to store a range of page references, either directly to data pages or as part
@@ -69,17 +80,40 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 			 * Byte		Content
 			 * 0-1		Status bits
 			 * 2-3		Fixed data length (short) - complete record length
-			 * 4-7		Blob ID (int)
-			 * 8-11		? (All observations so far == 0)
+			 * 4-11		Blob ID (long)
 			 * 12-13	Type (short)
-			 * 14-15	MaxLinks (short) - TODO: Verify
-			 * 16-23	? - Probably contains CurLinks + Level + unknown - TODO: Verify
-			 * 24-25	Size (short)
-			 * 26-27	?
-			 * 28-31	PageID (int)
-			 * 32-33	FileID (short)
-			 * 34-35	SlotID (short)
-			 * 36-?		?
+			 * 14-15	MaxLinks (short)
+			 * 16-17	CurLinks (short)
+			 * 18-19	Level (short)
+			 * 20-23	?
+			 * 24-27	Offset[0] (int) - This'll be the *end* of the data. For [0] size == offset. For [n] size == [n]-[n-1].
+			 * 28-31	PageID[0] (int)
+			 * 32-33	FileID[0] (short)
+			 * 34-35	SlotID[0] (short)
+			 * 36-39	Offset[1] (int)
+			 * 40-43	PageID[1] (int)
+			 * 44-45	FileID[1] (short)
+			 * 46-47	SlotID[1] (short)
+			*/
+
+			/* SUPER_LARGE_ROOT (type: 6)
+			 * ? No idea
+			*/
+
+			/* (type: 7)
+			 * Doesn't show type name, probably unused
+			*/
+
+			/* NULL (type: 8)
+			 * ? No idea
+			*/
+
+			/* INVALID (type: 9)
+			 * ? Probably invalid
+			*/
+
+			/* INVALID (type: 10)
+			 * ? I should probably stop now...
 			*/
 
 			return data;
