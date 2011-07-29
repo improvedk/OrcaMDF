@@ -70,7 +70,7 @@ namespace OrcaMDF.Core.Engine.Records
 			if (HasVariableLengthColumns)
 				ParseVariableLengthColumns(bytes, ref offset);
 
-			// Saw complete record raw bytes
+			// Save complete record raw bytes
 			RawBytes = bytes.Take(offset).ToArray();
 		}
 

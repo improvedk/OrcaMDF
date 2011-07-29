@@ -50,8 +50,14 @@
     <Compile Include="Engine\Pages\NonclusteredIndexPage.cs" />
     <Compile Include="Engine\Pages\PrimaryRecordPage.cs" />
     <Compile Include="Engine\Records\IndexRecord.cs" />
+    <Compile Include="Engine\Records\LobStructures\ILobStructure.cs" />
+    <Compile Include="Engine\Records\LobStructures\LargeRootYukon.cs" />
+    <Compile Include="Engine\Records\LobStructures\LobSlotPointer.cs" />
+    <Compile Include="Engine\Records\LobStructures\LobStructureType.cs" />
+    <Compile Include="Engine\Records\LobStructures\SmallRoot.cs" />
     <Compile Include="Engine\Records\PrimaryRecord.cs" />
     <Compile Include="Engine\Records\RecordReadState.cs" />
+    <Compile Include="Engine\Records\TextRecord.cs" />
     <Compile Include="Engine\Records\VariableLengthDataProxies\DataProxy.cs" />
     <Compile Include="Engine\Records\VariableLengthDataProxies\IVariableLengthDataProxy.cs" />
     <Compile Include="Engine\Records\VariableLengthDataProxies\LobDataProxy.cs" />
