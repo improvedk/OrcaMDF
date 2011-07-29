@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OrcaMDF.Core.Engine.Records.LobStructures
@@ -13,13 +14,14 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 	 * 12-15	?
 	 * 16-79	Data (everything above [Length] is to be considered garbage). Max SMALL_ROOT data storage = 64 bytes
 	 */
-	public class SmallRoot : ILobStructure
+	public class SmallRoot : BaseLobStructure, ILobStructure
 	{
 		public long BlobID { get; private set; }
 		public short Length { get; private set; }
 		private byte[] data;
 
-		public SmallRoot(byte[] bytes)
+		public SmallRoot(byte[] bytes, MdfFile file)
+			: base(file)
 		{
 			short type = BitConverter.ToInt16(bytes, 8);
 			if(type != (short)LobStructureType.SMALL_ROOT)
@@ -30,7 +32,7 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 			data = bytes.Skip(16).Take(Length).ToArray();
 		}
 
-		public byte[] GetData()
+		public IEnumerable<byte> GetData()
 		{
 			return data;
 		}

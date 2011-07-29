@@ -37,7 +37,7 @@ namespace OrcaMDF.Core.Engine.Pages
 							if (record.VariableLengthColumnData.Count <= variableColumnIndex)
 								columnValue = sqlType.GetValue(new byte[] { });
 							else
-								columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex].GetBytes());
+								columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex].GetBytes().ToArray());
 						}
 
 						variableColumnIndex++;

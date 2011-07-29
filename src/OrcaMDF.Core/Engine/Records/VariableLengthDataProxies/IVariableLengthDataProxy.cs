@@ -1,7 +1,9 @@
+using System.Collections.Generic;
+
 namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 {
 	public interface IVariableLengthDataProxy
 	{
-		byte[] GetBytes();
+		IEnumerable<byte> GetBytes();
 	}
 }

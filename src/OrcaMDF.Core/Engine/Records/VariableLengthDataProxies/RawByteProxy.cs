@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 {
 	public class RawByteProxy : IVariableLengthDataProxy
@@ -9,7 +11,7 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 			this.data = data;
 		}
 
-		public byte[] GetBytes()
+		public IEnumerable<byte> GetBytes()
 		{
 			return data;
 		}

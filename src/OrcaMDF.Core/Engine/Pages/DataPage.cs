@@ -54,7 +54,7 @@ namespace OrcaMDF.Core.Engine.Pages
 							if (sqlType.IsVariableLength)
 							{
 								if (!record.HasNullBitmap || !record.NullBitmap[nonSparseColumnIndex])
-									columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex].GetBytes());
+									columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex].GetBytes().ToArray());
 
 								variableColumnIndex++;
 							}

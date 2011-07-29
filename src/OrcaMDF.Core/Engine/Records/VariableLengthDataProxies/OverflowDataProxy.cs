@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Core.Engine.Pages;
 
@@ -28,7 +29,7 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 			timestamp = BitConverter.ToUInt32(data, 8) << 16;
 		}
 
-		public byte[] GetBytes()
+		public IEnumerable<byte> GetBytes()
 		{
 			byte[] fieldData = new byte[0];
 			for (int i = 12; i < data.Length; i += 12)

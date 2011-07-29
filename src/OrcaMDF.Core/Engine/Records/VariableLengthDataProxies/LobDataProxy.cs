@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Core.Engine.Pages;
 using OrcaMDF.Core.Engine.Records.LobStructures;
@@ -108,7 +109,7 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 		 * ? I should probably stop now...
 		 */
 
-		public byte[] GetBytes()
+		public IEnumerable<byte> GetBytes()
 		{
 			/* Choosing this way of parsing feels a bit wrong. Ideally I would treat all text structures
 			 * as normal records, as that's what they are. That means I should be subtyping PrimaryRecord.
@@ -125,11 +126,11 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 			switch(rootLobRecord.LobType)
 			{
 				case LobStructureType.SMALL_ROOT:
-					var smallRoot = new SmallRoot(rootLobRecord.FixedLengthData);
+					var smallRoot = new SmallRoot(rootLobRecord.FixedLengthData, OriginPage.File);
 					return smallRoot.GetData();
 
 				case LobStructureType.LARGE_ROOT_YUKON:
-					var largeRootYukon = new LargeRootYukon(rootLobRecord.FixedLengthData);
+					var largeRootYukon = new LargeRootYukon(rootLobRecord.FixedLengthData, OriginPage.File);
 					return largeRootYukon.GetData();
 
 				default:
