@@ -51,12 +51,15 @@
     <Compile Include="Engine\Pages\PrimaryRecordPage.cs" />
     <Compile Include="Engine\Records\IndexRecord.cs" />
     <Compile Include="Engine\Records\LobStructures\BaseLobStructure.cs" />
+    <Compile Include="Engine\Records\LobStructures\DataLobStructure.cs" />
     <Compile Include="Engine\Records\LobStructures\ILobStructure.cs" />
-    <Compile Include="Engine\Records\LobStructures\LargeRootYukon.cs" />
+    <Compile Include="Engine\Records\LobStructures\InternalLobSlotPointer.cs" />
+    <Compile Include="Engine\Records\LobStructures\InternalLobStructure.cs" />
+    <Compile Include="Engine\Records\LobStructures\LargeRootYukonLobStructure.cs" />
     <Compile Include="Engine\Records\LobStructures\LobSlotPointer.cs" />
     <Compile Include="Engine\Records\LobStructures\LobStructureFactory.cs" />
     <Compile Include="Engine\Records\LobStructures\LobStructureType.cs" />
-    <Compile Include="Engine\Records\LobStructures\SmallRoot.cs" />
+    <Compile Include="Engine\Records\LobStructures\SmallRootLobStructure.cs" />
     <Compile Include="Engine\Records\PrimaryRecord.cs" />
     <Compile Include="Engine\Records\RecordReadState.cs" />
     <Compile Include="Engine\Records\TextRecord.cs" />

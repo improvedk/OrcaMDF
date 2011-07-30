@@ -35,7 +35,7 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 		 * Byte		Content
 		 * 0-1		Status bits
 		 * 2-3		Fixed data length (short) - complete record length
-		 * 4-11		Small blob ID (long)
+		 * 4-11		Blob ID (long)
 		 * 12-13	Type (short)
 		 * 14-15	Length (short)
 		 * 16-19	?
@@ -47,7 +47,19 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 		 */
 
 		/* INTERNAL (type: 2)
-		 * ? No idea
+		 * 
+		 * Byte		Content
+		 * 0-1		Status bits
+		 * 2-3		Fixed data length (short) - complete record length
+		 * 4-11		Blob ID (long)
+		 * 12-13	Type (short)
+		 * 14-15	MaxLinks (short)
+		 * 16-17	CurLinks (short)
+		 * 18-19	Level (short)
+		 * 20-27	Offset[0] (long)
+		 * 28-31	PageID[0] (int)
+		 * 32-33	FileID[0] (short)
+		 * 34-35	SlotID[0] (short)
 		 */
 
 		/* DATA (type: 3)
@@ -101,41 +113,14 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 		 * ? No idea
 	 	 */
 
-		/* INVALID (type: 9)
-		 * ? Probably invalid
-		 */
-
-		/* INVALID (type: 10)
-		 * ? I should probably stop now...
-		 */
-
 		public IEnumerable<byte> GetBytes()
 		{
-			/* Choosing this way of parsing feels a bit wrong. Ideally I would treat all text structures
-			 * as normal records, as that's what they are. That means I should be subtyping PrimaryRecord.
-			 * However, there are some differences, e.g. these are technically forwarded records, yet they
-			 * don't contain a forwarded record header. As such, I'd need to split up PrimaryRecord even more.
-			 * Instead I'm keeping this in a tight parsing schema made explicitly for parsing the LOB text structures.
-			 * Speed, simplicity and readability wins over the 'right' design way of doing it, for now. Sorry.
-			 */
-
 			// Get root lob structure bytes
 			var rootLobStructurePage = OriginPage.File.GetTextMixPage(lobRootSlot.PagePointer);
 			var rootLobRecord = rootLobStructurePage.Records[lobRootSlot.SlotID];
+			var rootLobStructure = LobStructureFactory.Create(rootLobRecord.FixedLengthData, OriginPage.File);
 
-			switch(rootLobRecord.LobType)
-			{
-				case LobStructureType.SMALL_ROOT:
-					var smallRoot = new SmallRoot(rootLobRecord.FixedLengthData, OriginPage.File);
-					return smallRoot.GetData();
-
-				case LobStructureType.LARGE_ROOT_YUKON:
-					var largeRootYukon = new LargeRootYukon(rootLobRecord.FixedLengthData, OriginPage.File);
-					return largeRootYukon.GetData();
-
-				default:
-					throw new ArgumentException("Unsupported LOB structure encountered: " + rootLobRecord.LobType);
-			}
+			return rootLobStructure.GetData();
 		}
 	}
 }
