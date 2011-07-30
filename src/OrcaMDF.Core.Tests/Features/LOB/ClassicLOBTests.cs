@@ -47,12 +47,12 @@ namespace OrcaMDF.Core.Tests.Features.LOB
 		}
 
 		[Test]
-		public void Test()
+		public void LargeInternalLobStructure()
 		{
 			using (var mdf = new MdfFile(MdfPath))
 			{
 				var scanner = new DataScanner(mdf);
-				var rows = scanner.ScanTable("Test").ToList();
+				var rows = scanner.ScanTable("LargeInternalLobStructure").ToList();
 
 				Assert.AreEqual(28, rows[0].Field<int>("A"));
 				Assert.AreEqual("".PadLeft(1500000, 'a'), rows[0].Field<string>("B"));
@@ -82,12 +82,12 @@ namespace OrcaMDF.Core.Tests.Features.LOB
 						)
 						INSERT INTO SingleLargeRootYukonPointingToMultipleDataStructures VALUES (28, REPLICATE(CAST('a' AS varchar(MAX)), 15000))", conn);
 
-			RunQuery(@"	CREATE TABLE Test
+			RunQuery(@"	CREATE TABLE LargeInternalLobStructure
 						(
 							A int,
 							B text
 						)
-						INSERT INTO Test VALUES (28, REPLICATE(CAST('a' AS varchar(MAX)), 1500000))", conn);
+						INSERT INTO LargeInternalLobStructure VALUES (28, REPLICATE(CAST('a' AS varchar(MAX)), 1500000))", conn);
 		}
 	}
 }

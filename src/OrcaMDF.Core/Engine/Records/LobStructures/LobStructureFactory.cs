@@ -1,4 +1,5 @@
 using System;
+using OrcaMDF.Core.Engine.Records.LobStructures.Exceptions;
 
 namespace OrcaMDF.Core.Engine.Records.LobStructures
 {
@@ -13,7 +14,7 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 			if (Enum.IsDefined(typeof(LobStructureType), type))
 				lobType = (LobStructureType)type;
 			else
-				throw new ArgumentException("Invalid LOB record type encountered: " + type);
+				throw new InvalidLobStructureType(type);
 
 			switch(lobType)
 			{
@@ -30,7 +31,7 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 					return new InternalLobStructure(bytes, file);
 
 				default:
-					throw new ArgumentException("Unsupported LOB record type: " + type);
+					throw new InvalidLobStructureType(type);
 			}
 		}
 	}

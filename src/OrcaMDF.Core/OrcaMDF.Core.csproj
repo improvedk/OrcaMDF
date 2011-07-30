@@ -52,6 +52,7 @@
     <Compile Include="Engine\Records\IndexRecord.cs" />
     <Compile Include="Engine\Records\LobStructures\BaseLobStructure.cs" />
     <Compile Include="Engine\Records\LobStructures\DataLobStructure.cs" />
+    <Compile Include="Engine\Records\LobStructures\Exceptions\InvalidLobStructureType.cs" />
     <Compile Include="Engine\Records\LobStructures\ILobStructure.cs" />
     <Compile Include="Engine\Records\LobStructures\InternalLobSlotPointer.cs" />
     <Compile Include="Engine\Records\LobStructures\InternalLobStructure.cs" />
