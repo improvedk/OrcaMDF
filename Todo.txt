@@ -3,3 +3,4 @@
 		- Support parsing of included columns
 
 - Support sparse columns in indexes
+- Large (MAX) value support - hybrid overflow & LOB parsing

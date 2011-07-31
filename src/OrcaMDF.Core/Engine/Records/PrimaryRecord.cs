@@ -15,6 +15,7 @@ namespace OrcaMDF.Core.Engine.Records
 		{
 			short offset = 0;
 			
+			// Parse status bits A
 			parseStatusBitsA(new BitArray(new [] { bytes[offset++] }));
 
 			// TODO: Strategize this stuff to avoid ifs, switches & impersonation
@@ -22,7 +23,7 @@ namespace OrcaMDF.Core.Engine.Records
 			{
 				// Forwarding stub only has one status byte. Remaining 8 bytes are for (PageID, FileID, Slot)
 				FixedLengthData = bytes.Skip(1).Take(8).ToArray();
-
+				
 				int pageID = BitConverter.ToInt32(bytes, 1);
 				short fileID = BitConverter.ToInt16(bytes, 5);
 				short slot = BitConverter.ToInt16(bytes, 7);
@@ -38,35 +39,27 @@ namespace OrcaMDF.Core.Engine.Records
 				Type = RecordType.ForwardingStub;
 			}
 
+			// Parse status bits B
 			parseStatusBitsB(bytes[offset++]);
 
+			// Parse fixed length size
 			short fixedLengthSize = BitConverter.ToInt16(bytes, offset);
 			fixedLengthSize -= 4;
 			offset += 2;
 
-			switch (Type)
-			{
-				case RecordType.Forwarded:
-					// Ignore 10 byte forwarded record header
-					offset += 10;
-					fixedLengthSize -= 10;
+			// Parse fixed length data
+			FixedLengthData = bytes.Skip(offset).Take(fixedLengthSize).ToArray();
+			offset += fixedLengthSize;
 
-					FixedLengthData = bytes.Skip(offset).Take(fixedLengthSize).ToArray();
-					offset += fixedLengthSize;
-					break;
-
-				default:
-					FixedLengthData = bytes.Skip(offset).Take(fixedLengthSize).ToArray();
-					offset += fixedLengthSize;
-					break;
-			}
-
+			// Parse number of columns
 			NumberOfColumns = BitConverter.ToInt16(bytes, offset);
 			offset += 2;
 
+			// Parse null bitmap, if present
 			if (HasNullBitmap)
 				offset = ParseNullBitmap(bytes, ref offset);
 
+			// Parse variable length columns, if present
 			if (HasVariableLengthColumns)
 				ParseVariableLengthColumns(bytes, ref offset);
 

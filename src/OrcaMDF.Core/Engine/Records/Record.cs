@@ -71,11 +71,11 @@ namespace OrcaMDF.Core.Engine.Records
 				// - Back pointers (two-byte value of 1024)
 				// - Sparse vectors (two-byte value of 5)
 				// - Row-overflow pointer (one-byte value of 2)
-				// As all of these differ by just the first byte (a value of 4, 5 and 2 respectively), I'm using this to detect the
-				// complex column type. The only way around this, as I see it, would be to know the scema and thus know what to look for/expect.
-				// As I don't want to refactor that yet, hack away!
-				// Finally complex columns also store 16 byte LOB pointers. Since these are the only 16-byte length complex columns we'll use that fact
-				// to detect them and retrieve the referenced data.
+				// First we'll try to read just the very first pointer - hitting case values like 5 and 2. 1024 will result in a value of 0. In that specific
+				// case we then try to read a two-byte value.
+				// Finally complex columns also store 16 byte LOB pointers. Since these do not store a complex column type ID but are the only 16-byte length
+				// complex columns (except for the rare 16-byte sparse vector) we'll use that fact to detect them and retrieve the referenced data. This *is*
+				// a bug, I'm just postponing the necessary refactoring for now.
 				if (complexColumn)
 				{
 					// If length == 16 then we're dealing with a LOB pointer, otherwise it's a regular complex column
@@ -83,26 +83,29 @@ namespace OrcaMDF.Core.Engine.Records
 						VariableLengthColumnData[i] = new LobDataProxy(Page, RawVariableLengthColumnData[i]);
 					else
 					{
-						byte complexColumnID = RawVariableLengthColumnData[i][0];
+						short complexColumnID = RawVariableLengthColumnData[i][0];
+
+						if (complexColumnID == 0)
+							complexColumnID = BitConverter.ToInt16(RawVariableLengthColumnData[i], 0);
 
 						switch (complexColumnID)
 						{
 							// Row-overflow pointer, get referenced data
-							case 0x02:
+							case 2:
 								VariableLengthColumnData[i] = new OverflowDataProxy(Page, RawVariableLengthColumnData[i]);
+								break;
+
+							// Sparse vectors will be processed at a later stage - no public option for accessing raw bytes
+							case 5:
+								SparseVector = new SparseVectorParser(RawVariableLengthColumnData[i]);
 								break;
 
 							// Forwarded record back pointer (http://improve.dk/archive/2011/06/09/anatomy-of-a-forwarded-record-ndash-the-back-pointer.aspx)
 							// Ensure we expect a back pointer at this location. For forwarding stubs, the data stems from the referenced forwarded record. For the forwarded record,
 							// the last varlength column is a backpointer. No public option for accessing raw bytes.
-							case 0x04:
-								if ((Type != RecordType.ForwardingStub || Type != RecordType.BlobFragment) || i != NumberOfVariableLengthColumns - 1)
+							case 1024:
+								if ((Type == RecordType.ForwardingStub || Type == RecordType.BlobFragment) && i != NumberOfVariableLengthColumns - 1)
 									throw new ArgumentException("Unexpected back pointer found at column index " + i);
-								break;
-
-							// Sparse vectors will be processed at a later stage - no public option for accessing raw bytes
-							case 0x05:
-								SparseVector = new SparseVectorParser(RawVariableLengthColumnData[i]);
 								break;
 
 							default:

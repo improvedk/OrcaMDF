@@ -32,6 +32,7 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 		public IEnumerable<byte> GetBytes()
 		{
 			byte[] fieldData = new byte[0];
+
 			for (int i = 12; i < data.Length; i += 12)
 			{
 				int length = BitConverter.ToInt32(data, i);
@@ -39,9 +40,12 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 				short fileID = BitConverter.ToInt16(data, i + 8);
 				short slot = BitConverter.ToInt16(data, i + 10);
 
-				// Get referenced page
+				// Get referenced page data
 				var textMixPage = OriginPage.File.GetTextMixPage(new PagePointer(fileID, pageID));
 				fieldData = fieldData.Concat(textMixPage.Records[slot].FixedLengthData).ToArray();
+
+				// Skip first 10 bytes as those contain the back pointer
+				fieldData = fieldData.Skip(10).ToArray();
 			}
 
 			return fieldData;
