@@ -8,9 +8,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrcaMDF.Core.Tests", "src\OrcaMDF.Core.Tests\OrcaMDF.Core.Tests.csproj", "{C6062A74-A3B2-4102-84D4-A658AA8011B3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BEE61D1C-C16E-4046-88D1-6E5539B45AD1}"
-	ProjectSection(SolutionItems) = preProject
-		Todo.txt = Todo.txt
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

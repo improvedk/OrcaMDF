@@ -58,6 +58,7 @@
     <Compile Include="Engine\SqlTypes\SqlCharTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlDateTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlDateTimeTests.cs" />
+    <Compile Include="Engine\SqlTypes\SqlDecimalTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlIntTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlNCharTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlNvarcharTests.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Engine\SqlTypes\SqlVarBinaryTests.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarcharTests.cs" />
     <Compile Include="Engine\DataScannerTests.cs" />
+    <Compile Include="Features\DataTypes\Decimal\DecimalTests.cs" />
     <Compile Include="Features\NullBitmap\NullBitmapTests.cs" />
     <Compile Include="Features\SparseColumns\SparseColumnTests.cs" />
     <Compile Include="MetaData\DatabaseMetaDataTests\MetaDataTests.cs" />

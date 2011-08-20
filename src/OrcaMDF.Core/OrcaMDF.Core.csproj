@@ -56,6 +56,7 @@
     <Compile Include="Engine\SlotPointer.cs" />
     <Compile Include="Engine\SparseVectorParser.cs" />
     <Compile Include="Engine\SqlTypes\SqlDate.cs" />
+    <Compile Include="Engine\SqlTypes\SqlDecimal.cs" />
     <Compile Include="Engine\SqlTypes\SqlRID.cs" />
     <Compile Include="Engine\SqlTypes\SqlSmallDateTime.cs" />
     <Compile Include="Engine\SqlTypes\SqlTime.cs" />

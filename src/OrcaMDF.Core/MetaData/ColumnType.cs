@@ -7,6 +7,7 @@ namespace OrcaMDF.Core.MetaData
 		Bit,
 		Char,
 		DateTime,
+		Decimal,
 		Int,
 		NChar,
 		NVarchar,

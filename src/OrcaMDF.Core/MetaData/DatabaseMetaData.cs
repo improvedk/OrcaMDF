@@ -119,6 +119,8 @@ namespace OrcaMDF.Core.MetaData
 			{
 				var sqlType = SysScalarTypes.Where(x => x.ID == col.XType).Single();
 
+				// TODO: Handle decimal/other data types that needs more than a length specification
+
 				var dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Length + ")");
 				dc.IsNullable = col.IsNullable;
 				dc.IsIncluded = col.IsIncluded;
@@ -188,12 +190,23 @@ namespace OrcaMDF.Core.MetaData
 			// If it's a non unique clustered index, add uniquifier column
 			if (clusteredIndex != null && !clusteredIndex.IsUnique)
 				dataRow.Columns.Add(DataColumn.Uniquifier);
-
+			
 			foreach(var col in syscols)
 			{
 				var sqlType = SysScalarTypes.Where(x => x.ID == col.XType).Single();
+				DataColumn dc;
 
-				var dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Length + ")");
+				switch((SystemType)sqlType.XType)
+				{
+					case SystemType.Decimal:
+						dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Prec + "," + col.Scale + ")");
+						break;
+
+					default:
+						dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Length + ")");
+						break;
+				}
+
 				dc.IsNullable = sqlType.IsNullable;
 				dc.IsSparse = col.IsSparse;
 				dc.ColumnID = col.ColumnID;

@@ -25,6 +25,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 				case ColumnType.DateTime:
 					return new SqlDateTime();
 
+				case ColumnType.Decimal:
+					return new SqlDecimal(column.Precision, column.Scale);
+
 				case ColumnType.Int:
 					return new SqlInt();
 

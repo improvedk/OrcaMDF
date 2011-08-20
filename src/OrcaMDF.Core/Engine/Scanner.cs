@@ -15,7 +15,7 @@ namespace OrcaMDF.Core.Engine
 			{
 				if (metaData == null)
 					metaData = File.GetMetaData();
-
+				
 				return metaData;
 			}
 		}

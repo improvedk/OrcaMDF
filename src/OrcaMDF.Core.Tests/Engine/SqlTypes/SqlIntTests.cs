@@ -18,7 +18,7 @@ namespace OrcaMDF.Core.Tests.Engine.SqlTypes
 
 			input = new byte[] { 0x8d, 0xf9, 0xaa, 0x30 };
 			Assert.AreEqual(816511373, Convert.ToInt32(type.GetValue(input)));
-
+			
 			input = new byte[] { 0x7a, 0x4a, 0x72, 0xe2 };
 			Assert.AreEqual(-495826310, Convert.ToInt32(type.GetValue(input)));
 		}

@@ -9,6 +9,8 @@ namespace OrcaMDF.Core.MetaData
 		public int? ColumnID;
 		public string Name;
 		public ColumnType Type;
+		public byte Precision;
+		public byte Scale;
 		public string TypeString;
 		public bool IsNullable;
 		public bool IsIncluded;
@@ -47,6 +49,14 @@ namespace OrcaMDF.Core.MetaData
 
 				case "datetime":
 					Type = ColumnType.DateTime;
+					break;
+
+				case "decimal":
+					Type = ColumnType.Decimal;
+
+					var parts = type.Split('(')[1].Split(')')[0].Split(',');
+					Precision = Convert.ToByte(parts[0].Trim());
+					Scale = Convert.ToByte(parts[1].Trim());
 					break;
 
 				case "int":
