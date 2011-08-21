@@ -49,7 +49,7 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 			var sqlDecimal = new System.Data.SqlTypes.SqlDecimal(precision, scale, Convert.ToBoolean(value[0]), ints);
 
-			// This will fail for any SQL Server decimal values increasing the max value of a C# decimal.
+			// This will fail for any SQL Server decimal values exceeding the max value of a C# decimal.
 			// Might want to return raw bytes at some point, though it's ugly.
 			return sqlDecimal.Value;
 		}
