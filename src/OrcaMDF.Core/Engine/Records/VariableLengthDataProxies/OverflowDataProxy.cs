@@ -44,7 +44,8 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 				var textMixPage = OriginPage.File.GetTextMixPage(new PagePointer(fileID, pageID));
 				fieldData = fieldData.Concat(textMixPage.Records[slot].FixedLengthData).ToArray();
 
-				// Skip first 10 bytes as those contain the back pointer
+				// Skip first 10 bytes containing 2 bytes (unknown), BlobID(int), 2 bytes (unknown) & Blob Type (short)
+				// TODO: Parse these values even though they're not needed
 				fieldData = fieldData.Skip(10).ToArray();
 			}
 
