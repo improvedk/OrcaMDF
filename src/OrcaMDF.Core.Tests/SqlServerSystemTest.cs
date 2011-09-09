@@ -1,6 +1,7 @@
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using NUnit.Framework;
 
@@ -67,8 +68,17 @@ namespace OrcaMDF.Core.Tests
 
 		protected void RunQuery(string sql, SqlConnection conn)
 		{
-			var cmd = new SqlCommand(sql, conn);
-			cmd.ExecuteNonQuery();
+			try
+			{
+				var cmd = new SqlCommand(sql, conn);
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex);
+				Trace.WriteLine(ex);
+				throw;
+			}
 		}
 
 		[TestFixtureTearDown]

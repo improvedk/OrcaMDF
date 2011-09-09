@@ -5,7 +5,7 @@ using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Adhoc
 {
-	class EntityPrinter
+	public class EntityPrinter
 	{
 		public static void Print(IEnumerable<Row> input)
 		{

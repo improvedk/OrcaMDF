@@ -49,6 +49,11 @@ namespace OrcaMDF.Core.MetaData
 					Type = ColumnType.DateTime;
 					break;
 
+				case "image":
+					Type = ColumnType.Image;
+					IsVariableLength = true;
+					break;
+
 				case "int":
 					Type = ColumnType.Int;
 					break;
@@ -56,6 +61,11 @@ namespace OrcaMDF.Core.MetaData
 				case "ncar":
 					Type = ColumnType.NChar;
 					VariableFixedLength = Convert.ToInt16(type.Split('(')[1].Split(')')[0]);
+					break;
+
+				case "ntext":
+					Type = ColumnType.NText;
+					IsVariableLength = true;
 					break;
 
 				case "nvarchar":

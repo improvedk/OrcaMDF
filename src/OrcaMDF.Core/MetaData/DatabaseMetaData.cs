@@ -108,7 +108,7 @@ namespace OrcaMDF.Core.MetaData
 			if (idxColumns.Count() == 0)
 				throw new Exception("No columns found for index '" + indexName + "'");
 
-			// Get rowset columns
+			// Get rowset columns - these are the ones implicitly included in the index
 			var rsColumns = Sysrscols
 				.Where(x => x.RowsetID == index.RowsetID && x.KeyOrdinal > idxColumns.Max(y => y.KeyOrdinal))
 				.OrderBy(x => x.KeyOrdinal);

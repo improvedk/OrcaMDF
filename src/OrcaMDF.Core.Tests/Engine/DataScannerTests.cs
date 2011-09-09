@@ -41,7 +41,7 @@ namespace OrcaMDF.Core.Tests.Engine
 				Assert.AreEqual(1, rows[1].Field<int>(DataColumn.Uniquifier));
 			}
 		}
-
+		
 		protected override void RunSetupQueries(SqlConnection conn)
 		{
 			// Create unique clustered table
