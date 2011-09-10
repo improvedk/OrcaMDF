@@ -69,6 +69,8 @@
     <Compile Include="Engine\SqlTypes\SqlVarcharTests.cs" />
     <Compile Include="Engine\DataScannerTests.cs" />
     <Compile Include="Features\ForwardedRecords\ForwardedRecordTests.cs" />
+    <Compile Include="Features\LobTypes\VarBinaryTests.cs" />
+    <Compile Include="Features\LobTypes\NVarcharMaxTests.cs" />
     <Compile Include="Features\LobTypes\VarcharMaxTests.cs" />
     <Compile Include="Features\LobTypes\ImageTests.cs" />
     <Compile Include="Features\LobTypes\NTextTests.cs" />
