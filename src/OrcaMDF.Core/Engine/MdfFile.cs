@@ -64,6 +64,7 @@ namespace OrcaMDF.Core.Engine
 			return metaData;
 		}
 
+		[DebuggerStepThrough]
 		public Page GetPage(PagePointer loc)
 		{
 			Debug.WriteLine("Loading Generic Page " + loc);
@@ -73,6 +74,7 @@ namespace OrcaMDF.Core.Engine
 			return new Page(getPageBytes(loc.PageID), this);
 		}
 
+		[DebuggerStepThrough]
 		public NonclusteredIndexPage GetNonclusteredIndexPage(PagePointer loc)
 		{
 			Debug.WriteLine("Loading Nonclustered Index Page " + loc);
@@ -82,6 +84,7 @@ namespace OrcaMDF.Core.Engine
 			return new NonclusteredIndexPage(getPageBytes(loc.PageID), this);
 		}
 
+		[DebuggerStepThrough]
 		public ClusteredIndexPage GetClusteredIndexPage(PagePointer loc)
 		{
 			Debug.WriteLine("Loading Clustered Index Page " + loc);
@@ -91,6 +94,7 @@ namespace OrcaMDF.Core.Engine
 			return new ClusteredIndexPage(getPageBytes(loc.PageID), this);
 		}
 
+		[DebuggerStepThrough]
 		public TextMixPage GetTextMixPage(PagePointer loc)
 		{
 			Debug.WriteLine("Loading TextMix Page " + loc);
@@ -100,6 +104,7 @@ namespace OrcaMDF.Core.Engine
 			return new TextMixPage(getPageBytes(loc.PageID), this);
 		}
 
+		[DebuggerStepThrough]
 		public DataPage GetDataPage(PagePointer loc)
 		{
 			Debug.WriteLine("Loading Data Page " + loc);
@@ -109,6 +114,7 @@ namespace OrcaMDF.Core.Engine
 			return new DataPage(getPageBytes(loc.PageID), this);
 		}
 
+		[DebuggerStepThrough]
 		public IamPage GetIamPage(PagePointer loc)
 		{
 			Debug.WriteLine("Loading IAM Page " + loc);
@@ -118,6 +124,7 @@ namespace OrcaMDF.Core.Engine
 			return new IamPage(getPageBytes(loc.PageID), this);
 		}
 
+		[DebuggerStepThrough]
 		public BootPage GetBootPage()
 		{
 			Debug.WriteLine("Loading Boot Page");

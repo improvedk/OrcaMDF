@@ -19,7 +19,6 @@ namespace OrcaMDF.Core.Engine.Pages
 			
 			int index = 0;
 
-			// Skip first 98 bytes and last 10
 			foreach (byte b in bitmap)
 			{
 				var ba = new BitArray(new[] { b });

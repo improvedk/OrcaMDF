@@ -13,9 +13,7 @@ namespace OrcaMDF.Adhoc
 
 			using (var file = new MdfFile(@"C:\Test.mdf"))
 			{
-				var scanner = new DataScanner(file);
-				var rows = scanner.ScanTable("Heaptest");
-				EntityPrinter.Print(rows);
+				file.GetGamPage(new PagePointer(1, 2));
 			}
 
         	Console.WriteLine("Done");

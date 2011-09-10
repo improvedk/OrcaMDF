@@ -27,6 +27,12 @@ namespace OrcaMDF.Core.Engine
 			SlotID = BitConverter.ToInt16(bytes, 6);
 		}
 
+		public PagePointer PagePointer
+		{
+			[DebuggerStepThrough]
+			get { return new PagePointer(FileID, PageID); }
+		}
+
 		public static bool operator ==(SlotPointer a, SlotPointer b)
 		{
 			return a.Equals(b);

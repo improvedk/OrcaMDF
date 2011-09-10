@@ -20,7 +20,8 @@ namespace OrcaMDF.Core.Engine.Pages.PFS
 			pageDescriptions = new Dictionary<int, PfsPageByte>();
 			int pageID = Header.Pointer.PageID == 1 ? 0 : Header.Pointer.PageID;
 			
-			// Skip first 4 & last 4 bytes
+			// Skip first 4
+			// TODO: Should treat this as the record it is, instead of misusing RawBody
 			foreach(byte pageByte in RawBody.Skip(4).Take(8088))
 			{
 				var pfsPageDescription = new PfsPageByte(pageByte, pageID);

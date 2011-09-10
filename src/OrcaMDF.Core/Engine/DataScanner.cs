@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using OrcaMDF.Core.MetaData;
 using OrcaMDF.Core.MetaData.Enumerations;

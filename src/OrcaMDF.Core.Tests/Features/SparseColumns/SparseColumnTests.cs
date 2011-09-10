@@ -119,80 +119,66 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 
 		protected override void RunSetupQueries(SqlConnection conn)
 		{
-			SqlCommand cmd;
-
 			// Scanning of records with differing record formats
-			cmd = new SqlCommand(@"
-				CREATE TABLE DifferingRecordFormats (A int SPARSE)
-				INSERT INTO DifferingRecordFormats VALUES (5), (6)
-				ALTER TABLE DifferingRecordFormats ADD B int NULL
-				UPDATE DifferingRecordFormats SET B = 2 WHERE A = 5", conn);
-			cmd.ExecuteNonQuery();
+			RunQuery(@"	CREATE TABLE DifferingRecordFormats (A int SPARSE)
+						INSERT INTO DifferingRecordFormats VALUES (5), (6)
+						ALTER TABLE DifferingRecordFormats ADD B int NULL
+						UPDATE DifferingRecordFormats SET B = 2 WHERE A = 5", conn);
 			
 			// Scanning of records with no sparse vector
-			cmd = new SqlCommand(@"
-				CREATE TABLE ScanRecordWithoutSparseVector
-				(
-					A int SPARSE,
-					B varchar(10)
-				)
-				INSERT INTO ScanRecordWithoutSparseVector (B) VALUES ('xyz'), (NULL)", conn);
-			cmd.ExecuteNonQuery();
+			RunQuery(@"	CREATE TABLE ScanRecordWithoutSparseVector
+						(
+							A int SPARSE,
+							B varchar(10)
+						)
+						INSERT INTO ScanRecordWithoutSparseVector (B) VALUES ('xyz'), (NULL)", conn);
 
 			// Scanning of all-sparse tables with no values
-			cmd = new SqlCommand(@"
-				CREATE TABLE ScanAllNullSparse
-				(
-					A int SPARSE,
-					B int SPARSE
-				)
-				INSERT INTO ScanAllNullSparse DEFAULT VALUES", conn);
-			cmd.ExecuteNonQuery();
+			RunQuery(@"	CREATE TABLE ScanAllNullSparse
+						(
+							A int SPARSE,
+							B int SPARSE
+						)
+						INSERT INTO ScanAllNullSparse DEFAULT VALUES", conn);
 
 			// Scanning of non-sparse ints
-			cmd = new SqlCommand(@"
-				CREATE TABLE ScanNonSparseInts
-				(
-					A int,
-					B int,
-					C int,
-					D int
-				)
-				INSERT INTO
-					ScanNonSparseInts
-				VALUES
-					(123, NULL, NULL, 127),
-					(NULL, NULL, 123982, NULL)", conn);
-			cmd.ExecuteNonQuery();
+			RunQuery(@"	CREATE TABLE ScanNonSparseInts
+						(
+							A int,
+							B int,
+							C int,
+							D int
+						)
+						INSERT INTO
+							ScanNonSparseInts
+						VALUES
+							(123, NULL, NULL, 127),
+							(NULL, NULL, 123982, NULL)", conn);
 
 			// Scanning of sparse ints
-			cmd = new SqlCommand(@"
-				CREATE TABLE ScanSparseInts
-				(
-					ID int NOT NULL,
-					A int SPARSE,
-					B int SPARSE,
-					C int SPARSE,
-					D int SPARSE,
-					E int SPARSE
-				)
-				INSERT INTO ScanSparseInts (ID, B, E) VALUES (1, 3, 1234)
-				INSERT INTO ScanSparseInts (ID, A, B) VALUES (45, 243, 328)", conn);
-			cmd.ExecuteNonQuery();
+			RunQuery(@"	CREATE TABLE ScanSparseInts
+						(
+							ID int NOT NULL,
+							A int SPARSE,
+							B int SPARSE,
+							C int SPARSE,
+							D int SPARSE,
+							E int SPARSE
+						)
+						INSERT INTO ScanSparseInts (ID, B, E) VALUES (1, 3, 1234)
+						INSERT INTO ScanSparseInts (ID, A, B) VALUES (45, 243, 328)", conn);
 
 			// Scanning of sparse columns
-			cmd = new SqlCommand(@"
-				CREATE TABLE ScanSparseColumns
-				(
-					A int SPARSE,
-					B varchar(10) SPARSE,
-					C bigint SPARSE,
-					D tinyint SPARSE,
-					E int SPARSE
-				)
-				INSERT INTO ScanSparseColumns (B, C, E) VALUES ('Mark', 3, 1234)
-				INSERT INTO ScanSparseColumns (A, D) VALUES (45, 243)", conn);
-			cmd.ExecuteNonQuery();
+			RunQuery(@"	CREATE TABLE ScanSparseColumns
+						(
+							A int SPARSE,
+							B varchar(10) SPARSE,
+							C bigint SPARSE,
+							D tinyint SPARSE,
+							E int SPARSE
+						)
+						INSERT INTO ScanSparseColumns (B, C, E) VALUES ('Mark', 3, 1234)
+						INSERT INTO ScanSparseColumns (A, D) VALUES (45, 243)", conn);
 		}
 	}
 }

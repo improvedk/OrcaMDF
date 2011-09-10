@@ -49,6 +49,7 @@ namespace OrcaMDF.Core.Engine
 			return (FileID + "_" + PageID).GetHashCode();
 		}
 
+		[DebuggerStepThrough]
 		public override string ToString()
 		{
 			return "(" + FileID + ":" + PageID + ")";

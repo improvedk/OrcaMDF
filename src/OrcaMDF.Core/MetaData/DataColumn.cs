@@ -58,6 +58,11 @@ namespace OrcaMDF.Core.MetaData
 					Precision = Convert.ToByte(parts[0].Trim());
 					Scale = Convert.ToByte(parts[1].Trim());
 					break;
+				
+				case "image":
+					Type = ColumnType.Image;
+					IsVariableLength = true;
+					break;
 
 				case "int":
 					Type = ColumnType.Int;
@@ -68,6 +73,11 @@ namespace OrcaMDF.Core.MetaData
 					VariableFixedLength = Convert.ToInt16(type.Split('(')[1].Split(')')[0]);
 					break;
 
+				case "ntext":
+					Type = ColumnType.NText;
+					IsVariableLength = true;
+					break;
+
 				case "nvarchar":
 				case "sysname":
 					Type = ColumnType.NVarchar;
@@ -76,6 +86,11 @@ namespace OrcaMDF.Core.MetaData
 
 				case "smallint":
 					Type = ColumnType.SmallInt;
+					break;
+
+				case "text":
+					Type = ColumnType.Text;
+					IsVariableLength = true;
 					break;
 
 				case "tinyint":

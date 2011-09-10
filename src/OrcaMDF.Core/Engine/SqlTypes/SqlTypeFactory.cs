@@ -27,12 +27,18 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 				case ColumnType.Decimal:
 					return new SqlDecimal(column.Precision, column.Scale);
+				
+				case ColumnType.Image:
+					return new SqlImage();
 
 				case ColumnType.Int:
 					return new SqlInt();
 
 				case ColumnType.NChar:
 					return new SqlNChar((short)column.VariableFixedLength);
+
+				case ColumnType.NText:
+					return new SqlNText();
 
 				case ColumnType.NVarchar:
 					return new SqlNVarchar();
@@ -42,6 +48,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 				case ColumnType.SmallInt:
 					return new SqlSmallInt();
+
+				case ColumnType.Text:
+					return new SqlText();
 
 				case ColumnType.TinyInt:
 					return new SqlTinyInt();

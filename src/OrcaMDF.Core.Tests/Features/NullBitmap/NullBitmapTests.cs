@@ -39,25 +39,19 @@ namespace OrcaMDF.Core.Tests.Features.NullBitmap
 
 		protected override void RunSetupQueries(SqlConnection conn)
 		{
-			SqlCommand cmd;
-
 			// A garbage bitmap may occur if it's added to an existing column that did not already have a null bitmap
-			cmd = new SqlCommand(@"
-				CREATE TABLE Garbage (A int sparse)
-				INSERT INTO Garbage VALUES (5)
-				ALTER TABLE Garbage ADD B int NULL
-				ALTER TABLE Garbage ADD C int NULL
-				ALTER TABLE Garbage ADD D int NULL", conn);
-			cmd.ExecuteNonQuery();
+			RunQuery(@"	CREATE TABLE Garbage (A int sparse)
+						INSERT INTO Garbage VALUES (5)
+						ALTER TABLE Garbage ADD B int NULL
+						ALTER TABLE Garbage ADD C int NULL
+						ALTER TABLE Garbage ADD D int NULL", conn);
 
 			// Second test of garbage bitmaps
-			cmd = new SqlCommand(@"
-				CREATE TABLE Garbage2 (A int sparse)
-				INSERT INTO Garbage2 VALUES (5)
-				ALTER TABLE Garbage2 ADD B int NULL
-				UPDATE Garbage2 SET B = 2
-				ALTER TABLE Garbage2 ADD C varchar(10)", conn);
-			cmd.ExecuteNonQuery();
+			RunQuery(@"	CREATE TABLE Garbage2 (A int sparse)
+						INSERT INTO Garbage2 VALUES (5)
+						ALTER TABLE Garbage2 ADD B int NULL
+						UPDATE Garbage2 SET B = 2
+						ALTER TABLE Garbage2 ADD C varchar(10)", conn);
 		}
 	}
 }
