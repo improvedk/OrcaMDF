@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Core.Engine.Pages;
+using OrcaMDF.Core.Engine.Records.LobStructures;
 
 namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 {
-	public class OverflowDataProxy : DataProxy, IVariableLengthDataProxy
+	public class BlobInlineRootProxy : DataProxy, IVariableLengthDataProxy
 	{
 		private byte complexColumnType;
 		private short indexLevel;
@@ -14,7 +15,7 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 		private long timestamp;
 		private byte[] data;
 
-		public OverflowDataProxy(Page page, byte[] data)
+		public BlobInlineRootProxy(Page page, byte[] data)
 			: base(page)
 		{
 			this.data = data;
@@ -42,11 +43,11 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 
 				// Get referenced page data
 				var textMixPage = OriginPage.File.GetTextMixPage(new PagePointer(fileID, pageID));
-				fieldData = fieldData.Concat(textMixPage.Records[slot].FixedLengthData).ToArray();
+				var referencedData = textMixPage.Records[slot].FixedLengthData;
 
-				// Skip first 10 bytes containing 2 bytes (unknown), BlobID(int), 2 bytes (unknown) & Blob Type (short)
-				// TODO: Parse these values even though they're not needed
-				fieldData = fieldData.Skip(10).ToArray();
+				// Get lob structure and retrieve data
+				var lobStructure = LobStructureFactory.Create(referencedData, OriginPage.File);
+				fieldData = fieldData.Concat(lobStructure.GetData()).ToArray();
 			}
 
 			return fieldData;

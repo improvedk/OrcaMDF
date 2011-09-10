@@ -70,6 +70,7 @@ namespace OrcaMDF.Core.Engine.Records
 				// for a better description of the issue. Currently there are three cases:
 				// - Back pointers (two-byte value of 1024)
 				// - Sparse vectors (two-byte value of 5)
+				// - BLOB Inline ROot (one-byte value of 4)
 				// - Row-overflow pointer (one-byte value of 2)
 				// First we'll try to read just the very first pointer - hitting case values like 5 and 2. 1024 will result in a value of 0. In that specific
 				// case we then try to read a two-byte value.
@@ -80,7 +81,7 @@ namespace OrcaMDF.Core.Engine.Records
 				{
 					// If length == 16 then we're dealing with a LOB pointer, otherwise it's a regular complex column
 					if (RawVariableLengthColumnData[i].Length == 16)
-						VariableLengthColumnData[i] = new LobDataProxy(Page, RawVariableLengthColumnData[i]);
+						VariableLengthColumnData[i] = new TextPointerProxy(Page, RawVariableLengthColumnData[i]);
 					else
 					{
 						short complexColumnID = RawVariableLengthColumnData[i][0];
@@ -92,7 +93,12 @@ namespace OrcaMDF.Core.Engine.Records
 						{
 							// Row-overflow pointer, get referenced data
 							case 2:
-								VariableLengthColumnData[i] = new OverflowDataProxy(Page, RawVariableLengthColumnData[i]);
+								VariableLengthColumnData[i] = new BlobInlineRootProxy(Page, RawVariableLengthColumnData[i]);
+								break;
+
+							// BLOB Inline Root
+							case 4:
+								VariableLengthColumnData[i] = new BlobInlineRootProxy(Page, RawVariableLengthColumnData[i]);
 								break;
 
 							// Sparse vectors will be processed at a later stage - no public option for accessing raw bytes

@@ -66,8 +66,8 @@
     <Compile Include="Engine\Records\TextRecord.cs" />
     <Compile Include="Engine\Records\VariableLengthDataProxies\DataProxy.cs" />
     <Compile Include="Engine\Records\VariableLengthDataProxies\IVariableLengthDataProxy.cs" />
-    <Compile Include="Engine\Records\VariableLengthDataProxies\LobDataProxy.cs" />
-    <Compile Include="Engine\Records\VariableLengthDataProxies\OverflowDataProxy.cs" />
+    <Compile Include="Engine\Records\VariableLengthDataProxies\TextPointerProxy.cs" />
+    <Compile Include="Engine\Records\VariableLengthDataProxies\BlobInlineRootProxy.cs" />
     <Compile Include="Engine\Records\VariableLengthDataProxies\RawByteProxy.cs" />
     <Compile Include="Engine\Scanner.cs" />
     <Compile Include="Engine\SlotPointer.cs" />
@@ -139,7 +139,9 @@
     <Compile Include="Engine\SqlTypes\SqlTypeFactory.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarchar.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Engine\Records\LobStructures\LOB Structure Formats.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

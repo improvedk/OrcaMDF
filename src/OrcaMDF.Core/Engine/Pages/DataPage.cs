@@ -53,8 +53,16 @@ namespace OrcaMDF.Core.Engine.Pages
 						{
 							if (sqlType.IsVariableLength)
 							{
+								// If there's either no null bitmap, or the null bitmap defines the column as non-null.
 								if (!record.HasNullBitmap || !record.NullBitmap[nonSparseColumnIndex])
-									columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex].GetBytes().ToArray());
+								{
+									// If the current variable length column index exceeds the number of stored
+									// variable length columns, the value is empty by definition (that is, 0 bytes, but not null).
+									if (variableColumnIndex < record.NumberOfVariableLengthColumns)
+										columnValue = sqlType.GetValue(record.VariableLengthColumnData[variableColumnIndex].GetBytes().ToArray());
+									else
+										columnValue = sqlType.GetValue(new byte[0]);
+								}
 
 								variableColumnIndex++;
 							}
