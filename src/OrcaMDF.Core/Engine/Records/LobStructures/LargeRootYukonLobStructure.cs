@@ -15,7 +15,7 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 	 * 12-13	CurLinks (short) - Number of Slot Pointers present in the LARGE_ROOT_YUKON structure
 	 * 14-15	Level (short)
 	 * 16-19	?
-	 * 20-23	Offset[0] (int) - This'll be the *end* of the data. For [0] size == offset. For [n] size == [n]-[n-1].
+	 * 20-23	Size[0] (int) - This'll be the *end* of the data. For [0] size == offset. For [n] size == [n]-[n-1].
 	 * 24-27	PageID[0] (int)
 	 * 28-29	FileID[0] (short)
 	 * 30-31	SlotID[0] (short)

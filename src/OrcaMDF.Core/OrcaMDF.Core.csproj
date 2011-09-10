@@ -140,9 +140,6 @@
     <Compile Include="Engine\SqlTypes\SqlTypeFactory.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarchar.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Engine\Records\LobStructures\LOB Structure Formats.txt" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
