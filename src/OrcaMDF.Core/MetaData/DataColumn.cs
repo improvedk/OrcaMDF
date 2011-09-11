@@ -68,7 +68,7 @@ namespace OrcaMDF.Core.MetaData
 					Type = ColumnType.Int;
 					break;
 
-				case "ncar":
+				case "nchar":
 					Type = ColumnType.NChar;
 					VariableFixedLength = Convert.ToInt16(type.Split('(')[1].Split(')')[0]);
 					break;
