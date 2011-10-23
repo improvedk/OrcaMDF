@@ -5,8 +5,8 @@ namespace OrcaMDF.Core.Engine.Pages
 {
 	public class GamPage : ExtentAllocationMap
 	{
-		public GamPage(byte[] bytes, MdfFile file)
-			: base(bytes, file)
+		public GamPage(byte[] bytes, Database database)
+			: base(bytes, database)
 		{ }
 
 		public override string ToString()

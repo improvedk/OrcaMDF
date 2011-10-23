@@ -10,9 +10,9 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 		[Test]
 		public void ScanNonSparseInts()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ScanNonSparseInts").ToList();
 
 				Assert.AreEqual(123, rows[0].Field<int?>("A"));
@@ -30,9 +30,9 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 		[Test]
 		public void ScanSparseInts()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ScanSparseInts").ToList();
 
 				Assert.AreEqual(1, rows[0].Field<int>("ID"));
@@ -54,9 +54,9 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 		[Test]
 		public void ScanSparseColumns()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ScanSparseColumns").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<int?>("A"));
@@ -76,9 +76,9 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 		[Test]
 		public void ScanAllNullSparse()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ScanAllNullSparse").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<int?>("A"));
@@ -89,9 +89,9 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 		[Test]
 		public void ScanRecordWithoutSparseVector()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ScanRecordWithoutSparseVector").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<int?>("A"));
@@ -105,9 +105,9 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 		[Test]
 		public void DifferingRecordFormats()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("DifferingRecordFormats").ToList();
 
 				Assert.AreEqual(5, rows[0].Field<int?>("A"));

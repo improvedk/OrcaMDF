@@ -1,40 +1,24 @@
 ﻿using System;
 using System.Linq;
-using OrcaMDF.Core.Engine.Pages.PFS;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
 	public class Page
 	{
-		public MdfFile File { get; private set; }
+		public Database Database { get; private set; }
 		public PageHeader Header;
 
 		// Raw content of the page (8192 bytes)
 		public byte[] RawBytes { get; private set; }
 
-		public Page(byte[] bytes, MdfFile file)
+		public Page(byte[] bytes, Database database)
 		{
 			if (bytes.Length != 8192)
 				throw new ArgumentException("bytes");
 
-			File = file;
+			Database = database;
 			RawBytes = bytes;
 			Header = new PageHeader(RawHeader);
-		}
-
-		public GamPage GetGamPage()
-		{
-			return File.GetGamPage(GamPage.GetGamPointerForPage(Header.Pointer));
-		}
-
-		public SgamPage GetSgamPage()
-		{
-			return File.GetSgamPage(SgamPage.GetSgamPointerForPage(Header.Pointer));
-		}
-
-		public PfsPage GetPfsPage()
-		{
-			return File.GetPfsPage(PfsPage.GetPfsPointerForPage(Header.Pointer));
 		}
 
 		public byte[] RawHeader

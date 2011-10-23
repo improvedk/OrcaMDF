@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using OrcaMDF.Core.Engine.Pages.PFS;
 using OrcaMDF.Core.MetaData;
 using OrcaMDF.Core.MetaData.Enumerations;
 
@@ -9,8 +9,8 @@ namespace OrcaMDF.Core.Engine
 {
 	public class DataScanner : Scanner
 	{
-		public DataScanner(MdfFile file)
-			: base(file)
+		public DataScanner(Database database)
+			: base(database)
 		{ }
 
 		/// <summary>
@@ -45,7 +45,7 @@ namespace OrcaMDF.Core.Engine
 		{
 			while (loc != PagePointer.Zero)
 			{
-				var page = File.GetDataPage(loc);
+				var page = Database.GetDataPage(loc);
 
 				foreach (var dr in page.GetEntities(schema))
 					yield return dr;
@@ -93,7 +93,7 @@ namespace OrcaMDF.Core.Engine
 		{
 			while (loc != PagePointer.Zero)
 			{
-				var iamPage = File.GetIamPage(loc);
+				var iamPage = Database.GetIamPage(loc);
 
 				// Gather results from header slots and yield them afterwards
 				var iamPageSlots = new []
@@ -114,13 +114,24 @@ namespace OrcaMDF.Core.Engine
 
 				// Then loop through extents and yield results
 				foreach (var extent in iamPage.GetAllocatedExtents())
+				{
+					// Get PFS page that tracks this extent
+					var pfs = Database.GetPfsPage(PfsPage.GetPfsPointerForPage(extent.StartPage));
+					
 					foreach (var pageLoc in extent.GetPagePointers())
 					{
-						var dataPage = File.GetDataPage(pageLoc);
+						// Check if page is allocated according to PFS page
+						var pfsDescription = pfs.GetPageDescription(pageLoc.PageID);
 
-						foreach (var dr in dataPage.GetEntities(schema))
-							yield return dr;
+						if (pfsDescription.IsAllocated)
+						{
+							var dataPage = Database.GetDataPage(pageLoc);
+
+							foreach (var dr in dataPage.GetEntities(schema))
+								yield return dr;
+						}
 					}
+				}
 
 				loc = iamPage.Header.NextPage;
 			}
@@ -130,7 +141,7 @@ namespace OrcaMDF.Core.Engine
 		{
 			if (loc != PagePointer.Zero)
 			{
-				var dataPage = File.GetDataPage(loc);
+				var dataPage = Database.GetDataPage(loc);
 
 				foreach(var dr in dataPage.GetEntities(schema))
 					yield return dr;

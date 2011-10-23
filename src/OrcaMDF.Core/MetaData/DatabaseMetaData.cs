@@ -52,13 +52,13 @@ namespace OrcaMDF.Core.MetaData
 			}
 		}
 
-		private readonly MdfFile file;
+		private readonly Database database;
 		private readonly DataScanner scanner;
 
-		internal DatabaseMetaData(MdfFile file)
+		internal DatabaseMetaData(Database database)
 		{
-			this.file = file;
-			scanner = new DataScanner(file);
+			this.database = database;
+			scanner = new DataScanner(database);
 
 			parseSysAllocationUnits();
 			parseSysRowsets();
@@ -307,7 +307,7 @@ namespace OrcaMDF.Core.MetaData
 		private void parseSysAllocationUnits()
 		{
 			// Though this has a fixed first-page location at (1:16) we'll read it from the boot page to be sure
-			var bootPage = file.GetBootPage();
+			var bootPage = database.GetBootPage();
 			SysAllocationUnits = scanner.ScanLinkedDataPages<SysAllocationUnit>(bootPage.FirstSysIndexes).ToList();
 		}
 	}

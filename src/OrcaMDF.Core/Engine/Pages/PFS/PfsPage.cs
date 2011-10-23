@@ -9,8 +9,8 @@ namespace OrcaMDF.Core.Engine.Pages.PFS
 	{
 		private IDictionary<int, PfsPageByte> pageDescriptions;
 
-		public PfsPage(byte[] bytes, MdfFile file)
-			: base(bytes, file)
+		public PfsPage(byte[] bytes, Database database)
+			: base(bytes, database)
 		{
 			parseBody();
 		}

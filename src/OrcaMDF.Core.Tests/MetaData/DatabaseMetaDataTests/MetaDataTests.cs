@@ -10,9 +10,9 @@ namespace OrcaMDF.Core.Tests.MetaData.DatabaseMetaDataTests
 		[Test]
 		public void ParseUserTableNames()
 		{
-			using(var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var metaData = mdf.GetMetaData();
+				var metaData = db.GetMetaData();
 
 				Assert.AreEqual(3, metaData.UserTableNames.Length);
 				Assert.AreEqual("MyTable", metaData.UserTableNames[0]);
@@ -24,9 +24,9 @@ namespace OrcaMDF.Core.Tests.MetaData.DatabaseMetaDataTests
 		[Test]
 		public void DetectsSparseColumns()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var metaData = mdf.GetMetaData();
+				var metaData = db.GetMetaData();
 
 				var dr = metaData.GetEmptyDataRow("Sparse");
 

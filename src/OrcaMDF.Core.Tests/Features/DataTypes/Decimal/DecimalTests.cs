@@ -11,9 +11,9 @@ namespace OrcaMDF.Core.Tests.Features.DataTypes.Decimal
 		[Test]
 		public void DecimalTest()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("DecimalTest").ToList();
 
 				Assert.AreEqual(12345m, rows[0].Field<decimal>("A"));

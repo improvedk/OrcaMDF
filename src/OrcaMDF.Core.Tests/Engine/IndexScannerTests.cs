@@ -11,9 +11,9 @@ namespace OrcaMDF.Core.Tests.Engine
 		[Test]
 		public void ScanClusteredIndexOnUniqueClusteredTable()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new IndexScanner(mdf);
+				var scanner = new IndexScanner(db);
 				var result = scanner.ScanIndex("UniqueClusteredTable", "CX_Num1_Name").ToList();
 
 				Assert.AreEqual(112, result[0]["Num1"]);
@@ -26,9 +26,9 @@ namespace OrcaMDF.Core.Tests.Engine
 		[Test]
 		public void ScanNonclusteredIndexOnUniqueClusteredTable()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new IndexScanner(mdf);
+				var scanner = new IndexScanner(db);
 				var result = scanner.ScanIndex("UniqueClusteredTable", "IDX_Num1").ToList();
 
 				Assert.AreEqual(112, result[0]["Num1"]);
@@ -39,9 +39,9 @@ namespace OrcaMDF.Core.Tests.Engine
 		[Test]
 		public void ScanHeapAsIndex()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new IndexScanner(mdf);
+				var scanner = new IndexScanner(db);
 				var result = scanner.ScanIndex("Heap", null).ToList();
 
 				Assert.AreEqual(382, result[0]["Num1"]);
@@ -54,9 +54,9 @@ namespace OrcaMDF.Core.Tests.Engine
 		[Test]
 		public void ScanNonclusteredIndexOnNonUniqueClusteredTable()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new IndexScanner(mdf);
+				var scanner = new IndexScanner(db);
 				var result = scanner.ScanIndex("NonUniqueClusteredTable", "IDX_Num1").ToList();
 
 				Assert.AreEqual(112, result[0]["Num1"]);
@@ -71,10 +71,10 @@ namespace OrcaMDF.Core.Tests.Engine
 		[Test]
 		public void ScanNonclusteredIndexOnHeap()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
 				// Index stored in sorted order
-				var scanner = new IndexScanner(mdf);
+				var scanner = new IndexScanner(db);
 				var result = scanner.ScanIndex("Heap", "IDX_Num1").ToList();
 
 				Assert.AreEqual(112, result[0]["Num1"]);
@@ -85,7 +85,7 @@ namespace OrcaMDF.Core.Tests.Engine
 				Assert.AreEqual(0, ((SlotPointer)result[1][DataColumn.RID]).SlotID);
 
 				// Data stored in insertion order
-				var dataScanner = new DataScanner(mdf);
+				var dataScanner = new DataScanner(db);
 				var dataResult = dataScanner.ScanTable("Heap").ToList();
 
 				Assert.AreEqual(382, dataResult[0]["Num1"]);

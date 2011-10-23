@@ -7,8 +7,8 @@ namespace OrcaMDF.Core.Engine.Pages
 	{
 		protected bool[] ExtentMap = new bool[63904];
 
-		public ExtentAllocationMap(byte[] bytes, MdfFile file)
-			: base(bytes, file)
+		public ExtentAllocationMap(byte[] bytes, Database database)
+			: base(bytes, database)
 		{
 			parseBitmap();
 		}
@@ -31,8 +31,8 @@ namespace OrcaMDF.Core.Engine.Pages
 		public IEnumerable<ExtentPointer> GetAllocatedExtents()
 		{
 			int gamRangeStartPageID = (Header.Pointer.PageID / 511232) * 511232;
-
-			for (int i = 0; i < ExtentMap.Length && i < File.NumberOfExtents; i++)
+			
+			for (int i = 0; i < ExtentMap.Length; i++)
 				if (ExtentMap[i])
 					yield return new ExtentPointer(new PagePointer(Header.Pointer.FileID, gamRangeStartPageID + i * 8));
 		}

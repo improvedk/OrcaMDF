@@ -9,8 +9,8 @@ namespace OrcaMDF.Core.Engine
 {
 	public class IndexScanner : Scanner
 	{
-		public IndexScanner(MdfFile file)
-			: base(file)
+		public IndexScanner(Database database)
+			: base(database)
 		{ }
 
 		public IEnumerable<Row> ScanIndex(string tableName, string indexName)
@@ -37,7 +37,7 @@ namespace OrcaMDF.Core.Engine
 				case IndexType.Heap:
 				case IndexType.Clustered:
 					// For both heaps and clustered tables we delegate the responsibility to a DataScanner
-					var scanner = new DataScanner(File);
+					var scanner = new DataScanner(Database);
 					return scanner.ScanTable(tableName);
 
 				case IndexType.Nonclustered:
@@ -75,7 +75,7 @@ namespace OrcaMDF.Core.Engine
 		{
 			while (loc != PagePointer.Zero)
 			{
-				var page = File.GetNonclusteredIndexPage(loc);
+				var page = Database.GetNonclusteredIndexPage(loc);
 
 				foreach (var dr in page.GetEntities(schema))
 					yield return dr;

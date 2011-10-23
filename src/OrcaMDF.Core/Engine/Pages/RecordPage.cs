@@ -6,8 +6,8 @@ namespace OrcaMDF.Core.Engine.Pages
 	{
 		public short[] SlotArray { get; private set; }
 
-		protected RecordPage(byte[] bytes, MdfFile file)
-			: base(bytes, file)
+		protected RecordPage(byte[] bytes, Database database)
+			: base(bytes, database)
 		{
 			parseSlotArray();
 		}

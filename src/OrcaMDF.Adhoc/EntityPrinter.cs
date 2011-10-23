@@ -24,7 +24,7 @@ namespace OrcaMDF.Adhoc
 
 			foreach (var col in input.First().Columns)
 			{
-				int maxPropValueLength = entities.Max(x => Math.Max(x[col].ToString().Length, 6));
+				int maxPropValueLength = entities.Max(x => Math.Max((x[col] ?? "").ToString().Length, 6));
 
 				maxPropValueLength = Math.Min(maxPropValueLength, 40);
 

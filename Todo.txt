@@ -4,3 +4,12 @@
 
 - Support sparse columns in indexes
 - Large (MAX) value support - hybrid overflow & LOB parsing
+
+
+I nogle tilfælde bliver dbi_dbname forkert idet man tilsyneladende ikke kan regne med at det termineres med 0x2000 – der må være en længde et eller andet sted idet SQL-server godt kan finde ud af det.
+Jeg kan godt genkende de ekstra tegn idet databasen sandsynligvis er rename’t fra lessor5 til hhv. kursus (og ikke kursus5) og demo (og ikke demoor5).
+
+Du har stående at FlagBits i PageHeader er en smallint og anvender ToInt16(), men i forhold til DBCC-output ser det ud til at det kun er en enkelt byte.
+ 
+Tilsvarende har jeg et problem med dbi_status i BootPage.
+Her ser det ud til at den ikke er en 4-byte int32 men kun 2 eller 3 bytes.

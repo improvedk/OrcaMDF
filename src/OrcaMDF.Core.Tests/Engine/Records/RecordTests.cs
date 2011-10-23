@@ -10,9 +10,9 @@ namespace OrcaMDF.Core.Tests.Engine.Records
 		[Test]
 		public void RowOverflowPointer()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("RowOverflowPointer").ToList();
 
 				Assert.AreEqual(1, rows.Count);

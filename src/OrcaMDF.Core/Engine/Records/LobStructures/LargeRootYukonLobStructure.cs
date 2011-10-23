@@ -29,8 +29,8 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 		public short Level { get; private set; }
 		public LobSlotPointer[] DataSlotPointers { get; private set; }
 
-		public LargeRootYukonLobStructure(byte[] bytes, MdfFile file)
-			: base(file)
+		public LargeRootYukonLobStructure(byte[] bytes, Database database)
+			: base(database)
 		{
 			short type = BitConverter.ToInt16(bytes, 8);
 			if(type != (short)LobStructureType.LARGE_ROOT_YUKON)
@@ -56,9 +56,9 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 
 			foreach(var lobSlot in DataSlotPointers)
 			{
-				var textPage = File.GetTextMixPage(lobSlot.PagePointer);
+				var textPage = Database.GetTextMixPage(lobSlot.PagePointer);
 				var lobRecord = textPage.Records[lobSlot.SlotID];
-				var lobStructure = LobStructureFactory.Create(lobRecord.FixedLengthData, File);
+				var lobStructure = LobStructureFactory.Create(lobRecord.FixedLengthData, Database);
 
 				result.AddRange(lobStructure.GetData());
 			}

@@ -32,9 +32,9 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 		public IEnumerable<byte> GetBytes()
 		{
 			// Get root lob structure bytes
-			var rootLobStructurePage = OriginPage.File.GetTextMixPage(lobRootSlot.PagePointer);
+			var rootLobStructurePage = OriginPage.Database.GetTextMixPage(lobRootSlot.PagePointer);
 			var rootLobRecord = rootLobStructurePage.Records[lobRootSlot.SlotID];
-			var rootLobStructure = LobStructureFactory.Create(rootLobRecord.FixedLengthData, OriginPage.File);
+			var rootLobStructure = LobStructureFactory.Create(rootLobRecord.FixedLengthData, OriginPage.Database);
 
 			return rootLobStructure.GetData();
 		}

@@ -14,7 +14,7 @@ namespace OrcaMDF.Core.Engine.Records
 			: base(page)
 		{
 			short offset = 0;
-			
+
 			// Parse status bits A
 			parseStatusBitsA(new BitArray(new [] { bytes[offset++] }));
 
@@ -28,7 +28,7 @@ namespace OrcaMDF.Core.Engine.Records
 				short fileID = BitConverter.ToInt16(bytes, 5);
 				short slot = BitConverter.ToInt16(bytes, 7);
 
-				var forwardPage = page.File.GetDataPage(new PagePointer(fileID, pageID));
+				var forwardPage = page.Database.GetDataPage(new PagePointer(fileID, pageID));
 				byte[] forwardedRecordBytes = forwardPage.Records[slot].RawBytes;
 
 				parseStatusBitsA(new BitArray(new[] {forwardedRecordBytes[0]}));

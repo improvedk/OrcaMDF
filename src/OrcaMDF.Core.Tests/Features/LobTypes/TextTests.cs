@@ -10,9 +10,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void TextNull()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTestNull").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<string>("A"));
@@ -22,9 +22,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void TextEmpty()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTestEmpty").ToList();
 
 				Assert.AreEqual("", rows[0].Field<string>("A"));
@@ -34,9 +34,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Text64()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest64").ToList();
 
 				Assert.AreEqual("".PadLeft(64, 'A'), rows[0].Field<string>("A"));
@@ -46,9 +46,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Text65()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest65").ToList();
 
 				Assert.AreEqual("".PadLeft(65, 'A'), rows[0].Field<string>("A"));
@@ -58,9 +58,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Text8040()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest8040").ToList();
 
 				Assert.AreEqual("".PadLeft(8040, 'A'), rows[0].Field<string>("A"));
@@ -70,9 +70,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Text8041()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest8041").ToList();
 
 				Assert.AreEqual("".PadLeft(8041, 'A'), rows[0].Field<string>("A"));
@@ -82,9 +82,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Text40200()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest40200").ToList();
 
 				Assert.AreEqual("".PadLeft(40200, 'A'), rows[0].Field<string>("A"));
@@ -94,9 +94,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Text40201()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest40201").ToList();
 
 				Assert.AreEqual("".PadLeft(40201, 'A'), rows[0].Field<string>("A"));
@@ -106,9 +106,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Text20000000()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest20000000").ToList();
 
 				Assert.AreEqual("".PadLeft(20000000, 'A'), rows[0].Field<string>("A"));

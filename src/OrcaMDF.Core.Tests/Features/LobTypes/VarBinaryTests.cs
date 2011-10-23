@@ -11,9 +11,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void VarBinaryNull()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTestNull").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<string>("A"));
@@ -23,9 +23,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void VarBinaryEmpty()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTestEmpty").ToList();
 
 				Assert.AreEqual("", rows[0].Field<byte[]>("A"));
@@ -35,9 +35,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void VarBinary64()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest64").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(64, 'A')), rows[0].Field<byte[]>("A"));
@@ -47,9 +47,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void VarBinary65()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest65").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(65, 'A')), rows[0].Field<byte[]>("A"));
@@ -59,9 +59,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void VarBinary8040()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest8040").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(8040, 'A')), rows[0].Field<byte[]>("A"));
@@ -71,9 +71,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void VarBinary8041()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest8041").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(8041, 'A')), rows[0].Field<byte[]>("A"));
@@ -83,9 +83,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void VarBinary40200()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest40200").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(40200, 'A')), rows[0].Field<byte[]>("A"));
@@ -95,9 +95,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void VarBinary40201()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest40201").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(40201, 'A')), rows[0].Field<byte[]>("A"));
@@ -107,9 +107,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void VarBinary20000000()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest20000000").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(20000000, 'A')), rows[0].Field<byte[]>("A"));

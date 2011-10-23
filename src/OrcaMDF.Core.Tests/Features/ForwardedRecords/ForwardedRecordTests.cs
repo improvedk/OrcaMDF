@@ -10,9 +10,9 @@ namespace OrcaMDF.Core.Tests.Features.ForwardedRecords
 		[Test]
 		public void HeapForwardedRecord()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("HeapForwardedRecord").ToList();
 
 				Assert.AreEqual(25, rows[0].Field<int>("A"));

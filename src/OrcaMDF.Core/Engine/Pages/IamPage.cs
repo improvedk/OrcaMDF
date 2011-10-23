@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace OrcaMDF.Core.Engine.Pages
@@ -20,8 +21,8 @@ namespace OrcaMDF.Core.Engine.Pages
 		public PagePointer Slot6 { get; private set; }
 		public PagePointer Slot7 { get; private set; }
 
-		public IamPage(byte[] bytes, MdfFile file)
-			: base(bytes, file)
+		public IamPage(byte[] bytes, Database database)
+			: base(bytes, database)
 		{
 			parseHeader();
 		}
@@ -78,6 +79,18 @@ namespace OrcaMDF.Core.Engine.Pages
 			Slot5 = new PagePointer(BitConverter.ToInt16(header, 76), BitConverter.ToInt32(header, 72));
 			Slot6 = new PagePointer(BitConverter.ToInt16(header, 82), BitConverter.ToInt32(header, 78));
 			Slot7 = new PagePointer(BitConverter.ToInt16(header, 88), BitConverter.ToInt32(header, 84));
+		}
+
+		/// <summary>
+		/// The IAM page references needs to use the FileID of the StartPage, as stored in the IAM page IAM header.
+		/// </summary>
+		public new IEnumerable<ExtentPointer> GetAllocatedExtents()
+		{
+			int gamRangeStartPageID = (Header.Pointer.PageID / 511232) * 511232;
+
+			for (int i = 0; i < ExtentMap.Length; i++)
+				if (ExtentMap[i])
+					yield return new ExtentPointer(new PagePointer(StartPage.FileID, gamRangeStartPageID + i * 8));
 		}
 
 		public override string ToString()

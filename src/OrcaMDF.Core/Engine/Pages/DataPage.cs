@@ -8,8 +8,8 @@ namespace OrcaMDF.Core.Engine.Pages
 {
 	public class DataPage : PrimaryRecordPage
 	{
-		public DataPage(byte[] bytes, MdfFile file)
-			: base(bytes, file)
+		public DataPage(byte[] bytes, Database database)
+			: base(bytes, database)
 		{ }
 
 		public IEnumerable<Row> GetEntities(Row schema)

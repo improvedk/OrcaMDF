@@ -11,9 +11,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void ImageNull()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTestNull").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<string>("A"));
@@ -23,9 +23,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void ImageEmpty()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTestEmpty").ToList();
 
 				Assert.AreEqual("", rows[0].Field<byte[]>("A"));
@@ -35,9 +35,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Image64()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest64").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(64, 'A')), rows[0].Field<byte[]>("A"));
@@ -47,9 +47,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Image65()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest65").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(65, 'A')), rows[0].Field<byte[]>("A"));
@@ -59,9 +59,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Image8040()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest8040").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(8040, 'A')), rows[0].Field<byte[]>("A"));
@@ -71,9 +71,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Image8041()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest8041").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(8041, 'A')), rows[0].Field<byte[]>("A"));
@@ -83,9 +83,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Image40200()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest40200").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(40200, 'A')), rows[0].Field<byte[]>("A"));
@@ -95,9 +95,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Image40201()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest40201").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(40201, 'A')), rows[0].Field<byte[]>("A"));
@@ -107,9 +107,9 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 		[Test]
 		public void Image20000000()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest20000000").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(20000000, 'A')), rows[0].Field<byte[]>("A"));

@@ -8,12 +8,15 @@ namespace OrcaMDF.Adhoc
         static void Main()
         {
         	Console.WriteLine("VSS Copying...");
-			VssHelper.CopyFile(@"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\Test.mdf", @"C:\Test.mdf");
+			//VssHelper.CopyFile(@"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\Data1.mdf", @"C:\Data1.mdf");
         	Console.WriteLine();
 
-			using (var file = new MdfFile(@"C:\Test.mdf"))
+			using (var db = new Database(new[] { @"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\MF1.mdf", @"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\MF2.ndf" }))
 			{
-				file.GetGamPage(new PagePointer(1, 2));
+				var scanner = new DataScanner(db);
+
+				var result = scanner.ScanTable("X");
+				EntityPrinter.Print(result);
 			}
 
         	Console.WriteLine("Done");

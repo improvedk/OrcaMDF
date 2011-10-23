@@ -19,8 +19,8 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 		public short Length { get; private set; }
 		private byte[] data;
 
-		public SmallRootLobStructure(byte[] bytes, MdfFile file)
-			: base(file)
+		public SmallRootLobStructure(byte[] bytes, Database database)
+			: base(database)
 		{
 			short type = BitConverter.ToInt16(bytes, 8);
 			if(type != (short)LobStructureType.SMALL_ROOT)

@@ -77,6 +77,7 @@
     <Compile Include="Features\LobTypes\ImageTests.cs" />
     <Compile Include="Features\LobTypes\NTextTests.cs" />
     <Compile Include="Features\LobTypes\TextTests.cs" />
+    <Compile Include="Features\MultiDataFile\MultiFileTests.cs" />
     <Compile Include="Features\NullBitmap\NullBitmapTests.cs" />
     <Compile Include="Features\SparseColumns\SparseColumnTests.cs" />
     <Compile Include="MetaData\DatabaseMetaDataTests\MetaDataTests.cs" />

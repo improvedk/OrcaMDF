@@ -11,9 +11,9 @@ namespace OrcaMDF.Core.Tests.Engine
 		[Test]
 		public void ScanUniqueClusteredTable()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("UniqueClusteredTable").ToList();
 
 				Assert.AreEqual(112, rows[0].Field<int>("Num1"));
@@ -27,9 +27,9 @@ namespace OrcaMDF.Core.Tests.Engine
 		[Test]
 		public void ScanNonUniqueClusteredTable()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("NonUniqueClusteredTable").ToList();
 
 				Assert.AreEqual(112, rows[0].Field<int>("Num1"));

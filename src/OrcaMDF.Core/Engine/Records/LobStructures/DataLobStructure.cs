@@ -17,8 +17,8 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 		public long BlobID { get; private set; }
 		private byte[] data;
 
-		public DataLobStructure(byte[] bytes, MdfFile file)
-			: base(file)
+		public DataLobStructure(byte[] bytes, Database database)
+			: base(database)
 		{
 			short type = BitConverter.ToInt16(bytes, 8);
 			if (type != (short)LobStructureType.DATA)

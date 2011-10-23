@@ -42,10 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\BufferManager.cs" />
+    <Compile Include="Engine\Database.cs" />
     <Compile Include="Engine\DataScanner.cs" />
     <Compile Include="Engine\ExtentPointer.cs" />
     <Compile Include="Engine\IndexScanner.cs" />
     <Compile Include="Engine\Pages\ClusteredIndexPage.cs" />
+    <Compile Include="Engine\Pages\FileHeaderPage.cs" />
     <Compile Include="Engine\Pages\IndexRecordPage.cs" />
     <Compile Include="Engine\Pages\NonclusteredIndexPage.cs" />
     <Compile Include="Engine\Pages\PrimaryRecordPage.cs" />
@@ -86,6 +89,9 @@
     <Compile Include="MetaData\Enumerations\SystemType.cs" />
     <Compile Include="MetaData\Exceptions\UnknownIndexException.cs" />
     <Compile Include="MetaData\Exceptions\UnknownTableException.cs" />
+    <Compile Include="MetaData\ObjectDefinitions\ColumnDefinition.cs" />
+    <Compile Include="MetaData\ObjectDefinitions\IndexDefinition.cs" />
+    <Compile Include="MetaData\ObjectDefinitions\TableDefinition.cs" />
     <Compile Include="MetaData\Row.cs" />
     <Compile Include="MetaData\ClusteredIndexDataRow.cs" />
     <Compile Include="MetaData\ClusteredIndexEntity.cs" />
@@ -98,7 +104,7 @@
     <Compile Include="MetaData\Enumerations\ReservedIndexID.cs" />
     <Compile Include="MetaData\SysrscolTIParser.cs" />
     <Compile Include="MetaData\SystemEntities\SysAllocationUnit.cs" />
-    <Compile Include="Engine\MdfFile.cs" />
+    <Compile Include="Engine\DataFile.cs" />
     <Compile Include="Engine\PagePointer.cs" />
     <Compile Include="Engine\Pages\BootPage.cs" />
     <Compile Include="Engine\Pages\ExtentAllocationMap.cs" />

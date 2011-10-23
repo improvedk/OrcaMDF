@@ -14,8 +14,8 @@ namespace OrcaMDF.Core.Engine.Pages
 		public int Status { get; private set; }
 		public short DBID { get; private set; }
 
-		public BootPage(byte[] bytes, MdfFile file)
-			: base(bytes, file)
+		public BootPage(byte[] bytes, Database database)
+			: base(bytes, database)
 		{
 			parseBootRecord();
 		}

@@ -42,11 +42,11 @@ namespace OrcaMDF.Core.Engine.Records.VariableLengthDataProxies
 				short slot = BitConverter.ToInt16(data, i + 10);
 
 				// Get referenced page data
-				var textMixPage = OriginPage.File.GetTextMixPage(new PagePointer(fileID, pageID));
+				var textMixPage = OriginPage.Database.GetTextMixPage(new PagePointer(fileID, pageID));
 				var referencedData = textMixPage.Records[slot].FixedLengthData;
 
 				// Get lob structure and retrieve data
-				var lobStructure = LobStructureFactory.Create(referencedData, OriginPage.File);
+				var lobStructure = LobStructureFactory.Create(referencedData, OriginPage.Database);
 				fieldData = fieldData.Concat(lobStructure.GetData()).ToArray();
 			}
 

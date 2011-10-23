@@ -7,8 +7,8 @@ namespace OrcaMDF.Core.Engine.Pages
 	{
 		public IndexRecord[] Records { get; protected set; }
 
-		protected IndexRecordPage(byte[] bytes, MdfFile file)
-			: base(bytes, file)
+		protected IndexRecordPage(byte[] bytes, Database database)
+			: base(bytes, database)
 		{
 			parseRecords();
 		}

@@ -7,8 +7,8 @@ namespace OrcaMDF.Core.Engine.Pages
 	{
 		public PrimaryRecord[] Records { get; protected set; }
 
-		public PrimaryRecordPage(byte[] bytes, MdfFile file)
-			: base(bytes, file)
+		public PrimaryRecordPage(byte[] bytes, Database database)
+			: base(bytes, database)
 		{
 			parseRecords();
 		}

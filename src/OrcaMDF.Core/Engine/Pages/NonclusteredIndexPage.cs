@@ -8,8 +8,8 @@ namespace OrcaMDF.Core.Engine.Pages
 {
 	public class NonclusteredIndexPage : IndexRecordPage
 	{
-		public NonclusteredIndexPage(byte[] bytes, MdfFile file)
-			: base(bytes, file)
+		public NonclusteredIndexPage(byte[] bytes, Database database)
+			: base(bytes, database)
 		{ }
 
 		public IEnumerable<Row> GetEntities(Row schema)

@@ -7,8 +7,8 @@ namespace OrcaMDF.Core.Engine.Pages
 	{
 		public TextRecord[] Records { get; protected set; }
 
-		public TextMixPage(byte[] bytes, MdfFile file)
-			: base(bytes, file)
+		public TextMixPage(byte[] bytes, Database database)
+			: base(bytes, database)
 		{
 			parseRecords();
 		}

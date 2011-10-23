@@ -1,4 +1,3 @@
-using System;
 using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
@@ -11,9 +10,9 @@ namespace OrcaMDF.Core.Tests.Features.NullBitmap
 		[Test]
 		public void Garbage()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("Garbage").ToList();
 
 				Assert.AreEqual(5, rows[0].Field<int?>("A"));
@@ -26,9 +25,9 @@ namespace OrcaMDF.Core.Tests.Features.NullBitmap
 		[Test]
 		public void Garbage2()
 		{
-			using (var mdf = new MdfFile(MdfPath))
+			using (var db = new Database(DataFilePaths))
 			{
-				var scanner = new DataScanner(mdf);
+				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("Garbage2").ToList();
 
 				Assert.AreEqual(5, rows[0].Field<int?>("A"));
