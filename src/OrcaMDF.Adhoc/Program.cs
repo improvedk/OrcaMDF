@@ -7,15 +7,22 @@ namespace OrcaMDF.Adhoc
     {
         static void Main()
         {
-        	Console.WriteLine("VSS Copying...");
+        	//Console.WriteLine("VSS Copying...");
 			//VssHelper.CopyFile(@"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\Data1.mdf", @"C:\Data1.mdf");
-        	Console.WriteLine();
+        	//Console.WriteLine();
 
-			using (var db = new Database(new[] { @"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\MF1.mdf", @"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\MF2.ndf" }))
+        	var files = new[]
+        	    {
+					@"C:\SampleDatabase_Data1.mdf",
+					@"C:\SampleDatabase_Data2.ndf",
+					@"C:\SampleDatabase_Data3.ndf"
+        	    };
+
+			using (var db = new Database(files))
 			{
 				var scanner = new DataScanner(db);
+				var result = scanner.ScanTable("MyTable");
 
-				var result = scanner.ScanTable("X");
 				EntityPrinter.Print(result);
 			}
 

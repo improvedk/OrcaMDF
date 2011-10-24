@@ -17,6 +17,7 @@ namespace OrcaMDF.Core.MetaData
 		SmallInt,
 		Text,
 		TinyInt,
+		UniqueIdentifier,
 		Uniquifier,
 		VarBinary,
 		Varchar

@@ -97,6 +97,10 @@ namespace OrcaMDF.Core.MetaData
 					Type = ColumnType.TinyInt;
 					break;
 
+				case "uniqueidentifier":
+					Type = ColumnType.UniqueIdentifier;
+					break;
+
 				case "uniquifier":
 					Type = ColumnType.Uniquifier;
 					IsVariableLength = true;

@@ -83,6 +83,7 @@
     <Compile Include="Engine\SqlTypes\SqlSmallDateTime.cs" />
     <Compile Include="Engine\SqlTypes\SqlText.cs" />
     <Compile Include="Engine\SqlTypes\SqlTime.cs" />
+    <Compile Include="Engine\SqlTypes\SqlUniqueIdentifier.cs" />
     <Compile Include="Engine\SqlTypes\SqlUniquifier.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
     <Compile Include="MetaData\Enumerations\IndexType.cs" />
