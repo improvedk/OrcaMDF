@@ -16,16 +16,16 @@ namespace OrcaMDF.Core.Engine
 		public IEnumerable<Row> ScanIndex(string tableName, string indexName)
 		{
 			// Get table
-			var table = MetaData.SysObjects
-				.Where(x => x.Name == tableName && x.Type == "U ")
+			var table = Database.Dmvs.Objects
+				.Where(x => x.Name == tableName && (x.Type == ObjectType.USER_TABLE || x.Type == ObjectType.SYSTEM_TABLE))
 				.SingleOrDefault();
 
 			if (table == null)
 				throw new UnknownTableException(tableName);
 
 			// Get index
-			var index = MetaData.SysIndexStats
-				.Where(x => x.ObjectID == table.ObjectID && x.Name == indexName)
+			var index = Database.Dmvs.Indexes
+				.Where(i => i.ObjectID == table.ObjectID && i.Name == indexName)
 				.SingleOrDefault();
 
 			if (index == null)
@@ -45,7 +45,7 @@ namespace OrcaMDF.Core.Engine
 					var schema = MetaData.GetEmptyIndexRow(tableName, indexName);
 
 					// Get rowset for the index
-					var tableRowset = MetaData.SysRowsets
+					var tableRowset = Database.Dmvs.SystemInternalsPartitions
 						.Where(x => x.ObjectID == table.ObjectID && x.IndexID == index.IndexID)
 						.FirstOrDefault();
 
@@ -53,8 +53,8 @@ namespace OrcaMDF.Core.Engine
 						throw new Exception("Index has no rowset");
 
 					// Get allocation unit for in-row data
-					var allocUnit = MetaData.SysAllocationUnits
-						.Where(x => x.ContainerID == tableRowset.PartitionID && x.Type == 1)
+					var allocUnit = Database.Dmvs.SystemInternalsAllocationUnits
+						.Where(au => au.ContainerID == tableRowset.PartitionID && au.Type == (byte)AllocationUnitType.IN_ROW_DATA)
 						.SingleOrDefault();
 
 					if (allocUnit == null)

@@ -86,13 +86,34 @@
     <Compile Include="Engine\SqlTypes\SqlUniqueIdentifier.cs" />
     <Compile Include="Engine\SqlTypes\SqlUniquifier.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
+    <Compile Include="MetaData\BaseTableData.cs" />
+    <Compile Include="MetaData\BaseTables\sysiscol.cs" />
+    <Compile Include="MetaData\BaseTables\syspalname.cs" />
+    <Compile Include="MetaData\BaseTables\syspalvalue.cs" />
+    <Compile Include="MetaData\BaseTables\sysrscol.cs" />
+    <Compile Include="MetaData\BaseTables\syssingleobjref.cs" />
+    <Compile Include="MetaData\BaseTables\sysallocunit.cs" />
+    <Compile Include="MetaData\BaseTables\syscolpar.cs" />
+    <Compile Include="MetaData\BaseTables\sysidxstat.cs" />
+    <Compile Include="MetaData\BaseTables\sysschobj.cs" />
+    <Compile Include="MetaData\BaseTables\sysrowset.cs" />
+    <Compile Include="MetaData\BaseTables\sysscalartype.cs" />
+    <Compile Include="MetaData\DmvGenerator.cs" />
+    <Compile Include="MetaData\DMVs\Column.cs" />
+    <Compile Include="MetaData\DMVs\Index.cs" />
+    <Compile Include="MetaData\DMVs\IndexColumn.cs" />
+    <Compile Include="MetaData\DMVs\Object.cs" />
+    <Compile Include="MetaData\DMVs\ObjectDollar.cs" />
+    <Compile Include="MetaData\DMVs\SystemInternalsAllocationUnit.cs" />
+    <Compile Include="MetaData\DMVs\SystemInternalsPartition.cs" />
+    <Compile Include="MetaData\DMVs\SystemInternalsPartitionColumn.cs" />
+    <Compile Include="MetaData\DMVs\Table.cs" />
+    <Compile Include="MetaData\DMVs\Type.cs" />
+    <Compile Include="MetaData\Enumerations\AllocationUnitType.cs" />
     <Compile Include="MetaData\Enumerations\IndexType.cs" />
     <Compile Include="MetaData\Enumerations\SystemType.cs" />
     <Compile Include="MetaData\Exceptions\UnknownIndexException.cs" />
     <Compile Include="MetaData\Exceptions\UnknownTableException.cs" />
-    <Compile Include="MetaData\ObjectDefinitions\ColumnDefinition.cs" />
-    <Compile Include="MetaData\ObjectDefinitions\IndexDefinition.cs" />
-    <Compile Include="MetaData\ObjectDefinitions\TableDefinition.cs" />
     <Compile Include="MetaData\Row.cs" />
     <Compile Include="MetaData\ClusteredIndexDataRow.cs" />
     <Compile Include="MetaData\ClusteredIndexEntity.cs" />
@@ -104,7 +125,6 @@
     <Compile Include="MetaData\DataColumn.cs" />
     <Compile Include="MetaData\Enumerations\ReservedIndexID.cs" />
     <Compile Include="MetaData\SysrscolTIParser.cs" />
-    <Compile Include="MetaData\SystemEntities\SysAllocationUnit.cs" />
     <Compile Include="Engine\DataFile.cs" />
     <Compile Include="Engine\PagePointer.cs" />
     <Compile Include="Engine\Pages\BootPage.cs" />
@@ -121,15 +141,7 @@
     <Compile Include="Engine\Pages\RecordPage.cs" />
     <Compile Include="Engine\Pages\SgamPage.cs" />
     <Compile Include="Engine\Pages\TextMixPage.cs" />
-    <Compile Include="MetaData\SystemEntities\SysIndexStat.cs" />
-    <Compile Include="MetaData\SystemEntities\SysIsCol.cs" />
-    <Compile Include="MetaData\SystemEntities\SysObject.cs" />
-    <Compile Include="MetaData\SystemEntities\SysRowset.cs" />
-    <Compile Include="MetaData\SystemEntities\SysColPar.cs" />
     <Compile Include="MetaData\Enumerations\SystemObject.cs" />
-    <Compile Include="MetaData\SystemEntities\Sysrscol.cs" />
-    <Compile Include="MetaData\SystemEntities\SysScalarType.cs" />
-    <Compile Include="MetaData\SystemFlags\RowsetStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Records\Record.cs" />
     <Compile Include="Engine\Records\RecordType.cs" />
@@ -146,6 +158,9 @@
     <Compile Include="Engine\SqlTypes\SqlNVarchar.cs" />
     <Compile Include="Engine\SqlTypes\SqlTypeFactory.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarchar.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MetaData\SystemFlags\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

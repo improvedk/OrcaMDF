@@ -9,11 +9,11 @@ namespace OrcaMDF.Core.MetaData
 		public byte Precision;
 		public short MaxLength;
 		public short MaxInrowLength;
-		public int TypeID;
+		public byte TypeID;
 
 		public SysrscolTIParser(int ti)
 		{
-			TypeID = ti & 0xFF;
+			TypeID = (byte)(ti & 0xFF);
 
 			if (!Enum.IsDefined(typeof(SystemType), TypeID))
 				throw new ArgumentException("Unknown TypeID '" + TypeID + "'");

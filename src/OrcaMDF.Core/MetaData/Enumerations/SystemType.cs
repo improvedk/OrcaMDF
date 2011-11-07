@@ -1,6 +1,6 @@
 namespace OrcaMDF.Core.MetaData.Enumerations
 {
-	public enum SystemType
+	public enum SystemType : byte
 	{
 		Image				= 34,
 		Text				= 35,

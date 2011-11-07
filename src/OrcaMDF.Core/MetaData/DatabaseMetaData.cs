@@ -1,90 +1,33 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.MetaData.Enumerations;
 using OrcaMDF.Core.MetaData.Exceptions;
-using OrcaMDF.Core.MetaData.SystemEntities;
 
 namespace OrcaMDF.Core.MetaData
 {
 	public class DatabaseMetaData
 	{
-		public IList<SysAllocationUnit> SysAllocationUnits { get; internal set; }
-		public IList<SysObject> SysObjects { get; internal set; }
-		public IList<SysRowset> SysRowsets { get; internal set; }
-		public IList<SysColPar> SysColPars { get; internal set; }
-		public IList<SysScalarType> SysScalarTypes { get; internal set; }
+		private readonly Database db;
 
-		private IList<SysIndexStat> sysIndexStats;
-		public IList<SysIndexStat> SysIndexStats
+		internal DatabaseMetaData(Database db)
 		{
-			get
-			{
-				if (sysIndexStats == null)
-					parseSysIndexStats();
-
-				return sysIndexStats;
-			}
-		}
-
-		private IList<SysIsCol> sysIsCols;
-		public IList<SysIsCol> SysIsCols
-		{
-			get
-			{
-				if (sysIsCols == null)
-					parseSysIsCols();
-
-				return sysIsCols;
-			}
-		}
-
-		private IList<Sysrscol> sysrscols;
-		public IList<Sysrscol> Sysrscols
-		{
-			get
-			{
-				if (sysrscols == null)
-					parseSysrscols();
-
-				return sysrscols;
-			}
-		}
-
-		private readonly Database database;
-		private readonly DataScanner scanner;
-
-		internal DatabaseMetaData(Database database)
-		{
-			this.database = database;
-			scanner = new DataScanner(database);
-
-			parseSysAllocationUnits();
-			parseSysRowsets();
-			parseSysColPars();
-			parseSysObjects();
-			parseSysScalarTypes();
-		}
-
-		private void parseSysrscols()
-		{
-			sysrscols = scanner.ScanTable<Sysrscol>("sysrscols").ToList();
+			this.db = db;
 		}
 
 		public DataRow GetEmptyIndexRow(string tableName, string indexName)
 		{
 			// Get table
-			var table = SysObjects
-				.Where(x => x.Name == tableName && (x.Type == "U " || x.Type == "S "))
+			var table = db.Dmvs.Objects
+				.Where(x => x.Name == tableName && (x.Type == ObjectType.USER_TABLE || x.Type == ObjectType.SYSTEM_TABLE))
 				.SingleOrDefault();
 
 			if (table == null)
 				throw new UnknownTableException(tableName);
 
 			// Get index
-			var index = SysIndexStats
-				.Where(x => x.ObjectID == table.ObjectID && x.Name == indexName)
+			var index = db.Dmvs.Indexes
+				.Where(i => i.ObjectID == table.ObjectID && i.Name == indexName)
 				.SingleOrDefault();
 
 			if (index == null)
@@ -96,42 +39,48 @@ namespace OrcaMDF.Core.MetaData
 			// Determine if table is clustered or a heap. If we're not scanning the clustered index itself, see if
 			// table has a clustered index. If not, it's a heap.
 			bool isHeap = true;
-			if (index.IndexID == 1 || SysIndexStats.Any(x => x.ObjectID == table.ObjectID && x.IndexID == 1))
+			if (index.IndexID == 1 || db.Dmvs.Indexes.Any(i => i.ObjectID == table.ObjectID && i.IndexID == 1))
 				isHeap = false;
 
 			// Get index columns
-			var idxColumns = SysIsCols
-				.Join(SysColPars, x => new { x.ColumnID, x.ObjectID }, y => new { y.ColumnID, y.ObjectID }, (x, y) => new { x.ObjectID, x.IndexID, x.KeyOrdinal, y.IsNullable, x.IsIncluded, y.XType, y.Name, y.Length })
+			var idxColumns = db.Dmvs.IndexColumns
+				.Join(db.Dmvs.Columns, ic => new { ic.ColumnID, ic.ObjectID }, c => new { c.ColumnID, c.ObjectID }, (ic, c) => new { ic.ObjectID, ic.IndexID, ic.KeyOrdinal, c.IsNullable, ic.IsIncludedColumn, c.SystemTypeID, c.Name, c.MaxLength })
 				.Where(x => x.ObjectID == table.ObjectID && x.IndexID == index.IndexID)
 				.OrderBy(x => x.KeyOrdinal);
+
+			// Get first index partition
+			var idxFirstPartition = db.Dmvs.SystemInternalsPartitions
+				.Where(p => p.ObjectID == table.ObjectID && p.IndexID == index.IndexID)
+				.OrderBy(p => p.PartitionNumber)
+				.First();
 
 			if (idxColumns.Count() == 0)
 				throw new Exception("No columns found for index '" + indexName + "'");
 
 			// Get rowset columns - these are the ones implicitly included in the index
-			var rsColumns = Sysrscols
-				.Where(x => x.RowsetID == index.RowsetID && x.KeyOrdinal > idxColumns.Max(y => y.KeyOrdinal))
-				.OrderBy(x => x.KeyOrdinal);
+			var partitionColumns = db.Dmvs.SystemInternalsPartitionColumns
+				.Where(pc => pc.PartitionID == idxFirstPartition.PartitionID && pc.KeyOrdinal > idxColumns.Max(ic => ic.KeyOrdinal))
+				.OrderBy(pc => pc.KeyOrdinal);
 
 			// Add columns as specified in sysiscols
 			var dataRow = new DataRow();
 			foreach(var col in idxColumns)
 			{
-				var sqlType = SysScalarTypes.Where(x => x.ID == col.XType).Single();
+				var sqlType = db.Dmvs.Types.Where(x => x.SystemTypeID == col.SystemTypeID).Single();
 
 				// TODO: Handle decimal/other data types that needs more than a length specification
 
-				var dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Length + ")");
+				var dc = new DataColumn(col.Name, sqlType.Name + "(" + col.MaxLength + ")");
 				dc.IsNullable = col.IsNullable;
-				dc.IsIncluded = col.IsIncluded;
+				dc.IsIncluded = col.IsIncludedColumn;
 
 				dataRow.Columns.Add(dc);
 			}
 			
 			// Add remaining columns as specified in sysrscols
-			foreach(var col in rsColumns)
+			foreach (var col in partitionColumns)
 			{
-				var sqlType = SysScalarTypes.Where(x => x.ID == col.SystemTypeID).Single();
+				var sqlType = db.Dmvs.Types.Where(x => x.UserTypeID == col.SystemTypeID).Single();
 
 				// The uniquifier for clustered tables needs special treatment. Uniquifier is detected by the system type and
 				// the fact that it's stored in the variable length section of the record (LeafOffset < 0).
@@ -143,7 +92,7 @@ namespace OrcaMDF.Core.MetaData
 
 				// The RID for heaps needs special treatment. RID is detected by system type (binary(8)) and by
 				// being the last column in the record.
-				if(isHeap && col.SystemTypeID == (int)SystemType.Binary && col.MaxLength == 8 && col.KeyOrdinal == rsColumns.Max(x => x.KeyOrdinal))
+				if (isHeap && col.SystemTypeID == (int)SystemType.Binary && col.MaxLength == 8 && col.KeyOrdinal == partitionColumns.Max(pc => pc.KeyOrdinal))
 				{
 					dataRow.Columns.Add(DataColumn.RID);
 					continue;
@@ -167,21 +116,20 @@ namespace OrcaMDF.Core.MetaData
 		public DataRow GetEmptyDataRow(string tableName)
 		{
 			// Get table
-			var table = SysObjects
-				.Where(x => x.Name == tableName && (x.Type == "U " || x.Type == "S "))
+			var table = db.Dmvs.Objects
+				.Where(x => x.Name == tableName && (x.Type == ObjectType.USER_TABLE || x.Type == ObjectType.SYSTEM_TABLE))
 				.SingleOrDefault();
 
 			if (table == null)
 				throw new UnknownTableException(tableName);
 
 			// Get index
-			var clusteredIndex = SysIndexStats
-				.Where(x => x.ObjectID == table.ObjectID && x.IndexID == 1)
-				.OrderByDescending(x => x.IndexID)
+			var clusteredIndex = db.Dmvs.Indexes
+				.Where(i => i.ObjectID == table.ObjectID && i.IndexID == 1)
 				.SingleOrDefault();
 			
 			// Get columns
-			var syscols = SysColPars
+			var syscols = db.Dmvs.Columns
 				.Where(x => x.ObjectID == table.ObjectID);
 
 			// Create table and add columns
@@ -193,17 +141,17 @@ namespace OrcaMDF.Core.MetaData
 			
 			foreach(var col in syscols)
 			{
-				var sqlType = SysScalarTypes.Where(x => x.ID == col.XType).Single();
+				var sqlType = db.Dmvs.Types.Where(x => x.UserTypeID == col.UserTypeID).Single();
 				DataColumn dc;
 
-				switch((SystemType)sqlType.XType)
+				switch((SystemType)sqlType.SystemTypeID)
 				{
 					case SystemType.Decimal:
-						dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Prec + "," + col.Scale + ")");
+						dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Precision + "," + col.Scale + ")");
 						break;
 
 					default:
-						dc = new DataColumn(col.Name, sqlType.Name + "(" + col.Length + ")");
+						dc = new DataColumn(col.Name, sqlType.Name + "(" + col.MaxLength + ")");
 						break;
 				}
 
@@ -215,100 +163,6 @@ namespace OrcaMDF.Core.MetaData
 			}
 
 			return dataRow;
-		}
-
-		public string[] TableNames
-		{
-			get
-			{
-				return SysObjects
-					.Where(x => x.Type == ObjectType.INTERNAL_TABLE || x.Type == ObjectType.SYSTEM_TABLE || x.Type == ObjectType.USER_TABLE)
-					.Select(x => x.Name)
-					.ToArray();
-			}
-		}
-
-		public string[] UserTableNames
-		{
-			get
-			{
-				return SysObjects
-					.Where(x => x.Type == ObjectType.USER_TABLE)
-					.Select(x => x.Name)
-					.ToArray();
-			}
-		}
-
-		private void parseSysObjects()
-		{
-			long rowsetID = SysRowsets
-				.Where(x => x.ObjectID == (int)SystemObject.sysschobjs && x.IndexID == 1)
-				.Single()
-				.PartitionID;
-
-			var pageLoc = SysAllocationUnits
-				.Where(x => x.AllocationUnitID == rowsetID && x.Type == 1)
-				.Single()
-				.FirstPage;
-
-			SysObjects = scanner.ScanLinkedDataPages<SysObject>(pageLoc).ToList();
-		}
-
-		private void parseSysScalarTypes()
-		{
-			long rowsetID = SysRowsets
-				.Where(x => x.ObjectID == (int)SystemObject.sysscalartypes && x.IndexID == 1)
-				.Single()
-				.PartitionID;
-
-			var pageLoc = SysAllocationUnits
-				.Where(x => x.AllocationUnitID == rowsetID && x.Type == 1)
-				.Single()
-				.FirstPage;
-
-			SysScalarTypes = scanner.ScanLinkedDataPages<SysScalarType>(pageLoc).ToList();
-		}
-
-		private void parseSysColPars()
-		{
-			long rowsetID =	SysRowsets
-				.Where(x => x.ObjectID == (int)SystemObject.syscolpars && x.IndexID == 1)
-				.Single()
-				.PartitionID;
-
-			var pageLoc = SysAllocationUnits
-				.Where(x => x.AllocationUnitID == rowsetID && x.Type == 1)
-				.Single()
-				.FirstPage;
-
-			SysColPars = scanner.ScanLinkedDataPages<SysColPar>(pageLoc).ToList();
-		}
-
-		private void parseSysIndexStats()
-		{
-			sysIndexStats = scanner.ScanTable<SysIndexStat>("sysidxstats").ToList();
-		}
-
-		private void parseSysIsCols()
-		{
-			sysIsCols = scanner.ScanTable<SysIsCol>("sysiscols").ToList();
-		}
-
-		private void parseSysRowsets()
-		{
-			var pageLoc = SysAllocationUnits
-				.Where(x => x.AllocationUnitID == FixedSystemObjectAllocationUnits.sysrowsets)
-				.Single()
-				.FirstPage;
-
-			SysRowsets = scanner.ScanLinkedDataPages<SysRowset>(pageLoc).ToList();
-		}
-
-		private void parseSysAllocationUnits()
-		{
-			// Though this has a fixed first-page location at (1:16) we'll read it from the boot page to be sure
-			var bootPage = database.GetBootPage();
-			SysAllocationUnits = scanner.ScanLinkedDataPages<SysAllocationUnit>(bootPage.FirstSysIndexes).ToList();
 		}
 	}
 }

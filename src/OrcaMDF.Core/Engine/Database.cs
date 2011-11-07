@@ -12,12 +12,21 @@ namespace OrcaMDF.Core.Engine
 	{
 		public string Name { get; private set; }
 		public short ID { get; private set; }
+		public DmvGenerator Dmvs { get; private set; }
 
 		internal Dictionary<short, DataFile> Files = new Dictionary<short, DataFile>();
+		internal BaseTableData BaseTables;
 
 		private readonly BufferManager bufferManager;
 		private readonly object metaDataLock = new object();
 		private DatabaseMetaData metaData;
+
+		/// <summary>
+		/// Instantiates a database using just a single data file.
+		/// </summary>
+		public Database(string file)
+			: this(new [] { file })
+		{ }
 
 		/// <summary>
 		/// Instantiates a new database. Each data file that's part of the database must be included in the files parameter.
@@ -49,6 +58,12 @@ namespace OrcaMDF.Core.Engine
 			var bootPage = GetBootPage();
 			Name = bootPage.DatabaseName;
 			ID = bootPage.DBID;
+
+			// Parse vital base tables
+			BaseTables = new BaseTableData(this);
+
+			// Startup dmv generator
+			Dmvs = new DmvGenerator(this);
 		}
 
 		public DatabaseMetaData GetMetaData()

@@ -57,23 +57,23 @@ namespace OrcaMDF.Core.Engine
 		private IEnumerable<Row> scanTable(string tableName, Row schema)
 		{
 			// Get object
-			var tableObject = MetaData.SysObjects
-				.Where(x => x.Name == tableName)
-				.Where(x => x.Type == ObjectType.INTERNAL_TABLE || x.Type == ObjectType.SYSTEM_TABLE || x.Type == ObjectType.USER_TABLE)
+			var tableObject = Database.BaseTables.sysschobjs
+				.Where(x => x.name == tableName)
+				.Where(x => x.type.Trim() == ObjectType.INTERNAL_TABLE || x.type.Trim() == ObjectType.SYSTEM_TABLE || x.type.Trim() == ObjectType.USER_TABLE)
 				.SingleOrDefault();
 			if (tableObject == null)
 				throw new ArgumentException("Table does not exist.");
 
 			// Get rowset, prefer clustered index if exists
-			var tableRowset = MetaData.SysRowsets
-				.Where(x => x.ObjectID == tableObject.ObjectID && x.IndexID <= 1)
+			var tableRowset = Database.Dmvs.SystemInternalsPartitions
+				.Where(x => x.ObjectID == tableObject.id && x.IndexID <= 1)
 				.OrderByDescending(x => x.IndexID)
 				.FirstOrDefault();
 			if (tableRowset == null)
 				throw new ArgumentException("Table has no rowsets.");
 
 			// Get allocation unit for in-row data
-			var allocUnit = MetaData.SysAllocationUnits
+			var allocUnit = Database.Dmvs.SystemInternalsAllocationUnits
 				.Where(x => x.ContainerID == tableRowset.PartitionID && x.Type == 1)
 				.SingleOrDefault();
 			if (allocUnit == null)
