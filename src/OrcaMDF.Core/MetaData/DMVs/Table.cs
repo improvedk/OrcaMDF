@@ -24,16 +24,16 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		public int? FilestreamDataSpaceID { get; private set; }
 		public int MaxColumnIDUsed { get; private set; }
 		public bool LockOnBulkLoad { get; private set; }
-		public bool? UsesAnsiNulls { get; private set; }
-		public bool? IsReplicated { get; private set; }
-		public bool? HasReplicationFilter { get; private set; }
-		public bool? IsMergePublished { get; private set; }
-		public bool? IsSyncTranSubscribed { get; private set; }
+		public bool UsesAnsiNulls { get; private set; }
+		public bool IsReplicated { get; private set; }
+		public bool HasReplicationFilter { get; private set; }
+		public bool IsMergePublished { get; private set; }
+		public bool IsSyncTranSubscribed { get; private set; }
 		public bool HasUncheckedAssemblyData { get; private set; }
 		public int? TextInRowLimit { get; private set; }
-		public bool? LargeValueTypesOutOfRow { get; private set; }
-		public bool? IsTrackedByCdc { get; private set; }
-		public byte? LockEscalation { get; private set; }
+		public bool LargeValueTypesOutOfRow { get; private set; }
+		public bool IsTrackedByCdc { get; private set; }
+		public byte LockEscalation { get; private set; }
 		public string LockEscalationDesc { get; private set; }
 
 		internal static IEnumerable<Table> GetDmvData(Database db)

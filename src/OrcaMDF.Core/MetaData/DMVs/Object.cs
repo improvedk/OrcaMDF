@@ -39,29 +39,6 @@ namespace OrcaMDF.Core.MetaData.DMVs
 						IsPublished = o.IsPublished,
 						IsSchemaPublished = o.IsSchemaPublished
 				    });
-					
-			//return db.BaseTables.sysschobjs
-			//    .Select(o => new Object
-			//        {
-			//            Name = o.name,
-			//            ObjectID = o.id,
-			//            PrincipalID = db.BaseTables.syssingleobjrefs
-			//                .Where(r => r.depid == o.id && r.@class == 97 && r.depsubid == 0)
-			//                .Select(r => r.indepid)
-			//                .SingleOrDefault(),
-			//            SchemaID = o.nsid,
-			//            ParentObjectID = o.pid,
-			//            Type = o.type.Trim(),
-			//            TypeDesc = db.BaseTables.syspalnames
-			//                .Where(n => n.@class == "OBTY" && n.value.Trim() == o.type.Trim())
-			//                .Select(n => n.name)
-			//                .Single(),
-			//            CreateDate = o.created,
-			//            ModifyDate = o.modified,
-			//            IsMSShipped = Convert.ToBoolean(o.status & 1),
-			//            IsPublished = Convert.ToBoolean(o.status & 16),
-			//            IsSchemaPublished = Convert.ToBoolean(o.status & 64)
-			//        });
 		}
 	}
 }
