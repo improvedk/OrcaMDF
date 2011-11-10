@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrcaMDF.Adhoc", "src\OrcaMD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrcaMDF.Core.Tests", "src\OrcaMDF.Core.Tests\OrcaMDF.Core.Tests.csproj", "{C6062A74-A3B2-4102-84D4-A658AA8011B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrcaMDF.OMS", "src\OrcaMDF.OMS\OrcaMDF.OMS.csproj", "{B93D138E-C67F-43AE-BB84-6BD1C94B5ADB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,16 @@ Global
 		{C6062A74-A3B2-4102-84D4-A658AA8011B3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C6062A74-A3B2-4102-84D4-A658AA8011B3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C6062A74-A3B2-4102-84D4-A658AA8011B3}.Release|x86.ActiveCfg = Release|Any CPU
+		{B93D138E-C67F-43AE-BB84-6BD1C94B5ADB}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{B93D138E-C67F-43AE-BB84-6BD1C94B5ADB}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{B93D138E-C67F-43AE-BB84-6BD1C94B5ADB}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{B93D138E-C67F-43AE-BB84-6BD1C94B5ADB}.Debug|x86.ActiveCfg = Debug|x86
+		{B93D138E-C67F-43AE-BB84-6BD1C94B5ADB}.Debug|x86.Build.0 = Debug|x86
+		{B93D138E-C67F-43AE-BB84-6BD1C94B5ADB}.Release|Any CPU.ActiveCfg = Release|x86
+		{B93D138E-C67F-43AE-BB84-6BD1C94B5ADB}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{B93D138E-C67F-43AE-BB84-6BD1C94B5ADB}.Release|Mixed Platforms.Build.0 = Release|x86
+		{B93D138E-C67F-43AE-BB84-6BD1C94B5ADB}.Release|x86.ActiveCfg = Release|x86
+		{B93D138E-C67F-43AE-BB84-6BD1C94B5ADB}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
