@@ -103,16 +103,16 @@ namespace OrcaMDF.OMS
 			// Add DMVs
 			var dmvNode = rootNode.Nodes.Add("DMVs");
 			dmvNode.Nodes.Add("sys.columns").ContextMenu = dmvMenu;
-			dmvNode.Nodes.Add("sys.foreign_keys");
-			dmvNode.Nodes.Add("sys.indexes");
-			dmvNode.Nodes.Add("sys.index_columns");
-			dmvNode.Nodes.Add("sys.objects");
-			dmvNode.Nodes.Add("sys.objects$");
-			dmvNode.Nodes.Add("sys.system_internals_allocation_units");
-			dmvNode.Nodes.Add("sys.system_internals_partitions");
-			dmvNode.Nodes.Add("sys.system_internals_partition_columns");
-			dmvNode.Nodes.Add("sys.tables");
-			dmvNode.Nodes.Add("sys.types");
+			dmvNode.Nodes.Add("sys.foreign_keys").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.indexes").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.index_columns").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.objects").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.objects$").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.system_internals_allocation_units").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.system_internals_partitions").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.system_internals_partition_columns").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.tables").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.types").ContextMenu = dmvMenu;
 
 			// Refresh treeview
 			treeview.Nodes.Clear();
@@ -185,6 +185,46 @@ namespace OrcaMDF.OMS
 			{
 				case "sys.columns":
 					showRows(db.Dmvs.Columns.ToList());
+					break;
+
+				case "sys.foreign_keys":
+					showRows(db.Dmvs.ForeignKeys.ToList());
+					break;
+
+				case "sys.indexes":
+					showRows(db.Dmvs.Indexes.ToList());
+					break;
+
+				case "sys.index_columns":
+					showRows(db.Dmvs.IndexColumns.ToList());
+					break;
+
+				case "sys.objects":
+					showRows(db.Dmvs.Objects.ToList());
+					break;
+
+				case "sys.objects$":
+					showRows(db.Dmvs.ObjectsDollar.ToList());
+					break;
+
+				case "sys.system_internals_allocation_units":
+					showRows(db.Dmvs.SystemInternalsAllocationUnits.ToList());
+					break;
+
+				case "sys.system_internals_partitions":
+					showRows(db.Dmvs.SystemInternalsPartitions.ToList());
+					break;
+
+				case "sys.system_internals_partition_columns":
+					showRows(db.Dmvs.SystemInternalsPartitionColumns.ToList());
+					break;
+
+				case "sys.tables":
+					showRows(db.Dmvs.Tables.ToList());
+					break;
+
+				case "sys.types":
+					showRows(db.Dmvs.Types.ToList());
 					break;
 			}
 		}
