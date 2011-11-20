@@ -54,7 +54,7 @@ namespace OrcaMDF.Core.MetaData.DMVs
 			Columns.Add(new DataColumn("IsNonSqlSubscribed", "bit", true));
 			Columns.Add(new DataColumn("IsMergePublished", "bit", true));
 			Columns.Add(new DataColumn("IsDtsReplicated", "bit", true));
-			Columns.Add(new DataColumn("IsXmlDocumented", "bit"));
+			Columns.Add(new DataColumn("IsXmlDocument", "bit"));
 			Columns.Add(new DataColumn("XmlCollectionID", "int"));
 			Columns.Add(new DataColumn("DefaultObjectID", "int"));
 			Columns.Add(new DataColumn("RuleObjectID", "int"));
