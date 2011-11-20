@@ -98,6 +98,20 @@ namespace OrcaMDF.OMS
 				}
 			}
 
+			// Add DMVs
+			var dmvNode = rootNode.Nodes.Add("DMVs");
+			dmvNode.Nodes.Add("sys.columns");
+			dmvNode.Nodes.Add("sys.foreign_keys");
+			dmvNode.Nodes.Add("sys.indexes");
+			dmvNode.Nodes.Add("sys.index_columns");
+			dmvNode.Nodes.Add("sys.objects");
+			dmvNode.Nodes.Add("sys.objects$");
+			dmvNode.Nodes.Add("sys.system_internals_allocation_units");
+			dmvNode.Nodes.Add("sys.system_internals_partitions");
+			dmvNode.Nodes.Add("sys.system_internals_partition_columns");
+			dmvNode.Nodes.Add("sys.tables");
+			dmvNode.Nodes.Add("sys.types");
+
 			// Refresh treeview
 			treeview.Nodes.Clear();
 			treeview.Nodes.Add(rootNode);
