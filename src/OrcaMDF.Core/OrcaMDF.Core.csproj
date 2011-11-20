@@ -100,6 +100,7 @@
     <Compile Include="MetaData\BaseTables\sysscalartype.cs" />
     <Compile Include="MetaData\DmvGenerator.cs" />
     <Compile Include="MetaData\DMVs\Column.cs" />
+    <Compile Include="MetaData\DMVs\ForeignKey.cs" />
     <Compile Include="MetaData\DMVs\Index.cs" />
     <Compile Include="MetaData\DMVs\IndexColumn.cs" />
     <Compile Include="MetaData\DMVs\Object.cs" />
