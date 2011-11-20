@@ -42,6 +42,8 @@
 			this.grid = new System.Windows.Forms.DataGridView();
 			this.tableMenu = new System.Windows.Forms.ContextMenu();
 			this.menuItem1 = new System.Windows.Forms.MenuItem();
+			this.dmvMenu = new System.Windows.Forms.ContextMenu();
+			this.menuItem2 = new System.Windows.Forms.MenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.panel2.SuspendLayout();
@@ -161,6 +163,17 @@
 			this.menuItem1.Text = "Select Top 1000 Rows";
 			this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
 			// 
+			// dmvMenu
+			// 
+			this.dmvMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem2});
+			// 
+			// menuItem2
+			// 
+			this.menuItem2.Index = 0;
+			this.menuItem2.Text = "Select All Rows";
+			this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -200,6 +213,8 @@
 		private System.Windows.Forms.DataGridView grid;
 		private System.Windows.Forms.ContextMenu tableMenu;
 		private System.Windows.Forms.MenuItem menuItem1;
+		private System.Windows.Forms.ContextMenu dmvMenu;
+		private System.Windows.Forms.MenuItem menuItem2;
 	}
 }
 

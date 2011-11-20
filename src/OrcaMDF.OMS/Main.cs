@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.OMS
 {
@@ -100,7 +102,7 @@ namespace OrcaMDF.OMS
 
 			// Add DMVs
 			var dmvNode = rootNode.Nodes.Add("DMVs");
-			dmvNode.Nodes.Add("sys.columns");
+			dmvNode.Nodes.Add("sys.columns").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.foreign_keys");
 			dmvNode.Nodes.Add("sys.indexes");
 			dmvNode.Nodes.Add("sys.index_columns");
@@ -133,36 +135,40 @@ namespace OrcaMDF.OMS
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable(table).Take(1000);
-
-				grid.DataSource = null;
-
-				if (rows.Count() > 0)
-				{
-					var ds = new DataSet();
-					var tbl = new DataTable();
-					ds.Tables.Add(tbl);
-
-					var firstRow = rows.First();
-
-					foreach (var col in firstRow.Columns)
-						tbl.Columns.Add(col.Name);
-
-					foreach (var scannedRow in rows)
-					{
-						var row = tbl.NewRow();
-
-						foreach (var col in scannedRow.Columns)
-							row[col.Name] = scannedRow[col];
-
-						tbl.Rows.Add(row);
-					}
-
-					grid.DataSource = tbl;
-				}
+				showRows(rows);
 			}
 			catch (Exception ex)
 			{
 				logException(ex);
+			}
+		}
+
+		private void showRows(IEnumerable<Row> rows)
+		{
+			grid.DataSource = null;
+
+			if (rows.Count() > 0)
+			{
+				var ds = new DataSet();
+				var tbl = new DataTable();
+				ds.Tables.Add(tbl);
+
+				var firstRow = rows.First();
+
+				foreach (var col in firstRow.Columns)
+					tbl.Columns.Add(col.Name);
+
+				foreach (var scannedRow in rows)
+				{
+					var row = tbl.NewRow();
+
+					foreach (var col in scannedRow.Columns)
+						row[col.Name] = scannedRow[col];
+
+					tbl.Rows.Add(row);
+				}
+
+				grid.DataSource = tbl;
 			}
 		}
 
@@ -171,6 +177,16 @@ namespace OrcaMDF.OMS
 			// Make sure right clicking a node also selects it
 			if (e.Button == MouseButtons.Right)
 				treeview.SelectedNode = treeview.GetNodeAt(e.X, e.Y);
+		}
+
+		private void menuItem2_Click(object sender, EventArgs e)
+		{
+			switch(treeview.SelectedNode.Text)
+			{
+				case "sys.columns":
+					showRows(db.Dmvs.Columns.ToList());
+					break;
+			}
 		}
 	}
 }

@@ -52,7 +52,13 @@ namespace OrcaMDF.Core.MetaData
 
 		public object this[DataColumn col]
 		{
-			get { return data[col.Name]; }
+			get
+			{
+				if(data.ContainsKey(col.Name))
+					return data[col.Name];
+				
+				return null;
+			}
 			set { data[col.Name] = value; }
 		}
 
