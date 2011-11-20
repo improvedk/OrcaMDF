@@ -36,14 +36,16 @@
 			this.openDatabaseDialog = new System.Windows.Forms.OpenFileDialog();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.treeview = new System.Windows.Forms.TreeView();
 			this.splitter1 = new System.Windows.Forms.Splitter();
 			this.panel2 = new System.Windows.Forms.Panel();
-			this.treeview = new System.Windows.Forms.TreeView();
-			this.dataGridView1 = new System.Windows.Forms.DataGridView();
+			this.grid = new System.Windows.Forms.DataGridView();
+			this.tableMenu = new System.Windows.Forms.ContextMenu();
+			this.menuItem1 = new System.Windows.Forms.MenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.panel2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -109,7 +111,15 @@
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(200, 258);
 			this.panel1.TabIndex = 3;
-			this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+			// 
+			// treeview
+			// 
+			this.treeview.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.treeview.Location = new System.Drawing.Point(0, 0);
+			this.treeview.Name = "treeview";
+			this.treeview.Size = new System.Drawing.Size(200, 258);
+			this.treeview.TabIndex = 0;
+			this.treeview.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeview_MouseUp);
 			// 
 			// splitter1
 			// 
@@ -121,29 +131,35 @@
 			// 
 			// panel2
 			// 
-			this.panel2.Controls.Add(this.dataGridView1);
+			this.panel2.Controls.Add(this.grid);
 			this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel2.Location = new System.Drawing.Point(203, 24);
 			this.panel2.Name = "panel2";
 			this.panel2.Size = new System.Drawing.Size(275, 258);
 			this.panel2.TabIndex = 5;
 			// 
-			// treeview
+			// grid
 			// 
-			this.treeview.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.treeview.Location = new System.Drawing.Point(0, 0);
-			this.treeview.Name = "treeview";
-			this.treeview.Size = new System.Drawing.Size(200, 258);
-			this.treeview.TabIndex = 0;
+			this.grid.AllowUserToAddRows = false;
+			this.grid.AllowUserToDeleteRows = false;
+			this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.grid.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.grid.Location = new System.Drawing.Point(0, 0);
+			this.grid.Name = "grid";
+			this.grid.ReadOnly = true;
+			this.grid.Size = new System.Drawing.Size(275, 258);
+			this.grid.TabIndex = 0;
 			// 
-			// dataGridView1
+			// tableMenu
 			// 
-			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-			this.dataGridView1.Name = "dataGridView1";
-			this.dataGridView1.Size = new System.Drawing.Size(275, 258);
-			this.dataGridView1.TabIndex = 0;
+			this.tableMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem1});
+			// 
+			// menuItem1
+			// 
+			this.menuItem1.Index = 0;
+			this.menuItem1.Text = "Select Top 1000 Rows";
+			this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
 			// 
 			// Main
 			// 
@@ -157,12 +173,12 @@
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Main";
-			this.Text = "OrcaMDF Management Studio";
+			this.Text = "OrcaMDF Studio";
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.panel1.ResumeLayout(false);
 			this.panel2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -181,7 +197,9 @@
 		private System.Windows.Forms.Splitter splitter1;
 		private System.Windows.Forms.Panel panel2;
 		private System.Windows.Forms.TreeView treeview;
-		private System.Windows.Forms.DataGridView dataGridView1;
+		private System.Windows.Forms.DataGridView grid;
+		private System.Windows.Forms.ContextMenu tableMenu;
+		private System.Windows.Forms.MenuItem menuItem1;
 	}
 }
 

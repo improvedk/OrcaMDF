@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -23,7 +24,7 @@ namespace OrcaMDF.OMS
 				db.Dispose();
 		}
 
-		private void dumpException(Exception ex)
+		private void logException(Exception ex)
 		{
 			File.WriteAllText("ErrorLog.txt",
 				DateTime.Now +
@@ -32,6 +33,8 @@ namespace OrcaMDF.OMS
 				Environment.NewLine +
 				ex +
 				Environment.NewLine);
+
+			MessageBox.Show("Please send the ErrorLog.txt file, from the application directory, to mark@improve.dk. Make sure to verify it does not contain any sensitive information before you send it.", "An error occurred while trying to open the database.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
 		private void openToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -49,9 +52,7 @@ namespace OrcaMDF.OMS
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show("Please send the ErrorLog.txt file, from the application directory, to mark@improve.dk. Make sure to verify it does not contain any sensitive information before you send it.", "An error occurred while trying to open the database.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-					dumpException(ex);
+					logException(ex);
 				}
 			}
 		}
@@ -67,6 +68,7 @@ namespace OrcaMDF.OMS
 			foreach (var t in tables)
 			{
 				var tableNode = tableRootNode.Nodes.Add(t.Name);
+				tableNode.ContextMenu = tableMenu;
 
 				// Add columns
 				var tableColumnsNode = tableNode.Nodes.Add("Columns");
@@ -84,7 +86,16 @@ namespace OrcaMDF.OMS
 					.OrderBy(i => i.Name);
 
 				foreach (var i in indexes)
-					tableIndexesNode.Nodes.Add(i.Name);
+				{
+					var indexNode = tableIndexesNode.Nodes.Add(i.Name);
+
+					// Add index columns
+					var indexColumns = db.Dmvs.IndexColumns
+						.Where(ic => ic.ObjectID == t.ObjectID && ic.IndexID == i.IndexID);
+
+					foreach(var ic in indexColumns)
+						indexNode.Nodes.Add(columns.Where(c => c.ColumnID == ic.ColumnID).Single().Name);
+				}
 			}
 
 			// Refresh treeview
@@ -97,9 +108,55 @@ namespace OrcaMDF.OMS
 			Application.Exit();
 		}
 
-		private void panel1_Paint(object sender, PaintEventArgs e)
+		private void menuItem1_Click(object sender, EventArgs e)
 		{
+			loadTable(treeview.SelectedNode.Text);
+		}
 
+		private void loadTable(string table)
+		{
+			try
+			{
+				var scanner = new DataScanner(db);
+				var rows = scanner.ScanTable(table).Take(1000);
+
+				grid.DataSource = null;
+
+				if (rows.Count() > 0)
+				{
+					var ds = new DataSet();
+					var tbl = new DataTable();
+					ds.Tables.Add(tbl);
+
+					var firstRow = rows.First();
+
+					foreach (var col in firstRow.Columns)
+						tbl.Columns.Add(col.Name);
+
+					foreach (var scannedRow in rows)
+					{
+						var row = tbl.NewRow();
+
+						foreach (var col in scannedRow.Columns)
+							row[col.Name] = scannedRow[col];
+
+						tbl.Rows.Add(row);
+					}
+
+					grid.DataSource = tbl;
+				}
+			}
+			catch (Exception ex)
+			{
+				logException(ex);
+			}
+		}
+
+		private void treeview_MouseUp(object sender, MouseEventArgs e)
+		{
+			// Make sure right clicking a node also selects it
+			if (e.Button == MouseButtons.Right)
+				treeview.SelectedNode = treeview.GetNodeAt(e.X, e.Y);
 		}
 	}
 }
