@@ -8,58 +8,58 @@ namespace OrcaMDF.Core.MetaData.DMVs
 	public class Column : Row
 	{
 		public int ObjectID { get { return Field<int>("ObjectID"); } private set { this["ObjectID"] = value; } }
-		public string Name { get; private set; }
-		public int ColumnID { get; private set; }
-		public byte SystemTypeID { get; private set; }
-		public int UserTypeID { get; private set; }
-		public short MaxLength { get; private set; }
-		public byte Precision { get; private set; }
-		public byte Scale { get; private set; }
-		public string CollationName { get { throw new NotImplementedException(); } } // TODO: Get value from CollationPropertyFromId() function
-		public bool IsNullable { get; private set; }
-		public bool IsAnsiPadded { get; private set; }
-		public bool IsRowGuidCol { get; private set; }
-		public bool IsIdentity { get; private set; }
-		public bool IsComputed { get; private set; }
-		public bool IsFilestream { get; private set; }
-		public bool IsReplicated { get; private set; }
-		public bool IsNonSqlSubscribed { get; private set; }
-		public bool IsMergePublished { get; private set; }
-		public bool IsDtsReplicated { get; private set; }
-		public bool IsXmlDocument { get; private set; }
-		public bool IsSparse { get; private set; }
-		public bool IsColumnSet { get; private set; }
-		public int XmlCollectionID { get; private set; }
-		public int DefaultObjectID { get; private set; }
-		public int RuleObjectID { get; private set; }
+		public string Name { get { return Field<string>("Name"); } private set { this["Name"] = value; } }
+		public int ColumnID { get { return Field<int>("ColumnID"); } private set { this["ColumnID"] = value; } }
+		public byte SystemTypeID { get { return Field<byte>("SystemTypeID"); } private set { this["SystemTypeID"] = value; } }
+		public int UserTypeID { get { return Field<int>("UserTypeID"); } private set { this["UserTypeID"] = value; } }
+		public short MaxLength { get { return Field<short>("MaxLength"); } private set { this["MaxLength"] = value; } }
+		public byte Precision { get { return Field<byte>("Precision"); } private set { this["Precision"] = value; } }
+		public byte Scale { get { return Field<byte>("Scale"); } private set { this["Scale"] = value; } }
+		public string CollationName { get { return Field<string>("CollationName"); } private set { this["CollationName"] = value; } } // TODO
+		public bool IsNullable { get { return Field<bool>("IsNullable"); } private set { this["IsNullable"] = value; } }
+		public bool IsAnsiPadded { get { return Field<bool>("IsAnsiPadded"); } private set { this["IsAnsiPadded"] = value; } }
+		public bool IsRowGuidCol { get { return Field<bool>("IsRowGuidCol"); } private set { this["IsRowGuidCol"] = value; } }
+		public bool IsIdentity { get { return Field<bool>("IsIdentity"); } private set { this["IsIdentity"] = value; } }
+		public bool IsComputed { get { return Field<bool>("IsComputed"); } private set { this["IsComputed"] = value; } }
+		public bool IsFilestream { get { return Field<bool>("IsFilestream"); } private set { this["IsFilestream"] = value; } }
+		public bool IsReplicated { get { return Field<bool>("IsReplicated"); } private set { this["IsReplicated"] = value; } }
+		public bool IsNonSqlSubscribed { get { return Field<bool>("IsNonSqlSubscribed"); } private set { this["IsNonSqlSubscribed"] = value; } }
+		public bool IsMergePublished { get { return Field<bool>("IsMergePublished"); } private set { this["IsMergePublished"] = value; } }
+		public bool IsDtsReplicated { get { return Field<bool>("IsDtsReplicated"); } private set { this["IsDtsReplicated"] = value; } }
+		public bool IsXmlDocument { get { return Field<bool>("IsXmlDocument"); } private set { this["IsXmlDocument"] = value; } }
+		public bool IsSparse { get { return Field<bool>("IsSparse"); } private set { this["IsSparse"] = value; } }
+		public bool IsColumnSet { get { return Field<bool>("IsColumnSet"); } private set { this["IsColumnSet"] = value; } }
+		public int XmlCollectionID { get { return Field<int>("XmlCollectionID"); } private set { this["XmlCollectionID"] = value; } }
+		public int DefaultObjectID { get { return Field<int>("DefaultObjectID"); } private set { this["DefaultObjectID"] = value; } }
+		public int RuleObjectID { get { return Field<int>("RuleObjectID"); } private set { this["RuleObjectID"] = value; } }
 
 		public Column()
 		{
-			Columns.Add(new DataColumn("object_id", "int"));
-			Columns.Add(new DataColumn("name", "sysname", true));
-			Columns.Add(new DataColumn("column_id", "int"));
-			Columns.Add(new DataColumn("system_type_id", "tinyint"));
-			Columns.Add(new DataColumn("user_type_id", "int"));
-			Columns.Add(new DataColumn("max_length", "smallint"));
-			Columns.Add(new DataColumn("precision", "tinyint"));
-			Columns.Add(new DataColumn("scale", "tinyint"));
-			Columns.Add(new DataColumn("collation_name", "sysname", true));
-			Columns.Add(new DataColumn("is_nullable", "bit", true));
-			Columns.Add(new DataColumn("is_ansi_padded", "bit"));
-			Columns.Add(new DataColumn("is_rowguidcol", "bit"));
-			Columns.Add(new DataColumn("is_identity", "bit"));
-			Columns.Add(new DataColumn("is_computed", "bit"));
-			Columns.Add(new DataColumn("is_filestream", "bit"));
-			Columns.Add(new DataColumn("is_replicated", "bit", true));
-			Columns.Add(new DataColumn("is_non_sql_subscribed", "bit", true));
-			Columns.Add(new DataColumn("is_merge_published", "bit", true));
-			Columns.Add(new DataColumn("is_dts_replicated", "bit", true));
-			Columns.Add(new DataColumn("is_xml_document", "bit"));
-			Columns.Add(new DataColumn("xml_collection_id", "int"));
-			Columns.Add(new DataColumn("default_object_id", "int"));
-			Columns.Add(new DataColumn("rule_object_id", "int"));
-			Columns.Add(new DataColumn("is_sparse", "bit", true));
-			Columns.Add(new DataColumn("is_column_set", "bit", true));
+			Columns.Add(new DataColumn("ObjectID", "int"));
+			Columns.Add(new DataColumn("Name", "sysname", true));
+			Columns.Add(new DataColumn("ColumnID", "int"));
+			Columns.Add(new DataColumn("SystemTypeID", "tinyint"));
+			Columns.Add(new DataColumn("UserTypeID", "int"));
+			Columns.Add(new DataColumn("MaxLength", "smallint"));
+			Columns.Add(new DataColumn("Precision", "tinyint"));
+			Columns.Add(new DataColumn("Scale", "tinyint"));
+			Columns.Add(new DataColumn("CollationName", "sysname", true));
+			Columns.Add(new DataColumn("IsNullable", "bit", true));
+			Columns.Add(new DataColumn("IsAnsiPadded", "bit"));
+			Columns.Add(new DataColumn("IsRowGuidCol", "bit"));
+			Columns.Add(new DataColumn("IsIdentity", "bit"));
+			Columns.Add(new DataColumn("IsComputed", "bit"));
+			Columns.Add(new DataColumn("IsFilestream", "bit"));
+			Columns.Add(new DataColumn("IsReplicated", "bit", true));
+			Columns.Add(new DataColumn("IsNonSqlSubscribed", "bit", true));
+			Columns.Add(new DataColumn("IsMergePublished", "bit", true));
+			Columns.Add(new DataColumn("IsDtsReplicated", "bit", true));
+			Columns.Add(new DataColumn("IsXmlDocumented", "bit"));
+			Columns.Add(new DataColumn("XmlCollectionID", "int"));
+			Columns.Add(new DataColumn("DefaultObjectID", "int"));
+			Columns.Add(new DataColumn("RuleObjectID", "int"));
+			Columns.Add(new DataColumn("IsSparse", "bit", true));
+			Columns.Add(new DataColumn("IsColumnSet", "bit", true));
 		}
 
 		public override Row NewRow()
