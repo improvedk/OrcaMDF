@@ -3,6 +3,7 @@ using System.Collections.Generic;
 namespace OrcaMDF.Core.MetaData.BaseTables
 {
 	/// <summary>
+	/// TODO
 	/// This one's a bit ugly. Doesn't use Columns like all others. Can't be parsed as values are stored in resourceDB, which we can't parse.
 	/// Hardcoded values instead - will refactor eventually, to be more consistent.
 	/// </summary>

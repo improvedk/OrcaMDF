@@ -63,6 +63,32 @@ namespace OrcaMDF.OMS
 		{
 			var rootNode = new TreeNode(db.Name);
 
+			// Add base tables
+			var baseTableNode = rootNode.Nodes.Add("Base Tables");
+			baseTableNode.Nodes.Add("sys.sysallocunits").ContextMenu = baseTableMenu;
+			baseTableNode.Nodes.Add("sys.syscolpars").ContextMenu = baseTableMenu;
+			baseTableNode.Nodes.Add("sys.sysidxstats").ContextMenu = baseTableMenu;
+			baseTableNode.Nodes.Add("sys.sysiscols").ContextMenu = baseTableMenu;
+			baseTableNode.Nodes.Add("sys.sysrowsets").ContextMenu = baseTableMenu;
+			baseTableNode.Nodes.Add("sys.sysrscols").ContextMenu = baseTableMenu;
+			baseTableNode.Nodes.Add("sys.sysscalartypes").ContextMenu = baseTableMenu;
+			baseTableNode.Nodes.Add("sys.sysschobjs").ContextMenu = baseTableMenu;
+			baseTableNode.Nodes.Add("sys.syssingleobjrefs").ContextMenu = baseTableMenu;
+
+			// Add DMVs
+			var dmvNode = rootNode.Nodes.Add("DMVs");
+			dmvNode.Nodes.Add("sys.columns").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.foreign_keys").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.indexes").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.index_columns").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.objects").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.objects$").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.system_internals_allocation_units").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.system_internals_partitions").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.system_internals_partition_columns").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.tables").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.types").ContextMenu = dmvMenu;
+
 			// Add tables
 			var tableRootNode = rootNode.Nodes.Add("Tables");
 			var tables = db.Dmvs.Tables.OrderBy(t => t.Name);
@@ -99,20 +125,6 @@ namespace OrcaMDF.OMS
 						indexNode.Nodes.Add(columns.Where(c => c.ColumnID == ic.ColumnID).Single().Name);
 				}
 			}
-
-			// Add DMVs
-			var dmvNode = rootNode.Nodes.Add("DMVs");
-			dmvNode.Nodes.Add("sys.columns").ContextMenu = dmvMenu;
-			dmvNode.Nodes.Add("sys.foreign_keys").ContextMenu = dmvMenu;
-			dmvNode.Nodes.Add("sys.indexes").ContextMenu = dmvMenu;
-			dmvNode.Nodes.Add("sys.index_columns").ContextMenu = dmvMenu;
-			dmvNode.Nodes.Add("sys.objects").ContextMenu = dmvMenu;
-			dmvNode.Nodes.Add("sys.objects$").ContextMenu = dmvMenu;
-			dmvNode.Nodes.Add("sys.system_internals_allocation_units").ContextMenu = dmvMenu;
-			dmvNode.Nodes.Add("sys.system_internals_partitions").ContextMenu = dmvMenu;
-			dmvNode.Nodes.Add("sys.system_internals_partition_columns").ContextMenu = dmvMenu;
-			dmvNode.Nodes.Add("sys.tables").ContextMenu = dmvMenu;
-			dmvNode.Nodes.Add("sys.types").ContextMenu = dmvMenu;
 
 			// Refresh treeview
 			treeview.Nodes.Clear();
@@ -179,54 +191,72 @@ namespace OrcaMDF.OMS
 				treeview.SelectedNode = treeview.GetNodeAt(e.X, e.Y);
 		}
 
-		private void menuItem2_Click(object sender, EventArgs e)
+		private IEnumerable<Row> getRowsFromDmv(string dmv)
 		{
-			switch(treeview.SelectedNode.Text)
+			switch (dmv)
 			{
 				case "sys.columns":
-					showRows(db.Dmvs.Columns.ToList());
-					break;
-
+					return db.Dmvs.Columns.ToList();
 				case "sys.foreign_keys":
-					showRows(db.Dmvs.ForeignKeys.ToList());
-					break;
-
+					return db.Dmvs.ForeignKeys.ToList();
 				case "sys.indexes":
-					showRows(db.Dmvs.Indexes.ToList());
-					break;
-
+					return db.Dmvs.Indexes.ToList();
 				case "sys.index_columns":
-					showRows(db.Dmvs.IndexColumns.ToList());
-					break;
-
+					return db.Dmvs.IndexColumns.ToList();
 				case "sys.objects":
-					showRows(db.Dmvs.Objects.ToList());
-					break;
-
+					return db.Dmvs.Objects.ToList();
 				case "sys.objects$":
-					showRows(db.Dmvs.ObjectsDollar.ToList());
-					break;
-
+					return db.Dmvs.ObjectsDollar.ToList();
 				case "sys.system_internals_allocation_units":
-					showRows(db.Dmvs.SystemInternalsAllocationUnits.ToList());
-					break;
-
+					return db.Dmvs.SystemInternalsAllocationUnits.ToList();
 				case "sys.system_internals_partitions":
-					showRows(db.Dmvs.SystemInternalsPartitions.ToList());
-					break;
-
+					return db.Dmvs.SystemInternalsPartitions.ToList();
 				case "sys.system_internals_partition_columns":
-					showRows(db.Dmvs.SystemInternalsPartitionColumns.ToList());
-					break;
-
+					return db.Dmvs.SystemInternalsPartitionColumns.ToList();
 				case "sys.tables":
-					showRows(db.Dmvs.Tables.ToList());
-					break;
-
+					return db.Dmvs.Tables.ToList();
 				case "sys.types":
-					showRows(db.Dmvs.Types.ToList());
-					break;
+					return db.Dmvs.Types.ToList();
+				default:
+					throw new ArgumentOutOfRangeException(dmv);
 			}
+		}
+
+		private void menuItem2_Click(object sender, EventArgs e)
+		{
+			showRows(getRowsFromDmv(treeview.SelectedNode.Text));
+		}
+
+		private IEnumerable<Row> getRowsFromBaseTable(string table)
+		{
+			switch(table)
+			{
+				case "sys.sysallocunits":
+					return db.BaseTables.sysallocunits;
+				case "sys.syscolpars":
+					return db.BaseTables.syscolpars;
+				case "sys.sysidxstats":
+					return db.BaseTables.sysidxstats;
+				case "sys.sysiscols":
+					return db.BaseTables.sysiscols;
+				case "sys.sysrowsets":
+					return db.BaseTables.sysrowsets;
+				case "sys.sysrscols":
+					return db.BaseTables.sysrscols;
+				case "sys.sysscalartypes":
+					return db.BaseTables.sysscalartypes;
+				case "sys.sysschobjs":
+					return db.BaseTables.sysschobjs;
+				case "sys.syssingleobjrefs":
+					return db.BaseTables.syssingleobjrefs;
+				default:
+					throw new ArgumentOutOfRangeException(table);
+			}
+		}
+
+		private void menuItem3_Click(object sender, EventArgs e)
+		{
+			showRows(getRowsFromBaseTable(treeview.SelectedNode.Text));
 		}
 	}
 }

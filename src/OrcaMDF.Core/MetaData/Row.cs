@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OrcaMDF.Core.MetaData
 {
@@ -13,6 +12,8 @@ namespace OrcaMDF.Core.MetaData
 
 		protected IDictionary<string, object> data;
 
+		private HashSet<string> columnNames;
+
 		protected Row()
 			: this(new List<DataColumn>())
 		{ }
@@ -23,6 +24,20 @@ namespace OrcaMDF.Core.MetaData
 			data = new Dictionary<string, object>();
 		}
 
+		private void ensureColumnExists(string name)
+		{
+			if(columnNames == null)
+			{
+				columnNames = new HashSet<string>();
+
+				foreach(var col in Columns)
+					columnNames.Add(col.Name);
+			}
+
+			if(!columnNames.Contains(name))
+				throw new ArgumentOutOfRangeException("Column '" + name + "' does not exist.");
+		}
+
 		public T Field<T>(DataColumn col)
 		{
 			return Field<T>(col.Name);
@@ -30,8 +45,7 @@ namespace OrcaMDF.Core.MetaData
 
 		public T Field<T>(string name)
 		{
-			if (!Columns.Any(c => c.Name == name))
-				throw new ArgumentOutOfRangeException("Column '" + name + "' does not exist.");
+			ensureColumnExists(name);
 
 			// We need to handle nullables explicitly
 			Type t = typeof (T);
@@ -53,8 +67,7 @@ namespace OrcaMDF.Core.MetaData
 		{
 			get
 			{
-				if (!Columns.Any(c => c.Name == name))
-					throw new ArgumentOutOfRangeException("Column '" + name + "' does not exist.");
+				ensureColumnExists(name);
 
 				if (data.ContainsKey(name))
 					return data[name];
@@ -63,8 +76,7 @@ namespace OrcaMDF.Core.MetaData
 			}
 			set
 			{
-				if (!Columns.Any(c => c.Name == name))
-					throw new ArgumentOutOfRangeException("Column '" + name + "' does not exist.");
+				ensureColumnExists(name);
 
 				data[name] = value;
 			}
