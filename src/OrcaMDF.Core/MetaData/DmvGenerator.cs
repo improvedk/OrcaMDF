@@ -18,6 +18,11 @@ namespace OrcaMDF.Core.MetaData
 			get { return Column.GetDmvData(db); }
 		}
 
+		public IEnumerable<ForeignKey> ForeignKeys
+		{
+			get { return ForeignKey.GetDmvData(db); }
+		}
+
 		public IEnumerable<Index> Indexes
 		{
 			get { return Index.GetDmvData(db); }
