@@ -5,30 +5,61 @@ using OrcaMDF.Core.Engine;
 
 namespace OrcaMDF.Core.MetaData.DMVs
 {
-	public class SystemInternalsPartition
+	public class SystemInternalsPartition : Row
 	{
-		public long PartitionID { get; private set; }
-		public int ObjectID { get; private set; }
-		public int IndexID { get; private set; }
-		public int PartitionNumber { get; private set; }
-		public long Rows { get { throw new NotImplementedException(); } } // TODO: Get value from OpenRowset(TABLE ALUCOUNT, rs.rowsetid, 0) ct
-		public short FilestreamFilegroupID { get; private set; }
-		public bool IsOrphaned { get; private set; }
-		public byte DroppedLobColumnState { get; private set; }
-		public bool IsUnique { get; private set; }
-		public bool IsReplicated { get; private set; }
-		public bool IsLoggedForReplication { get; private set; }
-		public short MaxNullBitUsed { get; private set; }
-		public int MaxLeafLength { get; private set; }
-		public short MinLeafLength { get; private set; }
-		public short MaxInternalLength { get; private set; }
-		public short MinInternalLength { get; private set; }
-		public bool AllowsNullableKeys { get; private set; }
-		public bool AllowRowLocks { get; private set; }
-		public bool AllowPageLocks { get; private set; }
-		public bool IsDataRowFormat { get; private set; }
-		public bool IsNotVersioned { get; private set; }
-		public Guid? FilestreamGuid { get; private set; }
+		public long PartitionID { get { return Field<long>("PartitionID"); } private set { this["PartitionID"] = value; } }
+		public int ObjectID { get { return Field<int>("ObjectID"); } private set { this["ObjectID"] = value; } }
+		public int IndexID { get { return Field<int>("IndexID"); } private set { this["IndexID"] = value; } }
+		public int PartitionNumber { get { return Field<int>("PartitionNumber"); } private set { this["PartitionNumber"] = value; } }
+		public long? Rows { get { return Field<long?>("Rows"); } private set { this["Rows"] = value; } } // TODO
+		public short FilestreamFilegroupID { get { return Field<short>("FilestreamFilegroupID"); } private set { this["FilestreamFilegroupID"] = value; } }
+		public bool IsOrphaned { get { return Field<bool>("IsOrphaned"); } private set { this["IsOrphaned"] = value; } }
+		public byte DroppedLobColumnState { get { return Field<byte>("DroppedLobColumnState"); } private set { this["DroppedLobColumnState"] = value; } }
+		public bool IsUnique { get { return Field<bool>("IsUnique"); } private set { this["IsUnique"] = value; } }
+		public bool IsReplicated { get { return Field<bool>("IsReplicated"); } private set { this["IsReplicated"] = value; } }
+		public bool IsLoggedForReplication { get { return Field<bool>("IsLoggedForReplication"); } private set { this["IsLoggedForReplication"] = value; } }
+		public short MaxNullBitUsed { get { return Field<short>("MaxNullBitUsed"); } private set { this["MaxNullBitUsed"] = value; } }
+		public int MaxLeafLength { get { return Field<int>("MaxLeafLength"); } private set { this["MaxLeafLength"] = value; } }
+		public short MinLeafLength { get { return Field<short>("MinLeafLength"); } private set { this["MinLeafLength"] = value; } }
+		public short MaxInternalLength { get { return Field<short>("MaxInternalLength"); } private set { this["MaxInternalLength"] = value; } }
+		public short MinInternalLength { get { return Field<short>("MinInternalLength"); } private set { this["MinInternalLength"] = value; } }
+		public bool AllowsNullableKeys { get { return Field<bool>("AllowsNullableKeys"); } private set { this["AllowsNullableKeys"] = value; } }
+		public bool AllowRowLocks { get { return Field<bool>("AllowRowLocks"); } private set { this["AllowRowLocks"] = value; } }
+		public bool AllowPageLocks { get { return Field<bool>("AllowPageLocks"); } private set { this["AllowPageLocks"] = value; } }
+		public bool IsDataRowFormat { get { return Field<bool>("IsDataRowFormat"); } private set { this["IsDataRowFormat"] = value; } }
+		public bool IsNotVersioned { get { return Field<bool>("IsNotVersioned"); } private set { this["IsNotVersioned"] = value; } }
+		public Guid? FilestreamGuid { get { return Field<Guid?>("FilestreamGuid"); } private set { this["FilestreamGuid"] = value; } }
+
+		public SystemInternalsPartition()
+		{
+			Columns.Add(new DataColumn("PartitionID", "bigint"));
+			Columns.Add(new DataColumn("ObjectID", "int"));
+			Columns.Add(new DataColumn("IndexID", "int"));
+			Columns.Add(new DataColumn("PartitionNumber", "int"));
+			Columns.Add(new DataColumn("Rows", "bigint"));
+			Columns.Add(new DataColumn("FilestreamFilegroupID", "smallint"));
+			Columns.Add(new DataColumn("IsOrphaned", "bit", true));
+			Columns.Add(new DataColumn("DroppedLobColumnState", "tinyint", true));
+			Columns.Add(new DataColumn("IsUnique", "bit", true));
+			Columns.Add(new DataColumn("IsReplicated", "bit", true));
+			Columns.Add(new DataColumn("IsLoggedForReplication", "bit", true));
+			Columns.Add(new DataColumn("MaxNullBitUsed", "smallint"));
+			Columns.Add(new DataColumn("MaxLeafLength", "int"));
+			Columns.Add(new DataColumn("MinLeafLength", "smallint"));
+			Columns.Add(new DataColumn("MaxInternalLength", "smallint"));
+			Columns.Add(new DataColumn("MinInternalLength", "smallint"));
+			Columns.Add(new DataColumn("AllowsNullableKeys", "bit", true));
+			Columns.Add(new DataColumn("AllowRowLocks", "bit", true));
+			Columns.Add(new DataColumn("AllowPageLocks", "bit", true));
+			Columns.Add(new DataColumn("IsDataRowFormat", "bit", true));
+			Columns.Add(new DataColumn("IsNotVersioned", "bit", true));
+			Columns.Add(new DataColumn("FilestreamGuid", "uniqueidentifier", true));
+		}
+
+		public override Row NewRow()
+		{
+			return new SystemInternalsPartition();
+		}
 
 		internal static IEnumerable<SystemInternalsPartition> GetDmvData(Database db)
 		{

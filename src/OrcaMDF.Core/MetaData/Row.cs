@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OrcaMDF.Core.MetaData
 {
@@ -29,31 +30,50 @@ namespace OrcaMDF.Core.MetaData
 
 		public T Field<T>(string name)
 		{
-			// Wee need to handle nullables explicitly
+			if (!Columns.Any(c => c.Name == name))
+				throw new ArgumentOutOfRangeException("Column '" + name + "' does not exist.");
+
+			// We need to handle nullables explicitly
 			Type t = typeof (T);
 			Type u = Nullable.GetUnderlyingType(t);
-
+			
 			if(u != null)
 			{
-				if (data[name] == null)
+				if (!data.ContainsKey(name) || data[name] == null)
 					return default(T);
 
 				return (T)Convert.ChangeType(data[name], u);
 			}
 
-			return (T)Convert.ChangeType(data[name], t);
+			object value = data.ContainsKey(name) ? data[name] : null;
+			return (T)Convert.ChangeType(value, t);
 		}
 
 		public object this[string name]
 		{
-			get { return data[name]; }
-			set { data[name] = value; }
+			get
+			{
+				if (!Columns.Any(c => c.Name == name))
+					throw new ArgumentOutOfRangeException("Column '" + name + "' does not exist.");
+
+				if (data.ContainsKey(name))
+					return data[name];
+
+				return null;
+			}
+			set
+			{
+				if (!Columns.Any(c => c.Name == name))
+					throw new ArgumentOutOfRangeException("Column '" + name + "' does not exist.");
+
+				data[name] = value;
+			}
 		}
 
 		public object this[DataColumn col]
 		{
-			get { return data[col.Name]; }
-			set { data[col.Name] = value; }
+			get { return this[col.Name]; }
+			set { this[col.Name] = value; }
 		}
 
 		public abstract Row NewRow();

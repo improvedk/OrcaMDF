@@ -5,26 +5,53 @@ using OrcaMDF.Core.Engine;
 
 namespace OrcaMDF.Core.MetaData.DMVs
 {
-	public class Index
+	public class Index : Row
 	{
-		public int ObjectID { get; private set; }
-		public string Name { get; private set; }
-		public int IndexID { get; private set; }
-		public byte Type { get; private set; }
-		public string TypeDesc { get; private set; }
-		public int DataSpaceID { get; private set; }
-		public bool? IgnoreDupKey { get; private set; }
-		public byte FillFactor { get; private set; }
-		public bool IsUnique { get; private set; }
-		public bool IsPrimaryKey { get; private set; }
-		public bool IsUniqueConstraint { get; private set; }
-		public bool IsPadded { get; private set; }
-		public bool IsDisabled { get; private set; }
-		public bool IsHypothetical { get; private set; }
-		public bool AllowRowLocks { get; private set; }
-		public bool AllowPageLocks { get; private set; }
-		public bool HasFilter { get; private set; }
-		public string FilterDefinition { get { throw new NotImplementedException(); } } // TODO: Get value from OBJECT_DEFINITION (case when (i.status & 0x20000) != 0 then object_definition(i.id, i.indid, 7) else NULL end)
+		public int ObjectID { get { return Field<int>("ObjectID"); } private set { this["ObjectID"] = value; } }
+		public string Name { get { return Field<string>("Name"); } private set { this["Name"] = value; } }
+		public int IndexID { get { return Field<int>("IndexID"); } private set { this["IndexID"] = value; } }
+		public byte Type { get { return Field<byte>("Type"); } private set { this["Type"] = value; } }
+		public string TypeDesc { get { return Field<string>("TypeDesc"); } private set { this["TypeDesc"] = value; } }
+		public int DataSpaceID { get { return Field<int>("DataSpaceID"); } private set { this["DataSpaceID"] = value; } }
+		public bool? IgnoreDupKey { get { return Field<bool?>("IgnoreDupKey"); } private set { this["IgnoreDupKey"] = value; } }
+		public byte FillFactor { get { return Field<byte>("FillFactor"); } private set { this["FillFactor"] = value; } }
+		public bool IsUnique { get { return Field<bool>("IsUnique"); } private set { this["IsUnique"] = value; } }
+		public bool IsPrimaryKey { get { return Field<bool>("IsPrimaryKey"); } private set { this["IsPrimaryKey"] = value; } }
+		public bool IsUniqueConstraint { get { return Field<bool>("IsUniqueConstraint"); } private set { this["IsUniqueConstraint"] = value; } }
+		public bool IsPadded { get { return Field<bool>("IsPadded"); } private set { this["IsPadded"] = value; } }
+		public bool IsDisabled { get { return Field<bool>("IsDisabled"); } private set { this["IsDisabled"] = value; } }
+		public bool IsHypothetical { get { return Field<bool>("IsHypothetical"); } private set { this["IsHypothetical"] = value; } }
+		public bool AllowRowLocks { get { return Field<bool>("AllowRowLocks"); } private set { this["AllowRowLocks"] = value; } }
+		public bool AllowPageLocks { get { return Field<bool>("AllowPageLocks"); } private set { this["AllowPageLocks"] = value; } }
+		public bool HasFilter { get { return Field<bool>("HasFilter"); } private set { this["HasFilter"] = value; } }
+		public string FilterDefinition { get { return Field<string>("FilterDefinition"); } private set { this["FilterDefinition"] = value; } } // TODO
+
+		public Index()
+		{
+			Columns.Add(new DataColumn("ObjectID", "int"));
+			Columns.Add(new DataColumn("Name", "sysname", true));
+			Columns.Add(new DataColumn("IndexID", "int"));
+			Columns.Add(new DataColumn("Type", "tinyint"));
+			Columns.Add(new DataColumn("TypeDesc", "nvarchar", true));
+			Columns.Add(new DataColumn("IsUnique", "bit", true));
+			Columns.Add(new DataColumn("DataSpaceID", "int"));
+			Columns.Add(new DataColumn("IgnoreDupKey", "bit", true));
+			Columns.Add(new DataColumn("IsPrimaryKey", "bit", true));
+			Columns.Add(new DataColumn("IsUniqueConstraint", "bit", true));
+			Columns.Add(new DataColumn("FillFactor", "tinyint"));
+			Columns.Add(new DataColumn("IsPadded", "bit", true));
+			Columns.Add(new DataColumn("IsDisabled", "bit", true));
+			Columns.Add(new DataColumn("IsHypothetical", "bit", true));
+			Columns.Add(new DataColumn("AllowRowLocks", "bit", true));
+			Columns.Add(new DataColumn("AllowPageLocks", "bit", true));
+			Columns.Add(new DataColumn("HasFilter", "bit", true));
+			Columns.Add(new DataColumn("FilterDefinition", "nvarchar", true));
+		}
+
+		public override Row NewRow()
+		{
+			return new Index();
+		}
 
 		internal static IEnumerable<Index> GetDmvData(Database db)
 		{

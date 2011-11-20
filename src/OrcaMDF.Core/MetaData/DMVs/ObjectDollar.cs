@@ -5,51 +5,103 @@ using OrcaMDF.Core.Engine;
 
 namespace OrcaMDF.Core.MetaData.DMVs
 {
-	public class ObjectDollar
+	public class ObjectDollar : Row
 	{
-		public string Name { get; private set; }
-		public int ObjectID { get; private set; }
-		public int? PrincipalID { get; private set; }
-		public int SchemaID { get; private set; }
-		public int ParentObjectID { get; private set; }
-		public string Type { get; private set; }
-		public string TypeDesc { get; private set; }
-		public int Property { get; private set; }
-		public DateTime CreateDate { get; private set; }
-		public DateTime ModifyDate { get; private set; }
-		public bool IsMSShipped { get; private set; }
-		public bool IsAutoDropped { get; private set; }
-		public bool IsSystemNamed { get; private set; }
-		public bool IsPublished { get; private set; }
-		public bool IsSchemaPublished { get; private set; }
-		public bool LockOnBulkLoad { get; private set; }
-		public bool IsDisabled { get; private set; }
-		public bool IsAutoExecuted { get; private set; }
-		public bool IsActivationEnabled { get; private set; }
-		public bool HasOpaqueMetadata { get; private set; }
-		public bool IsNotForReplication { get; private set; }
-		public bool IsReceiveEnabled { get; private set; }
-		public bool IsNotTrusted { get; private set; }
-		public bool IsEnqueueEnabled { get; private set; }
-		public bool WithCheckOption { get; private set; }
-		public bool IsRetentionEnabled { get; private set; }
-		public bool HasUncheckedAssemblyData { get; private set; }
-		public byte UpdateReferentialAction { get; private set; }
-		public byte DeleteReferentialAction { get; private set; }
-		public bool IsReplicated { get; private set; }
-		public bool IsExecutionReplicated { get; private set; }
-		public bool HasReplicationFilter { get; private set; }
-		public bool IsReplSerializableOnly { get; private set; }
-		public bool IsMergePublished { get; private set; }
-		public bool SkipsReplConstraints { get; private set; }
-		public bool IsSyncTranSubscribed { get; private set; }
-		public bool UsesAnsiNulls { get; private set; }
-		public bool NullOnNullInput { get; private set; }
-		public bool UsesDatabaseCollation { get; private set; }
-		public bool IsTrackedByCdc { get; private set; }
-		public bool LargeValueTypesOutOfRow { get; private set; }
-		public byte LockEscalationOption { get; private set; }
-		public bool IsPoisonMessageHandlingEnabled { get; private set; }
+		public string Name { get { return Field<string>("Name"); } private set { this["Name"] = value; } }
+		public int ObjectID { get { return Field<int>("ObjectID"); } private set { this["ObjectID"] = value; } }
+		public int? PrincipalID { get { return Field<int?>("PrincipalID"); } private set { this["PrincipalID"] = value; } }
+		public int SchemaID { get { return Field<int>("SchemaID"); } private set { this["SchemaID"] = value; } }
+		public int ParentObjectID { get { return Field<int>("ParentObjectID"); } private set { this["ParentObjectID"] = value; } }
+		public string Type { get { return Field<string>("Type"); } private set { this["Type"] = value; } }
+		public string TypeDesc { get { return Field<string>("TypeDesc"); } private set { this["TypeDesc"] = value; } }
+		public int Property { get { return Field<int>("Property"); } private set { this["Property"] = value; } }
+		public DateTime CreateDate { get { return Field<DateTime>("CreateDate"); } private set { this["CreateDate"] = value; } }
+		public DateTime ModifyDate { get { return Field<DateTime>("ModifyDate"); } private set { this["ModifyDate"] = value; } }
+		public bool IsMSShipped { get { return Field<bool>("IsMSShipped"); } private set { this["IsMSShipped"] = value; } }
+		public bool IsAutoDropped { get { return Field<bool>("IsAutoDropped"); } private set { this["IsAutoDropped"] = value; } }
+		public bool IsSystemNamed { get { return Field<bool>("IsSystemNamed"); } private set { this["IsSystemNamed"] = value; } }
+		public bool IsPublished { get { return Field<bool>("IsPublished"); } private set { this["IsPublished"] = value; } }
+		public bool IsSchemaPublished { get { return Field<bool>("IsSchemaPublished"); } private set { this["IsSchemaPublished"] = value; } }
+		public bool LockOnBulkLoad { get { return Field<bool>("LockOnBulkLoad"); } private set { this["LockOnBulkLoad"] = value; } }
+		public bool IsDisabled { get { return Field<bool>("IsDisabled"); } private set { this["IsDisabled"] = value; } }
+		public bool IsAutoExecuted { get { return Field<bool>("IsAutoExecuted"); } private set { this["IsAutoExecuted"] = value; } }
+		public bool IsActivationEnabled { get { return Field<bool>("IsActivationEnabled"); } private set { this["IsActivationEnabled"] = value; } }
+		public bool HasOpaqueMetadata { get { return Field<bool>("HasOpaqueMetadata"); } private set { this["HasOpaqueMetadata"] = value; } }
+		public bool IsNotForReplication { get { return Field<bool>("IsNotForReplication"); } private set { this["IsNotForReplication"] = value; } }
+		public bool IsReceiveEnabled { get { return Field<bool>("IsReceiveEnabled"); } private set { this["IsReceiveEnabled"] = value; } }
+		public bool IsNotTrusted { get { return Field<bool>("IsNotTrusted"); } private set { this["IsNotTrusted"] = value; } }
+		public bool IsEnqueueEnabled { get { return Field<bool>("IsEnqueueEnabled"); } private set { this["IsEnqueueEnabled"] = value; } }
+		public bool WithCheckOption { get { return Field<bool>("WithCheckOption"); } private set { this["WithCheckOption"] = value; } }
+		public bool IsRetentionEnabled { get { return Field<bool>("IsRetentionEnabled"); } private set { this["IsRetentionEnabled"] = value; } }
+		public bool HasUncheckedAssemblyData { get { return Field<bool>("HasUncheckedAssemblyData"); } private set { this["HasUncheckedAssemblyData"] = value; } }
+		public byte UpdateReferentialAction { get { return Field<byte>("UpdateReferentialAction"); } private set { this["UpdateReferentialAction"] = value; } }
+		public byte DeleteReferentialAction { get { return Field<byte>("DeleteReferentialAction"); } private set { this["DeleteReferentialAction"] = value; } }
+		public bool IsReplicated { get { return Field<bool>("IsReplicated"); } private set { this["IsReplicated"] = value; } }
+		public bool IsExecutionReplicated { get { return Field<bool>("IsExecutionReplicated"); } private set { this["IsExecutionReplicated"] = value; } }
+		public bool HasReplicationFilter { get { return Field<bool>("HasReplicationFilter"); } private set { this["HasReplicationFilter"] = value; } }
+		public bool IsReplSerializableOnly { get { return Field<bool>("IsReplSerializableOnly"); } private set { this["IsReplSerializableOnly"] = value; } }
+		public bool IsMergePublished { get { return Field<bool>("IsMergePublished"); } private set { this["IsMergePublished"] = value; } }
+		public bool SkipsReplConstraints { get { return Field<bool>("SkipsReplConstraints"); } private set { this["SkipsReplConstraints"] = value; } }
+		public bool IsSyncTranSubscribed { get { return Field<bool>("IsSyncTranSubscribed"); } private set { this["IsSyncTranSubscribed"] = value; } }
+		public bool UsesAnsiNulls { get { return Field<bool>("UsesAnsiNulls"); } private set { this["UsesAnsiNulls"] = value; } }
+		public bool NullOnNullInput { get { return Field<bool>("NullOnNullInput"); } private set { this["NullOnNullInput"] = value; } }
+		public bool UsesDatabaseCollation { get { return Field<bool>("UsesDatabaseCollation"); } private set { this["UsesDatabaseCollation"] = value; } }
+		public bool IsTrackedByCdc { get { return Field<bool>("IsTrackedByCdc"); } private set { this["IsTrackedByCdc"] = value; } }
+		public bool LargeValueTypesOutOfRow { get { return Field<bool>("LargeValueTypesOutOfRow"); } private set { this["LargeValueTypesOutOfRow"] = value; } }
+		public byte LockEscalationOption { get { return Field<byte>("LockEscalationOption"); } private set { this["LockEscalationOption"] = value; } }
+		public bool IsPoisonMessageHandlingEnabled { get { return Field<bool>("IsPoisonMessageHandlingEnabled"); } private set { this["IsPoisonMessageHandlingEnabled"] = value; } }
+
+		public ObjectDollar()
+		{
+			Columns.Add(new DataColumn("Name", "sysname"));
+			Columns.Add(new DataColumn("ObjectID", "int"));
+			Columns.Add(new DataColumn("PrincipalID", "int", true));
+			Columns.Add(new DataColumn("SchemaID", "int"));
+			Columns.Add(new DataColumn("ParentObjectID", "int"));
+			Columns.Add(new DataColumn("Type", "char(2)"));
+			Columns.Add(new DataColumn("TypeDesc", "nvarchar", true));
+			Columns.Add(new DataColumn("Property", "int"));
+			Columns.Add(new DataColumn("CreateDate", "datetime"));
+			Columns.Add(new DataColumn("ModifyDate", "datetime"));
+			Columns.Add(new DataColumn("IsMSShipped", "bit"));
+			Columns.Add(new DataColumn("IsAutoDropped", "bit"));
+			Columns.Add(new DataColumn("IsSystemNamed", "bit"));
+			Columns.Add(new DataColumn("IsPublished", "bit"));
+			Columns.Add(new DataColumn("IsSchemaPublished", "bit"));
+			Columns.Add(new DataColumn("LockOnBulkLoad", "bit"));
+			Columns.Add(new DataColumn("IsDisabled", "bit"));
+			Columns.Add(new DataColumn("IsAutoExecuted", "bit"));
+			Columns.Add(new DataColumn("IsActivationEnabled", "bit"));
+			Columns.Add(new DataColumn("HasOpaqueMetadata", "bit"));
+			Columns.Add(new DataColumn("IsNotForReplication", "bit"));
+			Columns.Add(new DataColumn("IsReceiveEnabled", "bit"));
+			Columns.Add(new DataColumn("IsNotTrusted", "bit"));
+			Columns.Add(new DataColumn("IsEnqueueEnabled", "bit"));
+			Columns.Add(new DataColumn("WithCheckOption", "bit"));
+			Columns.Add(new DataColumn("IsRetentionEnabled", "bit"));
+			Columns.Add(new DataColumn("HasUncheckedAssemblyData", "bit"));
+			Columns.Add(new DataColumn("UpdateReferentialAction", "tinyint"));
+			Columns.Add(new DataColumn("DeleteReferentialAction", "tinyint"));
+			Columns.Add(new DataColumn("IsReplicated", "bit"));
+			Columns.Add(new DataColumn("IsExecutionReplicated", "bit"));
+			Columns.Add(new DataColumn("HasReplicationFilter", "bit"));
+			Columns.Add(new DataColumn("IsReplSerializableOnly", "bit"));
+			Columns.Add(new DataColumn("IsMergePublished", "bit"));
+			Columns.Add(new DataColumn("SkipsReplConstraints", "bit"));
+			Columns.Add(new DataColumn("IsSyncTranSubscribed", "bit"));
+			Columns.Add(new DataColumn("UsesAnsiNulls", "bit"));
+			Columns.Add(new DataColumn("NullOnNullInput", "bit"));
+			Columns.Add(new DataColumn("UsesDatabaseCollation", "bit"));
+			Columns.Add(new DataColumn("IsTrackedByCdc", "bit"));
+			Columns.Add(new DataColumn("LargeValueTypesOutOfRow", "bit"));
+			Columns.Add(new DataColumn("LockEscalationOption", "tinyint"));
+			Columns.Add(new DataColumn("IsPoisonMessageHandlingEnabled", "bit"));
+		}
+
+		public override Row NewRow()
+		{
+			return new ObjectDollar();
+		}
 
 		internal static IEnumerable<ObjectDollar> GetDmvData(Database db)
 		{
