@@ -14,10 +14,8 @@ namespace OrcaMDF.Adhoc
 
 			using (var db = new Database(new[] { @"C:\Test.mdf" }))
 			{
-				foreach (var ic in db.Dmvs.ForeignKeys)
-					Console.WriteLine(ic.Name);
-
-				Console.WriteLine(db.Dmvs.ForeignKeys.Count());
+				foreach (var ic in db.Dmvs.Columns)
+					Console.WriteLine(ic.ObjectID);
 			}
 			
         	Console.WriteLine("Done");
