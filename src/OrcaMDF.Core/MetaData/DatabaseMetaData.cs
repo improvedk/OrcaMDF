@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.MetaData.Enumerations;
@@ -63,7 +64,7 @@ namespace OrcaMDF.Core.MetaData
 				.OrderBy(pc => pc.KeyOrdinal);
 
 			// Add columns as specified in sysiscols
-			var dataRow = new DataRow();
+			var columnsList = new List<DataColumn>();
 			foreach(var col in idxColumns)
 			{
 				var sqlType = db.Dmvs.Types.Where(x => x.SystemTypeID == col.SystemTypeID).Single();
@@ -74,7 +75,7 @@ namespace OrcaMDF.Core.MetaData
 				dc.IsNullable = col.IsNullable;
 				dc.IsIncluded = col.IsIncludedColumn;
 
-				dataRow.Columns.Add(dc);
+				columnsList.Add(dc);
 			}
 			
 			// Add remaining columns as specified in sysrscols
@@ -86,7 +87,7 @@ namespace OrcaMDF.Core.MetaData
 				// the fact that it's stored in the variable length section of the record (LeafOffset < 0).
 				if (!isHeap && col.SystemTypeID == (int)SystemType.Int && col.LeafOffset < 0)
 				{
-					dataRow.Columns.Add(DataColumn.Uniquifier);
+					columnsList.Add(DataColumn.Uniquifier);
 					continue;
 				}
 
@@ -94,7 +95,7 @@ namespace OrcaMDF.Core.MetaData
 				// being the last column in the record.
 				if (isHeap && col.SystemTypeID == (int)SystemType.Binary && col.MaxLength == 8 && col.KeyOrdinal == partitionColumns.Max(pc => pc.KeyOrdinal))
 				{
-					dataRow.Columns.Add(DataColumn.RID);
+					columnsList.Add(DataColumn.RID);
 					continue;
 				}
 
@@ -107,10 +108,10 @@ namespace OrcaMDF.Core.MetaData
 				// implicitly included.
 				dc.IsIncluded = true;
 
-				dataRow.Columns.Add(dc);
+				columnsList.Add(dc);
 			}
 
-			return dataRow;
+			return new DataRow(columnsList);
 		}
 
 		public DataRow GetEmptyDataRow(string tableName)
@@ -133,11 +134,11 @@ namespace OrcaMDF.Core.MetaData
 				.Where(x => x.ObjectID == table.ObjectID);
 
 			// Create table and add columns
-			var dataRow = new DataRow();
+			var columnsList = new List<DataColumn>();
 
 			// If it's a non unique clustered index, add uniquifier column
 			if (clusteredIndex != null && !clusteredIndex.IsUnique)
-				dataRow.Columns.Add(DataColumn.Uniquifier);
+				columnsList.Add(DataColumn.Uniquifier);
 			
 			foreach(var col in syscols)
 			{
@@ -159,10 +160,10 @@ namespace OrcaMDF.Core.MetaData
 				dc.IsSparse = col.IsSparse;
 				dc.ColumnID = col.ColumnID;
 
-				dataRow.Columns.Add(dc);
+				columnsList.Add(dc);
 			}
 
-			return dataRow;
+			return new DataRow(columnsList);
 		}
 	}
 }

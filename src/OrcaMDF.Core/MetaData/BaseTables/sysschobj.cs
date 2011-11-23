@@ -4,20 +4,23 @@ namespace OrcaMDF.Core.MetaData.BaseTables
 {
 	internal class sysschobj : Row
 	{
-		public sysschobj()
-		{
-			Columns.Add(new DataColumn("id", "int"));
-			Columns.Add(new DataColumn("name", "sysname"));
-			Columns.Add(new DataColumn("nsid", "int"));
-			Columns.Add(new DataColumn("nsclass", "tinyint"));
-			Columns.Add(new DataColumn("status", "int"));
-			Columns.Add(new DataColumn("type", "char(2)"));
-			Columns.Add(new DataColumn("pid", "int"));
-			Columns.Add(new DataColumn("pclass", "tinyint"));
-			Columns.Add(new DataColumn("intprop", "int"));
-			Columns.Add(new DataColumn("created", "datetime"));
-			Columns.Add(new DataColumn("modified", "datetime"));
-		}
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("id", "int"),
+				new DataColumn("name", "sysname"),
+				new DataColumn("nsid", "int"),
+				new DataColumn("nsclass", "tinyint"),
+				new DataColumn("status", "int"),
+				new DataColumn("type", "char(2)"),
+				new DataColumn("pid", "int"),
+				new DataColumn("pclass", "tinyint"),
+				new DataColumn("intprop", "int"),
+				new DataColumn("created", "datetime"),
+				new DataColumn("modified", "datetime")
+		    });
+
+		public sysschobj() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{

@@ -2,16 +2,19 @@ namespace OrcaMDF.Core.MetaData.BaseTables
 {
 	internal class sysiscol : Row
 	{
-		public sysiscol()
-		{
-			Columns.Add(new DataColumn("idmajor", "int"));
-			Columns.Add(new DataColumn("idminor", "int"));
-			Columns.Add(new DataColumn("subid", "int"));
-			Columns.Add(new DataColumn("status", "int"));
-			Columns.Add(new DataColumn("intprop", "int"));
-			Columns.Add(new DataColumn("tinyprop1", "tinyint"));
-			Columns.Add(new DataColumn("tinyprop2", "tinyint"));
-		}
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("idmajor", "int"),
+				new DataColumn("idminor", "int"),
+				new DataColumn("subid", "int"),
+				new DataColumn("status", "int"),
+				new DataColumn("intprop", "int"),
+				new DataColumn("tinyprop1", "tinyint"),
+				new DataColumn("tinyprop2", "tinyint")
+		    });
+
+		public sysiscol() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{

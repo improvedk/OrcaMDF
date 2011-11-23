@@ -2,25 +2,28 @@ namespace OrcaMDF.Core.MetaData.BaseTables
 {
 	internal class syscolpar : Row
 	{
-		public syscolpar()
-		{
-			Columns.Add(new DataColumn("id", "int"));
-			Columns.Add(new DataColumn("number", "smallint"));
-			Columns.Add(new DataColumn("colid", "int"));
-			Columns.Add(new DataColumn("name", "sysname", true));
-			Columns.Add(new DataColumn("xtype", "tinyint"));
-			Columns.Add(new DataColumn("utype", "int"));
-			Columns.Add(new DataColumn("length", "smallint"));
-			Columns.Add(new DataColumn("prec", "tinyint"));
-			Columns.Add(new DataColumn("scale", "tinyint"));
-			Columns.Add(new DataColumn("collationid", "int"));
-			Columns.Add(new DataColumn("status", "int"));
-			Columns.Add(new DataColumn("maxinrow", "smallint"));
-			Columns.Add(new DataColumn("xmlns", "int"));
-			Columns.Add(new DataColumn("dflt", "int"));
-			Columns.Add(new DataColumn("chk", "int"));
-			Columns.Add(new DataColumn("idtval", "varbinary", true));
-		}
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("id", "int"),
+				new DataColumn("number", "smallint"),
+				new DataColumn("colid", "int"),
+				new DataColumn("name", "sysname", true),
+				new DataColumn("xtype", "tinyint"),
+				new DataColumn("utype", "int"),
+				new DataColumn("length", "smallint"),
+				new DataColumn("prec", "tinyint"),
+				new DataColumn("scale", "tinyint"),
+				new DataColumn("collationid", "int"),
+				new DataColumn("status", "int"),
+				new DataColumn("maxinrow", "smallint"),
+				new DataColumn("xmlns", "int"),
+				new DataColumn("dflt", "int"),
+				new DataColumn("chk", "int"),
+				new DataColumn("idtval", "varbinary", true)
+		    });
+
+		public syscolpar() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{

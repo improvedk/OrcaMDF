@@ -34,7 +34,6 @@
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openDatabaseDialog = new System.Windows.Forms.OpenFileDialog();
-			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.treeview = new System.Windows.Forms.TreeView();
 			this.splitter1 = new System.Windows.Forms.Splitter();
@@ -46,10 +45,13 @@
 			this.menuItem2 = new System.Windows.Forms.MenuItem();
 			this.baseTableMenu = new System.Windows.Forms.ContextMenu();
 			this.menuItem3 = new System.Windows.Forms.MenuItem();
+			this.gridStatus = new System.Windows.Forms.StatusStrip();
+			this.gridStatusRows = new System.Windows.Forms.ToolStripStatusLabel();
 			this.menuStrip1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.panel2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
+			this.gridStatus.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -58,7 +60,7 @@
             this.openToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(478, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(648, 24);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -99,21 +101,13 @@
 			this.openDatabaseDialog.Filter = "SQL Server data files|*.mdf;*.ndf";
 			this.openDatabaseDialog.Multiselect = true;
 			// 
-			// statusStrip1
-			// 
-			this.statusStrip1.Location = new System.Drawing.Point(0, 282);
-			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(478, 22);
-			this.statusStrip1.TabIndex = 2;
-			this.statusStrip1.Text = "statusStrip1";
-			// 
 			// panel1
 			// 
 			this.panel1.Controls.Add(this.treeview);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
 			this.panel1.Location = new System.Drawing.Point(0, 24);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(200, 258);
+			this.panel1.Size = new System.Drawing.Size(200, 453);
 			this.panel1.TabIndex = 3;
 			// 
 			// treeview
@@ -121,7 +115,7 @@
 			this.treeview.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.treeview.Location = new System.Drawing.Point(0, 0);
 			this.treeview.Name = "treeview";
-			this.treeview.Size = new System.Drawing.Size(200, 258);
+			this.treeview.Size = new System.Drawing.Size(200, 453);
 			this.treeview.TabIndex = 0;
 			this.treeview.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeview_MouseUp);
 			// 
@@ -129,17 +123,18 @@
 			// 
 			this.splitter1.Location = new System.Drawing.Point(200, 24);
 			this.splitter1.Name = "splitter1";
-			this.splitter1.Size = new System.Drawing.Size(3, 258);
+			this.splitter1.Size = new System.Drawing.Size(3, 453);
 			this.splitter1.TabIndex = 4;
 			this.splitter1.TabStop = false;
 			// 
 			// panel2
 			// 
+			this.panel2.Controls.Add(this.gridStatus);
 			this.panel2.Controls.Add(this.grid);
 			this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel2.Location = new System.Drawing.Point(203, 24);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(275, 258);
+			this.panel2.Size = new System.Drawing.Size(445, 453);
 			this.panel2.TabIndex = 5;
 			// 
 			// grid
@@ -151,7 +146,7 @@
 			this.grid.Location = new System.Drawing.Point(0, 0);
 			this.grid.Name = "grid";
 			this.grid.ReadOnly = true;
-			this.grid.Size = new System.Drawing.Size(275, 258);
+			this.grid.Size = new System.Drawing.Size(445, 453);
 			this.grid.TabIndex = 0;
 			// 
 			// tableMenu
@@ -187,15 +182,29 @@
 			this.menuItem3.Text = "Select All Rows";
 			this.menuItem3.Click += new System.EventHandler(this.menuItem3_Click);
 			// 
+			// gridStatus
+			// 
+			this.gridStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gridStatusRows});
+			this.gridStatus.Location = new System.Drawing.Point(0, 431);
+			this.gridStatus.Name = "gridStatus";
+			this.gridStatus.Size = new System.Drawing.Size(445, 22);
+			this.gridStatus.TabIndex = 1;
+			this.gridStatus.Text = "statusStrip2";
+			// 
+			// gridStatusRows
+			// 
+			this.gridStatusRows.Name = "gridStatusRows";
+			this.gridStatusRows.Size = new System.Drawing.Size(0, 17);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(478, 304);
+			this.ClientSize = new System.Drawing.Size(648, 477);
 			this.Controls.Add(this.panel2);
 			this.Controls.Add(this.splitter1);
 			this.Controls.Add(this.panel1);
-			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Main";
@@ -204,7 +213,10 @@
 			this.menuStrip1.PerformLayout();
 			this.panel1.ResumeLayout(false);
 			this.panel2.ResumeLayout(false);
+			this.panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
+			this.gridStatus.ResumeLayout(false);
+			this.gridStatus.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -218,7 +230,6 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.OpenFileDialog openDatabaseDialog;
-		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Splitter splitter1;
 		private System.Windows.Forms.Panel panel2;
@@ -230,6 +241,8 @@
 		private System.Windows.Forms.MenuItem menuItem2;
 		private System.Windows.Forms.ContextMenu baseTableMenu;
 		private System.Windows.Forms.MenuItem menuItem3;
+		private System.Windows.Forms.StatusStrip gridStatus;
+		private System.Windows.Forms.ToolStripStatusLabel gridStatusRows;
 	}
 }
 

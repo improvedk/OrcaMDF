@@ -36,7 +36,7 @@ namespace OrcaMDF.OMS
 				ex +
 				Environment.NewLine);
 
-			MessageBox.Show("Please send the ErrorLog.txt file, from the application directory, to mark@improve.dk. Make sure to verify it does not contain any sensitive information before you send it.", "An error occurred while trying to open the database.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			MessageBox.Show("Please send the ErrorLog.txt file, from the application directory, to mark@improve.dk. Make sure to verify it does not contain any sensitive information before you send it.", ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
 		private void openToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -182,6 +182,8 @@ namespace OrcaMDF.OMS
 
 				grid.DataSource = tbl;
 			}
+
+			gridStatusRows.Text = grid.Rows.Count + " Rows";
 		}
 
 		private void treeview_MouseUp(object sender, MouseEventArgs e)

@@ -7,6 +7,24 @@ namespace OrcaMDF.Core.MetaData.DMVs
 {
 	public class Object : Row
 	{
+		private const string CACHE_KEY = "DMV_Object";
+
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("Name", "sysname"),
+				new DataColumn("ObjectID", "int"),
+				new DataColumn("PrincipalID", "int", true),
+				new DataColumn("SchemaID", "int"),
+				new DataColumn("ParentObjectID", "int"),
+				new DataColumn("Type", "char(2)"),
+				new DataColumn("TypeDesc", "nvarchar", true),
+				new DataColumn("CreateDate", "datetime"),
+				new DataColumn("ModifyDate", "datetime"),
+				new DataColumn("IsMSShipped", "bit"),
+				new DataColumn("IsPublished", "bit"),
+				new DataColumn("IsSchemaPublished", "bit")
+		    });
+
 		public string Name { get { return Field<string>("Name"); } private set { this["Name"] = value; } }
 		public int ObjectID { get { return Field<int>("ObjectID"); } private set { this["ObjectID"] = value; } }
 		public int? PrincipalID { get { return Field<int?>("PrincipalID"); } private set { this["PrincipalID"] = value; } }
@@ -20,21 +38,8 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		public bool IsPublished { get { return Field<bool>("IsPublished"); } private set { this["IsPublished"] = value; } }
 		public bool IsSchemaPublished { get { return Field<bool>("IsSchemaPublished"); } private set { this["IsSchemaPublished"] = value; } }
 
-		public Object()
-		{
-			Columns.Add(new DataColumn("Name", "sysname"));
-			Columns.Add(new DataColumn("ObjectID", "int"));
-			Columns.Add(new DataColumn("PrincipalID", "int", true));
-			Columns.Add(new DataColumn("SchemaID", "int"));
-			Columns.Add(new DataColumn("ParentObjectID", "int"));
-			Columns.Add(new DataColumn("Type", "char(2)"));
-			Columns.Add(new DataColumn("TypeDesc", "nvarchar", true));
-			Columns.Add(new DataColumn("CreateDate", "datetime"));
-			Columns.Add(new DataColumn("ModifyDate", "datetime"));
-			Columns.Add(new DataColumn("IsMSShipped", "bit"));
-			Columns.Add(new DataColumn("IsPublished", "bit"));
-			Columns.Add(new DataColumn("IsSchemaPublished", "bit"));
-		}
+		public Object() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{
@@ -43,23 +48,28 @@ namespace OrcaMDF.Core.MetaData.DMVs
 
 		internal static IEnumerable<Object> GetDmvData(Database db)
 		{
-			// SQL Server gets data from sys.objects$. We need to get directly from sys.sysschobjs to avoid a stack overflow
-			return db.Dmvs.ObjectsDollar
-				.Select(o => new Object
-				    {
-				        Name = o.Name,
-				        ObjectID = o.ObjectID,
-						PrincipalID = o.PrincipalID,
-				        SchemaID = o.SchemaID,
-				        ParentObjectID = o.ParentObjectID,
-				        Type = o.Type.Trim(),
-						TypeDesc = o.TypeDesc,
-				        CreateDate = o.CreateDate,
-				        ModifyDate = o.ModifyDate,
-						IsMSShipped = o.IsMSShipped,
-						IsPublished = o.IsPublished,
-						IsSchemaPublished = o.IsSchemaPublished
-				    });
+			if (!db.ObjectCache.ContainsKey(CACHE_KEY))
+			{
+				db.ObjectCache[CACHE_KEY] = db.Dmvs.ObjectsDollar
+					.Select(o => new Object
+						{
+							Name = o.Name,
+							ObjectID = o.ObjectID,
+							PrincipalID = o.PrincipalID,
+							SchemaID = o.SchemaID,
+							ParentObjectID = o.ParentObjectID,
+							Type = o.Type.Trim(),
+							TypeDesc = o.TypeDesc,
+							CreateDate = o.CreateDate,
+							ModifyDate = o.ModifyDate,
+							IsMSShipped = o.IsMSShipped,
+							IsPublished = o.IsPublished,
+							IsSchemaPublished = o.IsSchemaPublished
+						})
+					.ToList();
+			}
+
+			return (IEnumerable<Object>)db.ObjectCache[CACHE_KEY];
 		}
 	}
 }

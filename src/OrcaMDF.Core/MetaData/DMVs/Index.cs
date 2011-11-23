@@ -7,6 +7,30 @@ namespace OrcaMDF.Core.MetaData.DMVs
 {
 	public class Index : Row
 	{
+		private const string CACHE_KEY = "DMV_Index";
+
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("ObjectID", "int"),
+				new DataColumn("Name", "sysname", true),
+				new DataColumn("IndexID", "int"),
+				new DataColumn("Type", "tinyint"),
+				new DataColumn("TypeDesc", "nvarchar", true),
+				new DataColumn("IsUnique", "bit", true),
+				new DataColumn("DataSpaceID", "int"),
+				new DataColumn("IgnoreDupKey", "bit", true),
+				new DataColumn("IsPrimaryKey", "bit", true),
+				new DataColumn("IsUniqueConstraint", "bit", true),
+				new DataColumn("FillFactor", "tinyint"),
+				new DataColumn("IsPadded", "bit", true),
+				new DataColumn("IsDisabled", "bit", true),
+				new DataColumn("IsHypothetical", "bit", true),
+				new DataColumn("AllowRowLocks", "bit", true),
+				new DataColumn("AllowPageLocks", "bit", true),
+				new DataColumn("HasFilter", "bit", true),
+				new DataColumn("FilterDefinition", "nvarchar", true)
+		    });
+
 		public int ObjectID { get { return Field<int>("ObjectID"); } private set { this["ObjectID"] = value; } }
 		public string Name { get { return Field<string>("Name"); } private set { this["Name"] = value; } }
 		public int IndexID { get { return Field<int>("IndexID"); } private set { this["IndexID"] = value; } }
@@ -26,27 +50,8 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		public bool HasFilter { get { return Field<bool>("HasFilter"); } private set { this["HasFilter"] = value; } }
 		public string FilterDefinition { get { return Field<string>("FilterDefinition"); } private set { this["FilterDefinition"] = value; } } // TODO
 
-		public Index()
-		{
-			Columns.Add(new DataColumn("ObjectID", "int"));
-			Columns.Add(new DataColumn("Name", "sysname", true));
-			Columns.Add(new DataColumn("IndexID", "int"));
-			Columns.Add(new DataColumn("Type", "tinyint"));
-			Columns.Add(new DataColumn("TypeDesc", "nvarchar", true));
-			Columns.Add(new DataColumn("IsUnique", "bit", true));
-			Columns.Add(new DataColumn("DataSpaceID", "int"));
-			Columns.Add(new DataColumn("IgnoreDupKey", "bit", true));
-			Columns.Add(new DataColumn("IsPrimaryKey", "bit", true));
-			Columns.Add(new DataColumn("IsUniqueConstraint", "bit", true));
-			Columns.Add(new DataColumn("FillFactor", "tinyint"));
-			Columns.Add(new DataColumn("IsPadded", "bit", true));
-			Columns.Add(new DataColumn("IsDisabled", "bit", true));
-			Columns.Add(new DataColumn("IsHypothetical", "bit", true));
-			Columns.Add(new DataColumn("AllowRowLocks", "bit", true));
-			Columns.Add(new DataColumn("AllowPageLocks", "bit", true));
-			Columns.Add(new DataColumn("HasFilter", "bit", true));
-			Columns.Add(new DataColumn("FilterDefinition", "nvarchar", true));
-		}
+		public Index() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{
@@ -55,30 +60,36 @@ namespace OrcaMDF.Core.MetaData.DMVs
 
 		internal static IEnumerable<Index> GetDmvData(Database db)
 		{
-			return db.BaseTables.sysidxstats
-				.Where(i => (i.status & 1) != 0)
-				.Select(i => new Index
-				    {
-						ObjectID = i.id,
-						Name = i.name,
-						IndexID = i.indid,
-						Type = i.type,
-						TypeDesc = db.BaseTables.syspalvalues
-							.Where(n => n.@class == "IDXT" && n.value == i.type)
-							.Select(n => n.name)
-							.Single(),
-						DataSpaceID = i.dataspace,
-						FillFactor = i.fillfact,
-						IsUnique = Convert.ToBoolean(i.status & 0x8),
-						IsPrimaryKey = Convert.ToBoolean(i.status & 0x20),
-						IsUniqueConstraint = Convert.ToBoolean(i.status & 0x40),
-						IsPadded = Convert.ToBoolean(i.status & 0x10),
-						IsDisabled = Convert.ToBoolean(i.status & 0x80),
-						IsHypothetical = Convert.ToBoolean(i.status & 0x100),
-						AllowRowLocks = Convert.ToBoolean(1 - (i.status & 512) / 512),
-						AllowPageLocks = Convert.ToBoolean(1 - (i.status & 1024) / 1024),
-						HasFilter = Convert.ToBoolean(i.status & 0x20000)
-				    });
+			if (!db.ObjectCache.ContainsKey(CACHE_KEY))
+			{
+				db.ObjectCache[CACHE_KEY] = db.BaseTables.sysidxstats
+					.Where(i => (i.status & 1) != 0)
+					.Select(i => new Index
+			       		{
+			       			ObjectID = i.id,
+			       			Name = i.name,
+			       			IndexID = i.indid,
+			       			Type = i.type,
+			       			TypeDesc = db.BaseTables.syspalvalues
+			       				.Where(n => n.@class == "IDXT" && n.value == i.type)
+			       				.Select(n => n.name)
+			       				.Single(),
+			       			DataSpaceID = i.dataspace,
+			       			FillFactor = i.fillfact,
+			       			IsUnique = Convert.ToBoolean(i.status & 0x8),
+			       			IsPrimaryKey = Convert.ToBoolean(i.status & 0x20),
+			       			IsUniqueConstraint = Convert.ToBoolean(i.status & 0x40),
+			       			IsPadded = Convert.ToBoolean(i.status & 0x10),
+			       			IsDisabled = Convert.ToBoolean(i.status & 0x80),
+			       			IsHypothetical = Convert.ToBoolean(i.status & 0x100),
+			       			AllowRowLocks = Convert.ToBoolean(1 - (i.status & 512) / 512),
+			       			AllowPageLocks = Convert.ToBoolean(1 - (i.status & 1024) / 1024),
+			       			HasFilter = Convert.ToBoolean(i.status & 0x20000)
+			       		})
+					.ToList();
+			}
+
+			return (IEnumerable<Index>)db.ObjectCache[CACHE_KEY];
 		}
 	}
 }

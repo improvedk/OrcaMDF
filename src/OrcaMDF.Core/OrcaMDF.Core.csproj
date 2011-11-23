@@ -86,6 +86,7 @@
     <Compile Include="Engine\SqlTypes\SqlUniqueIdentifier.cs" />
     <Compile Include="Engine\SqlTypes\SqlUniquifier.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
+    <Compile Include="Framework\ArrayHelper.cs" />
     <Compile Include="MetaData\BaseTableData.cs" />
     <Compile Include="MetaData\BaseTables\sysiscol.cs" />
     <Compile Include="MetaData\BaseTables\syspalname.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="MetaData\Enumerations\SystemType.cs" />
     <Compile Include="MetaData\Exceptions\UnknownIndexException.cs" />
     <Compile Include="MetaData\Exceptions\UnknownTableException.cs" />
+    <Compile Include="MetaData\ISchema.cs" />
     <Compile Include="MetaData\Row.cs" />
     <Compile Include="MetaData\ClusteredIndexDataRow.cs" />
     <Compile Include="MetaData\ClusteredIndexEntity.cs" />
@@ -125,6 +127,7 @@
     <Compile Include="MetaData\DataRow.cs" />
     <Compile Include="MetaData\DataColumn.cs" />
     <Compile Include="MetaData\Enumerations\ReservedIndexID.cs" />
+    <Compile Include="MetaData\Schema.cs" />
     <Compile Include="MetaData\SysrscolTIParser.cs" />
     <Compile Include="Engine\DataFile.cs" />
     <Compile Include="Engine\PagePointer.cs" />

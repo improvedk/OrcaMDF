@@ -2,23 +2,26 @@ namespace OrcaMDF.Core.MetaData.BaseTables
 {
 	public class sysrscol : Row
 	{
-		public sysrscol()
-		{
-			Columns.Add(new DataColumn("rsid", "bigint"));
-			Columns.Add(new DataColumn("rscolid", "int"));
-			Columns.Add(new DataColumn("hbcolid", "int"));
-			Columns.Add(new DataColumn("rcmodified", "bigint"));
-			Columns.Add(new DataColumn("ti", "int"));
-			Columns.Add(new DataColumn("cid", "int"));
-			Columns.Add(new DataColumn("ordkey", "smallint"));
-			Columns.Add(new DataColumn("maxinrowlen", "smallint"));
-			Columns.Add(new DataColumn("status", "int"));
-			Columns.Add(new DataColumn("offset", "int"));
-			Columns.Add(new DataColumn("nullbit", "int"));
-			Columns.Add(new DataColumn("bitpos", "smallint"));
-			Columns.Add(new DataColumn("colguid", "varbinary(16)", true));
-			Columns.Add(new DataColumn("dbfragid", "int"));
-		}
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("rsid", "bigint"),
+				new DataColumn("rscolid", "int"),
+				new DataColumn("hbcolid", "int"),
+				new DataColumn("rcmodified", "bigint"),
+				new DataColumn("ti", "int"),
+				new DataColumn("cid", "int"),
+				new DataColumn("ordkey", "smallint"),
+				new DataColumn("maxinrowlen", "smallint"),
+				new DataColumn("status", "int"),
+				new DataColumn("offset", "int"),
+				new DataColumn("nullbit", "int"),
+				new DataColumn("bitpos", "smallint"),
+				new DataColumn("colguid", "varbinary(16)", true),
+				new DataColumn("dbfragid", "int")
+		    });
+
+		public sysrscol() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{

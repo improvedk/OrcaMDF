@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace OrcaMDF.Core.MetaData
 {
@@ -8,33 +9,24 @@ namespace OrcaMDF.Core.MetaData
 	/// </summary>
 	public abstract class Row
 	{
-		public IList<DataColumn> Columns { get; private set; }
-
+		protected ISchema Schema;
+		
 		protected IDictionary<string, object> data;
 
-		private HashSet<string> columnNames;
-
-		protected Row()
-			: this(new List<DataColumn>())
-		{ }
-
-		protected Row(IList<DataColumn> columns)
+		public ReadOnlyCollection<DataColumn> Columns
 		{
-			Columns = columns;
+			get { return Schema.Columns; }
+		}
+
+		protected Row(ISchema schema)
+		{
+			Schema = schema;
 			data = new Dictionary<string, object>();
 		}
 
 		private void ensureColumnExists(string name)
 		{
-			if(columnNames == null)
-			{
-				columnNames = new HashSet<string>();
-
-				foreach(var col in Columns)
-					columnNames.Add(col.Name);
-			}
-
-			if(!columnNames.Contains(name))
+			if(!Schema.HasColumn(name))
 				throw new ArgumentOutOfRangeException("Column '" + name + "' does not exist.");
 		}
 
@@ -59,8 +51,16 @@ namespace OrcaMDF.Core.MetaData
 				return (T)Convert.ChangeType(data[name], u);
 			}
 
-			object value = data.ContainsKey(name) ? data[name] : null;
-			return (T)Convert.ChangeType(value, t);
+			// This is ugly, but fast as columns will practically always be present.
+			// Exceptions are... The exception.
+			try
+			{
+				return (T)data[name];
+			}
+			catch (KeyNotFoundException)
+			{
+				return (T)Convert.ChangeType(null, t);
+			}
 		}
 
 		public object this[string name]

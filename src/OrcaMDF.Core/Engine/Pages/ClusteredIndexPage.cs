@@ -11,7 +11,7 @@ namespace OrcaMDF.Core.Engine.Pages
 		public ClusteredIndexPage(byte[] bytes, Database database)
 			: base(bytes, database)
 		{ }
-
+		/*
 		public IEnumerable<T> GetEntities<T>() where T : ClusteredTableIndexRow, new()
 		{
 			for (int i = 0; i < Records.Length; i++)
@@ -67,5 +67,6 @@ namespace OrcaMDF.Core.Engine.Pages
 				yield return dataRow;
 			}
 		}
+		 */
 	}
 }

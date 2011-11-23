@@ -2,15 +2,18 @@ namespace OrcaMDF.Core.MetaData.BaseTables
 {
 	internal class syssingleobjref : Row
 	{
-		public syssingleobjref()
-		{
-			Columns.Add(new DataColumn("class", "tinyint"));
-			Columns.Add(new DataColumn("depid", "int"));
-			Columns.Add(new DataColumn("depsubid", "int"));
-			Columns.Add(new DataColumn("indepid", "int"));
-			Columns.Add(new DataColumn("indepsubid", "int"));
-			Columns.Add(new DataColumn("status", "int"));
-		}
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("class", "tinyint"),
+				new DataColumn("depid", "int"),
+				new DataColumn("depsubid", "int"),
+				new DataColumn("indepid", "int"),
+				new DataColumn("indepsubid", "int"),
+				new DataColumn("status", "int")
+		    });
+
+		public syssingleobjref() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{

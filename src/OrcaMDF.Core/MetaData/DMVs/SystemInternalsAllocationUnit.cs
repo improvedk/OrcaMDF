@@ -6,6 +6,23 @@ namespace OrcaMDF.Core.MetaData.DMVs
 {
 	public class SystemInternalsAllocationUnit : Row
 	{
+		private const string CACHE_KEY = "DMV_SystemInternalsAllocationUnit";
+
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("AllocationUnitID", "bigint"),
+				new DataColumn("Type", "tinyint"),
+				new DataColumn("TypeDesc", "nvarchar", true),
+				new DataColumn("ContainerID", "bigint"),
+				new DataColumn("FilegroupID", "smallint"),
+				new DataColumn("TotalPages", "bigint"),
+				new DataColumn("UsedPages", "bigint"),
+				new DataColumn("DataPages", "bigint"),
+				new DataColumn("FirstPage", "binary(6)"),
+				new DataColumn("RootPage", "binary(6)"),
+				new DataColumn("FirstIamPage", "binary(6)")
+		    });
+
 		public long AllocationUnitID { get { return Field<long>("AllocationUnitID"); } private set { this["AllocationUnitID"] = value; } }
 		public byte Type { get { return Field<byte>("Type"); } private set { this["Type"] = value; } }
 		public string TypeDesc { get { return Field<string>("TypeDesc"); } private set { this["TypeDesc"] = value; } }
@@ -18,20 +35,8 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		public PagePointer RootPage { get { return Field<PagePointer>("RootPage"); } private set { this["RootPage"] = value; } }
 		public PagePointer FirstIamPage { get { return Field<PagePointer>("FirstIamPage"); } private set { this["FirstIamPage"] = value; } }
 
-		public SystemInternalsAllocationUnit()
-		{
-			Columns.Add(new DataColumn("AllocationUnitID", "bigint"));
-			Columns.Add(new DataColumn("Type", "tinyint"));
-			Columns.Add(new DataColumn("TypeDesc", "nvarchar", true));
-			Columns.Add(new DataColumn("ContainerID", "bigint"));
-			Columns.Add(new DataColumn("FilegroupID", "smallint"));
-			Columns.Add(new DataColumn("TotalPages", "bigint"));
-			Columns.Add(new DataColumn("UsedPages", "bigint"));
-			Columns.Add(new DataColumn("DataPages", "bigint"));
-			Columns.Add(new DataColumn("FirstPage", "binary(6)"));
-			Columns.Add(new DataColumn("RootPage", "binary(6)"));
-			Columns.Add(new DataColumn("FirstIamPage", "binary(6)"));
-		}
+		public SystemInternalsAllocationUnit() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{
@@ -40,21 +45,27 @@ namespace OrcaMDF.Core.MetaData.DMVs
 
 		internal static IEnumerable<SystemInternalsAllocationUnit> GetDmvData(Database db)
 		{
-			return db.BaseTables.sysallocunits
-				.Select(au => new SystemInternalsAllocationUnit
-				{
-					AllocationUnitID = au.auid,
-					Type = au.type,
-					TypeDesc = db.BaseTables.syspalvalues
-						.Where(ip => ip.@class == "AUTY" && ip.value == au.type)
-						.Select(n => n.name)
-						.Single(),
-					ContainerID = au.ownerid,
-					FilegroupID = au.fgid,
-					FirstPage = new PagePointer(au.pgfirst),
-					RootPage = new PagePointer(au.pgroot),
-					FirstIamPage = new PagePointer(au.pgfirstiam)
-				});
+			if (!db.ObjectCache.ContainsKey(CACHE_KEY))
+			{
+				db.ObjectCache[CACHE_KEY] = db.BaseTables.sysallocunits
+					.Select(au => new SystemInternalsAllocationUnit
+						{
+							AllocationUnitID = au.auid,
+							Type = au.type,
+							TypeDesc = db.BaseTables.syspalvalues
+								.Where(ip => ip.@class == "AUTY" && ip.value == au.type)
+								.Select(n => n.name)
+								.Single(),
+							ContainerID = au.ownerid,
+							FilegroupID = au.fgid,
+							FirstPage = new PagePointer(au.pgfirst),
+							RootPage = new PagePointer(au.pgroot),
+							FirstIamPage = new PagePointer(au.pgfirstiam)
+						})
+					.ToList();
+			}
+
+			return (IEnumerable<SystemInternalsAllocationUnit>)db.ObjectCache[CACHE_KEY];
 		}
 	}
 }

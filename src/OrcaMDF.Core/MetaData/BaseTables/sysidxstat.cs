@@ -2,20 +2,23 @@ namespace OrcaMDF.Core.MetaData.BaseTables
 {
 	internal class sysidxstat : Row
 	{
-		public sysidxstat()
-		{
-			Columns.Add(new DataColumn("id", "int"));
-			Columns.Add(new DataColumn("indid", "int"));
-			Columns.Add(new DataColumn("name", "sysname", true));
-			Columns.Add(new DataColumn("status", "int"));
-			Columns.Add(new DataColumn("intprop", "int"));
-			Columns.Add(new DataColumn("fillfact", "tinyint"));
-			Columns.Add(new DataColumn("type", "tinyint"));
-			Columns.Add(new DataColumn("tinyprop", "tinyint"));
-			Columns.Add(new DataColumn("dataspace", "int"));
-			Columns.Add(new DataColumn("lobds", "int"));
-			Columns.Add(new DataColumn("rowset", "bigint"));
-		}
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("id", "int"),
+				new DataColumn("indid", "int"),
+				new DataColumn("name", "sysname", true),
+				new DataColumn("status", "int"),
+				new DataColumn("intprop", "int"),
+				new DataColumn("fillfact", "tinyint"),
+				new DataColumn("type", "tinyint"),
+				new DataColumn("tinyprop", "tinyint"),
+				new DataColumn("dataspace", "int"),
+				new DataColumn("lobds", "int"),
+				new DataColumn("rowset", "bigint")
+		    });
+
+		public sysidxstat() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{

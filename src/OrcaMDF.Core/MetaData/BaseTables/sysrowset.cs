@@ -2,27 +2,30 @@ namespace OrcaMDF.Core.MetaData.BaseTables
 {
 	internal class sysrowset : Row
 	{
-		public sysrowset()
-		{
-			Columns.Add(new DataColumn("rowsetid", "bigint"));
-			Columns.Add(new DataColumn("ownertype", "tinyint"));
-			Columns.Add(new DataColumn("idmajor", "int"));
-			Columns.Add(new DataColumn("idminor", "int"));
-			Columns.Add(new DataColumn("numpart", "int"));
-			Columns.Add(new DataColumn("status", "int"));
-			Columns.Add(new DataColumn("fgidfs", "smallint"));
-			Columns.Add(new DataColumn("rcrows", "bigint"));
-			Columns.Add(new DataColumn("cmprlevel", "tinyint"));
-			Columns.Add(new DataColumn("fillfact", "tinyint"));
-			Columns.Add(new DataColumn("maxnullbit", "smallint"));
-			Columns.Add(new DataColumn("maxleaf", "int"));
-			Columns.Add(new DataColumn("maxint", "smallint"));
-			Columns.Add(new DataColumn("minleaf", "smallint"));
-			Columns.Add(new DataColumn("minint", "smallint"));
-			Columns.Add(new DataColumn("rsguid", "varbinary", true));
-			Columns.Add(new DataColumn("lockres", "varbinary", true));
-			Columns.Add(new DataColumn("dbfragid", "int"));
-		}
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("rowsetid", "bigint"),
+				new DataColumn("ownertype", "tinyint"),
+				new DataColumn("idmajor", "int"),
+				new DataColumn("idminor", "int"),
+				new DataColumn("numpart", "int"),
+				new DataColumn("status", "int"),
+				new DataColumn("fgidfs", "smallint"),
+				new DataColumn("rcrows", "bigint"),
+				new DataColumn("cmprlevel", "tinyint"),
+				new DataColumn("fillfact", "tinyint"),
+				new DataColumn("maxnullbit", "smallint"),
+				new DataColumn("maxleaf", "int"),
+				new DataColumn("maxint", "smallint"),
+				new DataColumn("minleaf", "smallint"),
+				new DataColumn("minint", "smallint"),
+				new DataColumn("rsguid", "varbinary", true),
+				new DataColumn("lockres", "varbinary", true),
+				new DataColumn("dbfragid", "int")
+		    });
+
+		public sysrowset() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{

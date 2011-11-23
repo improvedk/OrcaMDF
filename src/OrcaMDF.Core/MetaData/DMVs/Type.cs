@@ -7,6 +7,27 @@ namespace OrcaMDF.Core.MetaData.DMVs
 {
 	public class Type : Row
 	{
+		private const string CACHE_KEY = "DMV_Type";
+
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("Name", "sysname"),
+				new DataColumn("SystemTypeID", "tinyint"),
+				new DataColumn("UserTypeID", "int"),
+				new DataColumn("SchemaID", "int"),
+				new DataColumn("PrincipalID", "int", true),
+				new DataColumn("MaxLength", "smallint"),
+				new DataColumn("Precision", "tinyint"),
+				new DataColumn("Scale", "tinyint"),
+				new DataColumn("CollationName", "sysname", true),
+				new DataColumn("IsNullable", "bit", true),
+				new DataColumn("IsUserDefined", "bit"),
+				new DataColumn("IsAssemblyType", "bit"),
+				new DataColumn("DefaultObjectID", "int"),
+				new DataColumn("RuleObjectID", "int"),
+				new DataColumn("IsTableType", "bit")
+		    });
+
 		public string Name { get { return Field<string>("Name"); } private set { this["Name"] = value; } }
 		public byte SystemTypeID { get { return Field<byte>("SystemTypeID"); } private set { this["SystemTypeID"] = value; } }
 		public int UserTypeID { get { return Field<int>("UserTypeID"); } private set { this["UserTypeID"] = value; } }
@@ -23,24 +44,8 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		public int RuleObjectID { get { return Field<int>("RuleObjectID"); } private set { this["RuleObjectID"] = value; } }
 		public bool IsTableType { get { return Field<bool>("IsTableType"); } private set { this["IsTableType"] = value; } }
 
-		public Type()
-		{
-			Columns.Add(new DataColumn("Name", "sysname"));
-			Columns.Add(new DataColumn("SystemTypeID", "tinyint"));
-			Columns.Add(new DataColumn("UserTypeID", "int"));
-			Columns.Add(new DataColumn("SchemaID", "int"));
-			Columns.Add(new DataColumn("PrincipalID", "int", true));
-			Columns.Add(new DataColumn("MaxLength", "smallint"));
-			Columns.Add(new DataColumn("Precision", "tinyint"));
-			Columns.Add(new DataColumn("Scale", "tinyint"));
-			Columns.Add(new DataColumn("CollationName", "sysname", true));
-			Columns.Add(new DataColumn("IsNullable", "bit", true));
-			Columns.Add(new DataColumn("IsUserDefined", "bit"));
-			Columns.Add(new DataColumn("IsAssemblyType", "bit"));
-			Columns.Add(new DataColumn("DefaultObjectID", "int"));
-			Columns.Add(new DataColumn("RuleObjectID", "int"));
-			Columns.Add(new DataColumn("IsTableType", "bit"));
-		}
+		public Type() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{
@@ -49,27 +54,33 @@ namespace OrcaMDF.Core.MetaData.DMVs
 
 		internal static IEnumerable<Type> GetDmvData(Database db)
 		{
-			return db.BaseTables.sysscalartypes
-				.Select(t => new Type
-				    {
-						Name = t.name,
-				        SystemTypeID = t.xtype,
-				        UserTypeID = t.id,
-				        SchemaID = t.schid,
-				        MaxLength = t.length,
-				        Precision = t.prec,
-				        Scale = t.scale,
-				        DefaultObjectID = t.dflt,
-				        RuleObjectID = t.chk,
-				        IsNullable = Convert.ToBoolean(1 - (t.status & 1)),
-						IsUserDefined = t.id > 256,
-						IsAssemblyType = t.xtype == 240,
-						IsTableType = t.xtype == 243,
-				        PrincipalID = db.BaseTables.syssingleobjrefs
-							.Where(o => o.depid == t.id && o.@class == 44 && o.depsubid == 0)
-							.Select(o => (int?)o.indepid)
-							.SingleOrDefault()
-				    });
+			if (!db.ObjectCache.ContainsKey(CACHE_KEY))
+			{
+				db.ObjectCache[CACHE_KEY] = db.BaseTables.sysscalartypes
+					.Select(t => new Type
+						{
+							Name = t.name,
+							SystemTypeID = t.xtype,
+							UserTypeID = t.id,
+							SchemaID = t.schid,
+							MaxLength = t.length,
+							Precision = t.prec,
+							Scale = t.scale,
+							DefaultObjectID = t.dflt,
+							RuleObjectID = t.chk,
+							IsNullable = Convert.ToBoolean(1 - (t.status & 1)),
+							IsUserDefined = t.id > 256,
+							IsAssemblyType = t.xtype == 240,
+							IsTableType = t.xtype == 243,
+							PrincipalID = db.BaseTables.syssingleobjrefs
+								.Where(o => o.depid == t.id && o.@class == 44 && o.depsubid == 0)
+								.Select(o => (int?)o.indepid)
+								.SingleOrDefault()
+						})
+					.ToList();
+			}
+
+			return (IEnumerable<Type>)db.ObjectCache[CACHE_KEY];
 		}
 	}
 }

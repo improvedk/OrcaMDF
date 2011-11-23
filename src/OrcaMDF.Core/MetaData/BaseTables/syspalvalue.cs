@@ -9,9 +9,15 @@ namespace OrcaMDF.Core.MetaData.BaseTables
 	/// </summary>
 	internal class syspalvalue : Row
 	{
+		private static readonly ISchema schema = new Schema(new DataColumn[0]);
+
+
 		internal string @class { get; set; }
 		internal int value { get; set; }
 		internal string name { get; set; }
+
+		public syspalvalue() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{

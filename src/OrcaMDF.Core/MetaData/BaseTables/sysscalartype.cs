@@ -4,22 +4,25 @@ namespace OrcaMDF.Core.MetaData.BaseTables
 {
 	internal class sysscalartype : Row
 	{
-		public sysscalartype()
-		{
-			Columns.Add(new DataColumn("id", "int"));
-			Columns.Add(new DataColumn("schid", "int"));
-			Columns.Add(new DataColumn("name", "sysname"));
-			Columns.Add(new DataColumn("xtype", "tinyint"));
-			Columns.Add(new DataColumn("length", "smallint"));
-			Columns.Add(new DataColumn("prec", "tinyint"));
-			Columns.Add(new DataColumn("scale", "tinyint"));
-			Columns.Add(new DataColumn("collationid", "int"));
-			Columns.Add(new DataColumn("status", "int"));
-			Columns.Add(new DataColumn("created", "datetime"));
-			Columns.Add(new DataColumn("modified", "datetime"));
-			Columns.Add(new DataColumn("dflt", "int"));
-			Columns.Add(new DataColumn("chk", "int"));
-		}
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("id", "int"),
+				new DataColumn("schid", "int"),
+				new DataColumn("name", "sysname"),
+				new DataColumn("xtype", "tinyint"),
+				new DataColumn("length", "smallint"),
+				new DataColumn("prec", "tinyint"),
+				new DataColumn("scale", "tinyint"),
+				new DataColumn("collationid", "int"),
+				new DataColumn("status", "int"),
+				new DataColumn("created", "datetime"),
+				new DataColumn("modified", "datetime"),
+				new DataColumn("dflt", "int"),
+				new DataColumn("chk", "int")
+		    });
+
+		public sysscalartype() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{

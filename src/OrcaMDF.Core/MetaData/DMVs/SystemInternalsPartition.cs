@@ -7,6 +7,34 @@ namespace OrcaMDF.Core.MetaData.DMVs
 {
 	public class SystemInternalsPartition : Row
 	{
+		private const string CACHE_KEY = "DMV_SystemInternalsPartition";
+
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("PartitionID", "bigint"),
+				new DataColumn("ObjectID", "int"),
+				new DataColumn("IndexID", "int"),
+				new DataColumn("PartitionNumber", "int"),
+				new DataColumn("Rows", "bigint"),
+				new DataColumn("FilestreamFilegroupID", "smallint"),
+				new DataColumn("IsOrphaned", "bit", true),
+				new DataColumn("DroppedLobColumnState", "tinyint", true),
+				new DataColumn("IsUnique", "bit", true),
+				new DataColumn("IsReplicated", "bit", true),
+				new DataColumn("IsLoggedForReplication", "bit", true),
+				new DataColumn("MaxNullBitUsed", "smallint"),
+				new DataColumn("MaxLeafLength", "int"),
+				new DataColumn("MinLeafLength", "smallint"),
+				new DataColumn("MaxInternalLength", "smallint"),
+				new DataColumn("MinInternalLength", "smallint"),
+				new DataColumn("AllowsNullableKeys", "bit", true),
+				new DataColumn("AllowRowLocks", "bit", true),
+				new DataColumn("AllowPageLocks", "bit", true),
+				new DataColumn("IsDataRowFormat", "bit", true),
+				new DataColumn("IsNotVersioned", "bit", true),
+				new DataColumn("FilestreamGuid", "uniqueidentifier", true)
+		    });
+
 		public long PartitionID { get { return Field<long>("PartitionID"); } private set { this["PartitionID"] = value; } }
 		public int ObjectID { get { return Field<int>("ObjectID"); } private set { this["ObjectID"] = value; } }
 		public int IndexID { get { return Field<int>("IndexID"); } private set { this["IndexID"] = value; } }
@@ -30,31 +58,8 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		public bool IsNotVersioned { get { return Field<bool>("IsNotVersioned"); } private set { this["IsNotVersioned"] = value; } }
 		public Guid? FilestreamGuid { get { return Field<Guid?>("FilestreamGuid"); } private set { this["FilestreamGuid"] = value; } }
 
-		public SystemInternalsPartition()
-		{
-			Columns.Add(new DataColumn("PartitionID", "bigint"));
-			Columns.Add(new DataColumn("ObjectID", "int"));
-			Columns.Add(new DataColumn("IndexID", "int"));
-			Columns.Add(new DataColumn("PartitionNumber", "int"));
-			Columns.Add(new DataColumn("Rows", "bigint"));
-			Columns.Add(new DataColumn("FilestreamFilegroupID", "smallint"));
-			Columns.Add(new DataColumn("IsOrphaned", "bit", true));
-			Columns.Add(new DataColumn("DroppedLobColumnState", "tinyint", true));
-			Columns.Add(new DataColumn("IsUnique", "bit", true));
-			Columns.Add(new DataColumn("IsReplicated", "bit", true));
-			Columns.Add(new DataColumn("IsLoggedForReplication", "bit", true));
-			Columns.Add(new DataColumn("MaxNullBitUsed", "smallint"));
-			Columns.Add(new DataColumn("MaxLeafLength", "int"));
-			Columns.Add(new DataColumn("MinLeafLength", "smallint"));
-			Columns.Add(new DataColumn("MaxInternalLength", "smallint"));
-			Columns.Add(new DataColumn("MinInternalLength", "smallint"));
-			Columns.Add(new DataColumn("AllowsNullableKeys", "bit", true));
-			Columns.Add(new DataColumn("AllowRowLocks", "bit", true));
-			Columns.Add(new DataColumn("AllowPageLocks", "bit", true));
-			Columns.Add(new DataColumn("IsDataRowFormat", "bit", true));
-			Columns.Add(new DataColumn("IsNotVersioned", "bit", true));
-			Columns.Add(new DataColumn("FilestreamGuid", "uniqueidentifier", true));
-		}
+		public SystemInternalsPartition() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{
@@ -63,31 +68,37 @@ namespace OrcaMDF.Core.MetaData.DMVs
 
 		internal static IEnumerable<SystemInternalsPartition> GetDmvData(Database db)
 		{
-			return db.BaseTables.sysrowsets
-				.Select(rs => new SystemInternalsPartition
-				{
-					PartitionID = rs.rowsetid,
-					ObjectID = rs.idmajor,
-					IndexID = rs.idminor,
-					PartitionNumber = rs.numpart,
-					FilestreamFilegroupID = rs.fgidfs,
-					MaxNullBitUsed = rs.maxnullbit,
-					MaxLeafLength = rs.maxleaf,
-					MinLeafLength = rs.minleaf,
-					MaxInternalLength = rs.maxint,
-					MinInternalLength = rs.minint,
-					FilestreamGuid = rs.rsguid != null ? (Guid?)(new Guid(rs.rsguid)) : null,
-					IsOrphaned = Convert.ToBoolean(1 - rs.ownertype),
-					DroppedLobColumnState = Convert.ToByte(rs.status & 3),
-					IsUnique = Convert.ToBoolean(rs.status & 4),
-					IsReplicated = Convert.ToBoolean(rs.status & 8),
-					IsLoggedForReplication = Convert.ToBoolean(rs.status & 16),
-					AllowsNullableKeys = Convert.ToBoolean(rs.status & 64),
-					AllowRowLocks = Convert.ToBoolean(1 - (rs.status & 256) / 256),
-					AllowPageLocks = Convert.ToBoolean(1 - (rs.status & 256) / 256),
-					IsDataRowFormat = Convert.ToBoolean(rs.status & 512),
-					IsNotVersioned = Convert.ToBoolean(rs.status & 2048)
-				});
+			if (!db.ObjectCache.ContainsKey(CACHE_KEY))
+			{
+				db.ObjectCache[CACHE_KEY] = db.BaseTables.sysrowsets
+					.Select(rs => new SystemInternalsPartition
+						{
+							PartitionID = rs.rowsetid,
+							ObjectID = rs.idmajor,
+							IndexID = rs.idminor,
+							PartitionNumber = rs.numpart,
+							FilestreamFilegroupID = rs.fgidfs,
+							MaxNullBitUsed = rs.maxnullbit,
+							MaxLeafLength = rs.maxleaf,
+							MinLeafLength = rs.minleaf,
+							MaxInternalLength = rs.maxint,
+							MinInternalLength = rs.minint,
+							FilestreamGuid = rs.rsguid != null ? (Guid?)(new Guid(rs.rsguid)) : null,
+							IsOrphaned = Convert.ToBoolean(1 - rs.ownertype),
+							DroppedLobColumnState = Convert.ToByte(rs.status & 3),
+							IsUnique = Convert.ToBoolean(rs.status & 4),
+							IsReplicated = Convert.ToBoolean(rs.status & 8),
+							IsLoggedForReplication = Convert.ToBoolean(rs.status & 16),
+							AllowsNullableKeys = Convert.ToBoolean(rs.status & 64),
+							AllowRowLocks = Convert.ToBoolean(1 - (rs.status & 256) / 256),
+							AllowPageLocks = Convert.ToBoolean(1 - (rs.status & 256) / 256),
+							IsDataRowFormat = Convert.ToBoolean(rs.status & 512),
+							IsNotVersioned = Convert.ToBoolean(rs.status & 2048)
+						})
+					.ToList();
+			}
+
+			return (IEnumerable<SystemInternalsPartition>)db.ObjectCache[CACHE_KEY];
 		}
 	}
 }

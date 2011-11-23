@@ -1,4 +1,5 @@
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;

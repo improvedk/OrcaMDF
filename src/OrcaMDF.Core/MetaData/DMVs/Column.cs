@@ -7,6 +7,37 @@ namespace OrcaMDF.Core.MetaData.DMVs
 {
 	public class Column : Row
 	{
+		private const string CACHE_KEY = "DMV_Column";
+
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("ObjectID", "int"),
+				new DataColumn("Name", "sysname", true),
+				new DataColumn("ColumnID", "int"),
+				new DataColumn("SystemTypeID", "tinyint"),
+				new DataColumn("UserTypeID", "int"),
+				new DataColumn("MaxLength", "smallint"),
+				new DataColumn("Precision", "tinyint"),
+				new DataColumn("Scale", "tinyint"),
+				new DataColumn("CollationName", "sysname", true),
+				new DataColumn("IsNullable", "bit", true),
+				new DataColumn("IsAnsiPadded", "bit"),
+				new DataColumn("IsRowGuidCol", "bit"),
+				new DataColumn("IsIdentity", "bit"),
+				new DataColumn("IsComputed", "bit"),
+				new DataColumn("IsFilestream", "bit"),
+				new DataColumn("IsReplicated", "bit", true),
+				new DataColumn("IsNonSqlSubscribed", "bit", true),
+				new DataColumn("IsMergePublished", "bit", true),
+				new DataColumn("IsDtsReplicated", "bit", true),
+				new DataColumn("IsXmlDocument", "bit"),
+				new DataColumn("XmlCollectionID", "int"),
+				new DataColumn("DefaultObjectID", "int"),
+				new DataColumn("RuleObjectID", "int"),
+				new DataColumn("IsSparse", "bit", true),
+				new DataColumn("IsColumnSet", "bit", true)
+		    });
+
 		public int ObjectID { get { return Field<int>("ObjectID"); } private set { this["ObjectID"] = value; } }
 		public string Name { get { return Field<string>("Name"); } private set { this["Name"] = value; } }
 		public int ColumnID { get { return Field<int>("ColumnID"); } private set { this["ColumnID"] = value; } }
@@ -33,34 +64,8 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		public int DefaultObjectID { get { return Field<int>("DefaultObjectID"); } private set { this["DefaultObjectID"] = value; } }
 		public int RuleObjectID { get { return Field<int>("RuleObjectID"); } private set { this["RuleObjectID"] = value; } }
 
-		public Column()
-		{
-			Columns.Add(new DataColumn("ObjectID", "int"));
-			Columns.Add(new DataColumn("Name", "sysname", true));
-			Columns.Add(new DataColumn("ColumnID", "int"));
-			Columns.Add(new DataColumn("SystemTypeID", "tinyint"));
-			Columns.Add(new DataColumn("UserTypeID", "int"));
-			Columns.Add(new DataColumn("MaxLength", "smallint"));
-			Columns.Add(new DataColumn("Precision", "tinyint"));
-			Columns.Add(new DataColumn("Scale", "tinyint"));
-			Columns.Add(new DataColumn("CollationName", "sysname", true));
-			Columns.Add(new DataColumn("IsNullable", "bit", true));
-			Columns.Add(new DataColumn("IsAnsiPadded", "bit"));
-			Columns.Add(new DataColumn("IsRowGuidCol", "bit"));
-			Columns.Add(new DataColumn("IsIdentity", "bit"));
-			Columns.Add(new DataColumn("IsComputed", "bit"));
-			Columns.Add(new DataColumn("IsFilestream", "bit"));
-			Columns.Add(new DataColumn("IsReplicated", "bit", true));
-			Columns.Add(new DataColumn("IsNonSqlSubscribed", "bit", true));
-			Columns.Add(new DataColumn("IsMergePublished", "bit", true));
-			Columns.Add(new DataColumn("IsDtsReplicated", "bit", true));
-			Columns.Add(new DataColumn("IsXmlDocument", "bit"));
-			Columns.Add(new DataColumn("XmlCollectionID", "int"));
-			Columns.Add(new DataColumn("DefaultObjectID", "int"));
-			Columns.Add(new DataColumn("RuleObjectID", "int"));
-			Columns.Add(new DataColumn("IsSparse", "bit", true));
-			Columns.Add(new DataColumn("IsColumnSet", "bit", true));
-		}
+		public Column() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{
@@ -69,35 +74,41 @@ namespace OrcaMDF.Core.MetaData.DMVs
 
 		internal static IEnumerable<Column> GetDmvData(Database db)
 		{
-			return db.BaseTables.syscolpars
-				.Where(c => c.number == 0)
-				.Select(c => new Column
-				{
-					ObjectID = c.id,
-					Name = c.name,
-					ColumnID = c.colid,
-					SystemTypeID = c.xtype,
-					UserTypeID = c.utype,
-					MaxLength = c.length,
-					Precision = c.prec,
-					Scale = c.scale,
-					XmlCollectionID = c.xmlns,
-					DefaultObjectID = c.dflt,
-					RuleObjectID = c.chk,
-					IsNullable = Convert.ToBoolean(1 - (c.status & 1)),
-					IsAnsiPadded = Convert.ToBoolean(c.status & 2),
-					IsRowGuidCol = Convert.ToBoolean(c.status & 8),
-					IsIdentity = Convert.ToBoolean(c.status & 4),
-					IsComputed = Convert.ToBoolean(c.status & 16),
-					IsFilestream = Convert.ToBoolean(c.status & 32),
-					IsReplicated = Convert.ToBoolean(c.status & 0x020000),
-					IsNonSqlSubscribed = Convert.ToBoolean(c.status & 0x040000),
-					IsMergePublished = Convert.ToBoolean(c.status & 0x080000),
-					IsDtsReplicated = Convert.ToBoolean(c.status & 0x100000),
-					IsXmlDocument = Convert.ToBoolean(c.status & 2048),
-					IsSparse = Convert.ToBoolean(c.status & 0x1000000),
-					IsColumnSet = Convert.ToBoolean(c.status & 0x2000000)
-				});
+			if (!db.ObjectCache.ContainsKey(CACHE_KEY))
+			{
+				db.ObjectCache[CACHE_KEY] = db.BaseTables.syscolpars
+				    .Where(c => c.number == 0)
+				    .Select(c => new Column
+				        {
+				            ObjectID = c.id,
+				            Name = c.name,
+				            ColumnID = c.colid,
+				            SystemTypeID = c.xtype,
+				            UserTypeID = c.utype,
+				            MaxLength = c.length,
+				            Precision = c.prec,
+				            Scale = c.scale,
+				            XmlCollectionID = c.xmlns,
+				            DefaultObjectID = c.dflt,
+				            RuleObjectID = c.chk,
+				            IsNullable = Convert.ToBoolean(1 - (c.status & 1)),
+				            IsAnsiPadded = Convert.ToBoolean(c.status & 2),
+				            IsRowGuidCol = Convert.ToBoolean(c.status & 8),
+				            IsIdentity = Convert.ToBoolean(c.status & 4),
+				            IsComputed = Convert.ToBoolean(c.status & 16),
+				            IsFilestream = Convert.ToBoolean(c.status & 32),
+				            IsReplicated = Convert.ToBoolean(c.status & 0x020000),
+				            IsNonSqlSubscribed = Convert.ToBoolean(c.status & 0x040000),
+				            IsMergePublished = Convert.ToBoolean(c.status & 0x080000),
+				            IsDtsReplicated = Convert.ToBoolean(c.status & 0x100000),
+				            IsXmlDocument = Convert.ToBoolean(c.status & 2048),
+				            IsSparse = Convert.ToBoolean(c.status & 0x1000000),
+				            IsColumnSet = Convert.ToBoolean(c.status & 0x2000000)
+				        })
+					.ToList();
+			}
+
+			return (IEnumerable<Column>)db.ObjectCache[CACHE_KEY];
 		}
 	}
 }

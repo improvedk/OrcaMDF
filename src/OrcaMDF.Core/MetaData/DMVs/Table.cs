@@ -7,6 +7,39 @@ namespace OrcaMDF.Core.MetaData.DMVs
 {
 	public class Table : Row
 	{
+		private const string CACHE_KEY = "DMV_Table";
+
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("Name", "sysname"),
+				new DataColumn("ObjectID", "int"),
+				new DataColumn("PrincipalID", "int", true),
+				new DataColumn("SchemaID", "int"),
+				new DataColumn("ParentObjectID", "int"),
+				new DataColumn("Type", "char(2)"),
+				new DataColumn("TypeDesc", "nvarchar", true),
+				new DataColumn("CreateDate", "datetime"),
+				new DataColumn("ModifyDate", "datetime"),
+				new DataColumn("IsMSShipped", "bit"),
+				new DataColumn("IsPublished", "bit"),
+				new DataColumn("IsSchemaPublished", "bit"),
+				new DataColumn("LobDataSpaceID", "int", true),
+				new DataColumn("FilestreamDataSpaceID", "int", true),
+				new DataColumn("MaxColumnIDUsed", "int"),
+				new DataColumn("LockOnBulkLoad", "bit"),
+				new DataColumn("UsesAnsiNulls", "bit", true),
+				new DataColumn("IsReplicated", "bit", true),
+				new DataColumn("HasReplicationFilter", "bit", true),
+				new DataColumn("IsMergePublished", "bit", true),
+				new DataColumn("IsSyncTranSubscribed", "bit", true),
+				new DataColumn("HasUncheckedAssemblyData", "bit"),
+				new DataColumn("TextInRowLimit", "int", true),
+				new DataColumn("LargeValueTypesOutOfRow", "bit", true),
+				new DataColumn("IsTrackedByCdc", "bit", true),
+				new DataColumn("LockEscalation", "tinyint", true),
+				new DataColumn("LockEscalationDesc", "nvarchar", true)
+		    });
+
 		public string Name { get { return Field<string>("Name"); } private set { this["Name"] = value; } }
 		public int ObjectID { get { return Field<int>("ObjectID"); } private set { this["ObjectID"] = value; } }
 		public int? PrincipalID { get { return Field<int?>("PrincipalID"); } private set { this["PrincipalID"] = value; } }
@@ -35,36 +68,8 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		public byte LockEscalation { get { return Field<byte>("LockEscalation"); } private set { this["LockEscalation"] = value; } }
 		public string LockEscalationDesc { get { return Field<string>("LockEscalationDesc"); } private set { this["LockEscalationDesc"] = value; } }
 
-		public Table()
-		{
-			Columns.Add(new DataColumn("Name", "sysname"));
-			Columns.Add(new DataColumn("ObjectID", "int"));
-			Columns.Add(new DataColumn("PrincipalID", "int", true));
-			Columns.Add(new DataColumn("SchemaID", "int"));
-			Columns.Add(new DataColumn("ParentObjectID", "int"));
-			Columns.Add(new DataColumn("Type", "char(2)"));
-			Columns.Add(new DataColumn("TypeDesc", "nvarchar", true));
-			Columns.Add(new DataColumn("CreateDate", "datetime"));
-			Columns.Add(new DataColumn("ModifyDate", "datetime"));
-			Columns.Add(new DataColumn("IsMSShipped", "bit"));
-			Columns.Add(new DataColumn("IsPublished", "bit"));
-			Columns.Add(new DataColumn("IsSchemaPublished", "bit"));
-			Columns.Add(new DataColumn("LobDataSpaceID", "int", true));
-			Columns.Add(new DataColumn("FilestreamDataSpaceID", "int", true));
-			Columns.Add(new DataColumn("MaxColumnIDUsed", "int"));
-			Columns.Add(new DataColumn("LockOnBulkLoad", "bit"));
-			Columns.Add(new DataColumn("UsesAnsiNulls", "bit", true));
-			Columns.Add(new DataColumn("IsReplicated", "bit", true));
-			Columns.Add(new DataColumn("HasReplicationFilter", "bit", true));
-			Columns.Add(new DataColumn("IsMergePublished", "bit", true));
-			Columns.Add(new DataColumn("IsSyncTranSubscribed", "bit", true));
-			Columns.Add(new DataColumn("HasUncheckedAssemblyData", "bit"));
-			Columns.Add(new DataColumn("TextInRowLimit", "int", true));
-			Columns.Add(new DataColumn("LargeValueTypesOutOfRow", "bit", true));
-			Columns.Add(new DataColumn("IsTrackedByCdc", "bit", true));
-			Columns.Add(new DataColumn("LockEscalation", "tinyint", true));
-			Columns.Add(new DataColumn("LockEscalationDesc", "nvarchar", true));
-		}
+		public Table() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{
@@ -73,50 +78,56 @@ namespace OrcaMDF.Core.MetaData.DMVs
 
 		internal static IEnumerable<Table> GetDmvData(Database db)
 		{
-			return db.Dmvs.ObjectsDollar
-				.Where(o => o.Type == "U")
-				.Select(o => new Table
-				    {
-						Name = o.Name,
-						ObjectID = o.ObjectID,
-						PrincipalID = o.PrincipalID,
-						SchemaID = o.SchemaID,
-						ParentObjectID = o.ParentObjectID,
-						Type = o.Type,
-						TypeDesc = o.TypeDesc,
-						CreateDate = o.CreateDate,
-						ModifyDate = o.ModifyDate,
-						IsMSShipped = o.IsMSShipped,
-						IsPublished = o.IsPublished,
-						IsSchemaPublished = o.IsSchemaPublished,
-						LobDataSpaceID = db.BaseTables.sysidxstats
-							.Where(lob => lob.id == o.ObjectID && lob.indid <= 1)
-							.Select(lob => (int?)lob.lobds)
-							.SingleOrDefault(),
-						FilestreamDataSpaceID = db.BaseTables.syssingleobjrefs
-							.Where(rfs => rfs.depid == o.ObjectID && rfs.@class == 42 && rfs.depsubid == 0)
-							.Select(rfs => (int?)rfs.indepid)
-							.SingleOrDefault(),
-						MaxColumnIDUsed = o.Property,
-						LockOnBulkLoad = o.LockOnBulkLoad,
-						UsesAnsiNulls = o.UsesAnsiNulls,
-						IsReplicated = o.IsReplicated,
-						HasReplicationFilter = o.HasReplicationFilter,
-						IsMergePublished = o.IsMergePublished,
-						IsSyncTranSubscribed = o.IsSyncTranSubscribed,
-						HasUncheckedAssemblyData = o.HasUncheckedAssemblyData,
-						TextInRowLimit = db.BaseTables.sysidxstats
-							.Where(lob => lob.id == o.ObjectID && lob.indid <= 1)
-							.Select(lob => (int?)lob.intprop)
-							.SingleOrDefault(),
-						LargeValueTypesOutOfRow = o.LargeValueTypesOutOfRow,
-						IsTrackedByCdc = o.IsTrackedByCdc,
-						LockEscalation = o.LockEscalationOption,
-						LockEscalationDesc = db.BaseTables.syspalvalues
-							.Where(ts => ts.@class == "LEOP" && ts.value == o.LockEscalationOption)
-							.Select(ts => ts.name)
-							.Single()
-				    });
+			if (!db.ObjectCache.ContainsKey(CACHE_KEY))
+			{
+				db.ObjectCache[CACHE_KEY] = db.Dmvs.ObjectsDollar
+					.Where(o => o.Type == "U")
+					.Select(o => new Table
+					    {
+					        Name = o.Name,
+					        ObjectID = o.ObjectID,
+					        PrincipalID = o.PrincipalID,
+					        SchemaID = o.SchemaID,
+					        ParentObjectID = o.ParentObjectID,
+					        Type = o.Type,
+					        TypeDesc = o.TypeDesc,
+					        CreateDate = o.CreateDate,
+					        ModifyDate = o.ModifyDate,
+					        IsMSShipped = o.IsMSShipped,
+					        IsPublished = o.IsPublished,
+					        IsSchemaPublished = o.IsSchemaPublished,
+					        LobDataSpaceID = db.BaseTables.sysidxstats
+					            .Where(lob => lob.id == o.ObjectID && lob.indid <= 1)
+					            .Select(lob => (int?)lob.lobds)
+					            .SingleOrDefault(),
+					        FilestreamDataSpaceID = db.BaseTables.syssingleobjrefs
+					            .Where(rfs => rfs.depid == o.ObjectID && rfs.@class == 42 && rfs.depsubid == 0)
+					            .Select(rfs => (int?)rfs.indepid)
+					            .SingleOrDefault(),
+					        MaxColumnIDUsed = o.Property,
+					        LockOnBulkLoad = o.LockOnBulkLoad,
+					        UsesAnsiNulls = o.UsesAnsiNulls,
+					        IsReplicated = o.IsReplicated,
+					        HasReplicationFilter = o.HasReplicationFilter,
+					        IsMergePublished = o.IsMergePublished,
+					        IsSyncTranSubscribed = o.IsSyncTranSubscribed,
+					        HasUncheckedAssemblyData = o.HasUncheckedAssemblyData,
+					        TextInRowLimit = db.BaseTables.sysidxstats
+					            .Where(lob => lob.id == o.ObjectID && lob.indid <= 1)
+					            .Select(lob => (int?)lob.intprop)
+					            .SingleOrDefault(),
+					        LargeValueTypesOutOfRow = o.LargeValueTypesOutOfRow,
+					        IsTrackedByCdc = o.IsTrackedByCdc,
+					        LockEscalation = o.LockEscalationOption,
+					        LockEscalationDesc = db.BaseTables.syspalvalues
+					            .Where(ts => ts.@class == "LEOP" && ts.value == o.LockEscalationOption)
+					            .Select(ts => ts.name)
+					            .Single()
+					    })
+					.ToList();
+			}
+
+			return (IEnumerable<Table>)db.ObjectCache[CACHE_KEY];
 		}
 	}
 }

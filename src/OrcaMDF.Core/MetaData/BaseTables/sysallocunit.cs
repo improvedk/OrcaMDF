@@ -2,21 +2,25 @@ namespace OrcaMDF.Core.MetaData.BaseTables
 {
 	internal class sysallocunit : Row
 	{
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("auid", "bigint"),
+				new DataColumn("type", "tinyint"),
+				new DataColumn("ownerid", "bigint"),
+				new DataColumn("status", "int"),
+				new DataColumn("fgid", "smallint"),
+				new DataColumn("pgfirst", "binary(6)"),
+				new DataColumn("pgroot", "binary(6)"),
+				new DataColumn("pgfirstiam", "binary(6)"),
+				new DataColumn("pcused", "bigint"),
+				new DataColumn("pcdata", "bigint"),
+				new DataColumn("pcreserved", "bigint"),
+				new DataColumn("dbfragid", "int")
+		    });
+
 		public sysallocunit()
-		{
-			Columns.Add(new DataColumn("auid", "bigint"));
-			Columns.Add(new DataColumn("type", "tinyint"));
-			Columns.Add(new DataColumn("ownerid", "bigint"));
-			Columns.Add(new DataColumn("status", "int"));
-			Columns.Add(new DataColumn("fgid", "smallint"));
-			Columns.Add(new DataColumn("pgfirst", "binary(6)"));
-			Columns.Add(new DataColumn("pgroot", "binary(6)"));
-			Columns.Add(new DataColumn("pgfirstiam", "binary(6)"));
-			Columns.Add(new DataColumn("pcused", "bigint"));
-			Columns.Add(new DataColumn("pcdata", "bigint"));
-			Columns.Add(new DataColumn("pcreserved", "bigint"));
-			Columns.Add(new DataColumn("dbfragid", "int"));
-		}
+			: base(schema)
+		{ }
 
 		public override Row NewRow()
 		{

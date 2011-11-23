@@ -7,6 +7,34 @@ namespace OrcaMDF.Core.MetaData.DMVs
 {
 	public class ForeignKey : Row
 	{
+		private const string CACHE_KEY = "DMV_ForeignKey";
+
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("Name", "sysname"),
+				new DataColumn("ObjectID", "int"),
+				new DataColumn("PrincipalID", "int", true),
+				new DataColumn("SchemaID", "int"),
+				new DataColumn("ParentObjectID", "int"),
+				new DataColumn("Type", "char(2)"),
+				new DataColumn("TypeDesc", "nvarchar", true),
+				new DataColumn("CreateDate", "datetime"),
+				new DataColumn("ModifyDate", "datetime"),
+				new DataColumn("IsMSShipped", "bit"),
+				new DataColumn("IsPublished", "bit"),
+				new DataColumn("IsSchemaPublished", "bit"),
+				new DataColumn("ReferencedObjectID", "int", true),
+				new DataColumn("KeyIndexID", "int", true),
+				new DataColumn("IsDisabled", "bit"),
+				new DataColumn("IsNotForReplication", "bit"),
+				new DataColumn("IsNotTrusted", "bit"),
+				new DataColumn("DeleteReferentialAction", "tinyint", true),
+				new DataColumn("DeleteReferentialActionDesc", "nvarchar", true),
+				new DataColumn("UpdateReferentialAction", "tinyint", true),
+				new DataColumn("UpdateReferentialActionDesc", "nvarchar", true),
+				new DataColumn("IsSystemNamed", "bit")
+		    });
+
 		public string Name { get { return Field<string>("Name"); } private set { this["Name"] = value; } }
 		public int ObjectID { get { return Field<int>("ObjectID"); } private set { this["ObjectID"] = value; } }
 		public int? PrincipalID { get { return Field<int?>("PrincipalID"); } private set { this["PrincipalID"] = value; } }
@@ -30,31 +58,8 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		public string UpdateReferentialActionDesc { get { return Field<string>("UpdateReferentialActionDesc"); } private set { this["UpdateReferentialActionDesc"] = value; } }
 		public bool IsSystemNamed { get { return Field<bool>("IsSystemNamed"); } private set { this["IsSystemNamed"] = value; } }
 
-		public ForeignKey()
-		{
-			Columns.Add(new DataColumn("Name", "sysname"));
-			Columns.Add(new DataColumn("ObjectID", "int"));
-			Columns.Add(new DataColumn("PrincipalID", "int", true));
-			Columns.Add(new DataColumn("SchemaID", "int"));
-			Columns.Add(new DataColumn("ParentObjectID", "int"));
-			Columns.Add(new DataColumn("Type", "char(2)"));
-			Columns.Add(new DataColumn("TypeDesc", "nvarchar", true));
-			Columns.Add(new DataColumn("CreateDate", "datetime"));
-			Columns.Add(new DataColumn("ModifyDate", "datetime"));
-			Columns.Add(new DataColumn("IsMSShipped", "bit"));
-			Columns.Add(new DataColumn("IsPublished", "bit"));
-			Columns.Add(new DataColumn("IsSchemaPublished", "bit"));
-			Columns.Add(new DataColumn("ReferencedObjectID", "int", true));
-			Columns.Add(new DataColumn("KeyIndexID", "int", true));
-			Columns.Add(new DataColumn("IsDisabled", "bit"));
-			Columns.Add(new DataColumn("IsNotForReplication", "bit"));
-			Columns.Add(new DataColumn("IsNotTrusted", "bit"));
-			Columns.Add(new DataColumn("DeleteReferentialAction", "tinyint", true));
-			Columns.Add(new DataColumn("DeleteReferentialActionDesc", "nvarchar", true));
-			Columns.Add(new DataColumn("UpdateReferentialAction", "tinyint", true));
-			Columns.Add(new DataColumn("UpdateReferentialActionDesc", "nvarchar", true));
-			Columns.Add(new DataColumn("IsSystemNamed", "bit"));
-		}
+		public ForeignKey() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{
@@ -63,45 +68,51 @@ namespace OrcaMDF.Core.MetaData.DMVs
 
 		internal static IEnumerable<ForeignKey> GetDmvData(Database db)
 		{
-			return db.Dmvs.ObjectsDollar
-				.Where(o => o.Type == "F")
-				.Select(o => new ForeignKey
-				    {
-						Name = o.Name,
-						ObjectID = o.ObjectID,
-						PrincipalID = o.PrincipalID,
-						SchemaID = o.SchemaID,
-						ParentObjectID = o.ParentObjectID,
-						Type = o.Type,
-						TypeDesc = o.TypeDesc,
-						CreateDate = o.CreateDate,
-						ModifyDate = o.ModifyDate,
-						IsMSShipped = o.IsMSShipped,
-						IsPublished = o.IsPublished,
-						IsSchemaPublished = o.IsSchemaPublished,
-						ReferencedObjectID = db.BaseTables.syssingleobjrefs
-							.Where(f => f.depid == o.ObjectID && f.@class == 27 && f.depsubid == 0)
-							.Select(f => f.indepid)
-							.Single(),
-						KeyIndexID= db.BaseTables.syssingleobjrefs
-							.Where(f => f.depid == o.ObjectID && f.@class == 27 && f.depsubid == 0)
-							.Select(f => f.indepsubid)
-							.Single(),
-						IsDisabled = o.IsDisabled,
-						IsNotForReplication = o.IsNotForReplication,
-						IsNotTrusted = o.IsNotTrusted,
-						DeleteReferentialAction = o.DeleteReferentialAction,
-						DeleteReferentialActionDesc = db.BaseTables.syspalvalues
-							.Where(d => d.@class == "FKRA" && d.value == o.DeleteReferentialAction)
-							.Select(d => d.name)
-							.Single(),
-						UpdateReferentialAction = o.UpdateReferentialAction,
-						UpdateReferentialActionDesc = db.BaseTables.syspalvalues
-							.Where(u => u.@class == "FKRA" && u.value == o.UpdateReferentialAction)
-							.Select(u => u.name)
-							.Single(),
-						IsSystemNamed = o.IsSystemNamed
-				    });
+			if (!db.ObjectCache.ContainsKey(CACHE_KEY))
+			{
+				db.ObjectCache[CACHE_KEY] = db.Dmvs.ObjectsDollar
+					.Where(o => o.Type == "F")
+					.Select(o => new ForeignKey
+						{
+							Name = o.Name,
+							ObjectID = o.ObjectID,
+							PrincipalID = o.PrincipalID,
+							SchemaID = o.SchemaID,
+							ParentObjectID = o.ParentObjectID,
+							Type = o.Type,
+							TypeDesc = o.TypeDesc,
+							CreateDate = o.CreateDate,
+							ModifyDate = o.ModifyDate,
+							IsMSShipped = o.IsMSShipped,
+							IsPublished = o.IsPublished,
+							IsSchemaPublished = o.IsSchemaPublished,
+							ReferencedObjectID = db.BaseTables.syssingleobjrefs
+								.Where(f => f.depid == o.ObjectID && f.@class == 27 && f.depsubid == 0)
+								.Select(f => f.indepid)
+								.Single(),
+							KeyIndexID = db.BaseTables.syssingleobjrefs
+								.Where(f => f.depid == o.ObjectID && f.@class == 27 && f.depsubid == 0)
+								.Select(f => f.indepsubid)
+								.Single(),
+							IsDisabled = o.IsDisabled,
+							IsNotForReplication = o.IsNotForReplication,
+							IsNotTrusted = o.IsNotTrusted,
+							DeleteReferentialAction = o.DeleteReferentialAction,
+							DeleteReferentialActionDesc = db.BaseTables.syspalvalues
+								.Where(d => d.@class == "FKRA" && d.value == o.DeleteReferentialAction)
+								.Select(d => d.name)
+								.Single(),
+							UpdateReferentialAction = o.UpdateReferentialAction,
+							UpdateReferentialActionDesc = db.BaseTables.syspalvalues
+								.Where(u => u.@class == "FKRA" && u.value == o.UpdateReferentialAction)
+								.Select(u => u.name)
+								.Single(),
+							IsSystemNamed = o.IsSystemNamed
+						})
+					.ToList();
+			}
+
+			return (IEnumerable<ForeignKey>)db.ObjectCache[CACHE_KEY];
 		}
 	}
 }

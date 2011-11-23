@@ -1,5 +1,5 @@
-using System.Linq;
 using OrcaMDF.Core.Engine.Records;
+using OrcaMDF.Core.Framework;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
@@ -16,10 +16,10 @@ namespace OrcaMDF.Core.Engine.Pages
 		private void parseRecords()
 		{
 			Records = new PrimaryRecord[Header.SlotCnt];
-
+			
 			int cnt = 0;
 			foreach (short recordOffset in SlotArray)
-				Records[cnt++] = new PrimaryRecord(RawBytes.Skip(recordOffset).ToArray(), this);
+				Records[cnt++] = new PrimaryRecord(ArrayHelper.SliceArray(RawBytes, recordOffset, RawBytes.Length - recordOffset), this);
 		}
 	}
 }

@@ -7,6 +7,38 @@ namespace OrcaMDF.Core.MetaData.DMVs
 {
 	public class SystemInternalsPartitionColumn : Row
 	{
+		private const string CACHE_KEY = "DMV_SystemInternalsPartitionColumn";
+
+		private static readonly ISchema schema = new Schema(new[]
+		    {
+		        new DataColumn("PartitionID", "bigint"),
+				new DataColumn("PartitionColumnID", "int"),
+				new DataColumn("ModifiedCount", "bigint"),
+				new DataColumn("MaxInrowLength", "smallint", true),
+				new DataColumn("IsReplicated", "bit", true),
+				new DataColumn("IsLoggedForReplication", "bit", true),
+				new DataColumn("IsDropped", "bit", true),
+				new DataColumn("SystemTypeID", "tinyint", true),
+				new DataColumn("MaxLength", "smallint", true),
+				new DataColumn("Precision", "tinyint", true),
+				new DataColumn("Scale", "tinyint", true),
+				new DataColumn("CollationName", "sysname", true),
+				new DataColumn("IsFilestream", "bit", true),
+				new DataColumn("KeyOrdinal", "smallint"),
+				new DataColumn("IsNullable", "bit", true),
+				new DataColumn("IsDescendingKey", "bit", true),
+				new DataColumn("IsUniqueifier", "bit", true),
+				new DataColumn("LeafOffset", "smallint", true),
+				new DataColumn("InternalOffset", "smallint", true),
+				new DataColumn("LeafBitPosition", "tinyint", true),
+				new DataColumn("InternalBitPosition", "tinyint", true),
+				new DataColumn("LeafNullBit", "smallint", true),
+				new DataColumn("InternalNullBit", "smallint", true),
+				new DataColumn("IsAntiMatter", "bit", true),
+				new DataColumn("PartitionColumnGuid", "uniqueidentifier", true),
+				new DataColumn("IsSparse", "bit", true)
+		    });
+
 		public long PartitionID { get { return Field<long>("PartitionID"); } private set { this["PartitionID"] = value; } }
 		public int PartitionColumnID { get { return Field<int>("PartitionColumnID"); } private set { this["PartitionColumnID"] = value; } }
 		public long ModifiedCount { get { return Field<long>("ModifiedCount"); } private set { this["ModifiedCount"] = value; } }
@@ -34,35 +66,8 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		public Guid? PartitionColumnGuid { get { return Field<Guid?>("PartitionColumnGuid"); } private set { this["PartitionColumnGuid"] = value; } }
 		public bool IsSparse { get { return Field<bool>("IsSparse"); } private set { this["IsSparse"] = value; } }
 
-		public SystemInternalsPartitionColumn()
-		{
-			Columns.Add(new DataColumn("PartitionID", "bigint"));
-			Columns.Add(new DataColumn("PartitionColumnID", "int"));
-			Columns.Add(new DataColumn("ModifiedCount", "bigint"));
-			Columns.Add(new DataColumn("MaxInrowLength", "smallint", true));
-			Columns.Add(new DataColumn("IsReplicated", "bit", true));
-			Columns.Add(new DataColumn("IsLoggedForReplication", "bit", true));
-			Columns.Add(new DataColumn("IsDropped", "bit", true));
-			Columns.Add(new DataColumn("SystemTypeID", "tinyint", true));
-			Columns.Add(new DataColumn("MaxLength", "smallint", true));
-			Columns.Add(new DataColumn("Precision", "tinyint", true));
-			Columns.Add(new DataColumn("Scale", "tinyint", true));
-			Columns.Add(new DataColumn("CollationName", "sysname", true));
-			Columns.Add(new DataColumn("IsFilestream", "bit", true));
-			Columns.Add(new DataColumn("KeyOrdinal", "smallint"));
-			Columns.Add(new DataColumn("IsNullable", "bit", true));
-			Columns.Add(new DataColumn("IsDescendingKey", "bit", true));
-			Columns.Add(new DataColumn("IsUniqueifier", "bit", true));
-			Columns.Add(new DataColumn("LeafOffset", "smallint", true));
-			Columns.Add(new DataColumn("InternalOffset", "smallint", true));
-			Columns.Add(new DataColumn("LeafBitPosition", "tinyint", true));
-			Columns.Add(new DataColumn("InternalBitPosition", "tinyint", true));
-			Columns.Add(new DataColumn("LeafNullBit", "smallint", true));
-			Columns.Add(new DataColumn("InternalNullBit", "smallint", true));
-			Columns.Add(new DataColumn("IsAntiMatter", "bit", true));
-			Columns.Add(new DataColumn("PartitionColumnGuid", "uniqueidentifier", true));
-			Columns.Add(new DataColumn("IsSparse", "bit", true));
-		}
+		public SystemInternalsPartitionColumn() : base(schema)
+		{ }
 
 		public override Row NewRow()
 		{
@@ -71,36 +76,42 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		
 		internal static IEnumerable<SystemInternalsPartitionColumn> GetDmvData(Database db)
 		{
-			return db.BaseTables.sysrscols
-				.Select(c => new {c, ti = new SysrscolTIParser(c.ti)})
-				.Select(x => new SystemInternalsPartitionColumn
-				    {
-				        PartitionID = x.c.rsid,
-				        PartitionColumnID = x.c.rscolid,
-				        ModifiedCount = x.c.rcmodified,
-				        KeyOrdinal = x.c.ordkey,
-				        SystemTypeID = x.ti.TypeID,
-				        MaxLength = x.ti.MaxLength,
-				        Precision = x.ti.Precision,
-				        Scale = x.ti.Scale,
-				        MaxInrowLength = x.c.maxinrowlen == 0 ? x.ti.MaxLength : x.c.maxinrowlen,
-						LeafOffset = BitConverter.ToInt16(BitConverter.GetBytes(x.c.offset & 0xFFFF), 0),
-						IsReplicated = Convert.ToBoolean(x.c.status & 1),
-						IsLoggedForReplication = Convert.ToBoolean(x.c.status & 4),
-						IsDropped = Convert.ToBoolean(x.c.status & 2),
-						IsFilestream = Convert.ToBoolean(x.c.status & 32),
-						IsNullable = Convert.ToBoolean(1 - (x.c.status & 128) / 128),
-						IsDescendingKey = Convert.ToBoolean(x.c.status & 8),
-						IsUniqueifier = Convert.ToBoolean(x.c.status & 16),
-						LeafBitPosition = Convert.ToByte(x.c.bitpos & 0xFF),
-						InternalBitPosition = Convert.ToByte(x.c.bitpos / 0x100),
-						IsSparse = Convert.ToBoolean(x.c.status & 0x100),
-						IsAntiMatter = Convert.ToBoolean(x.c.status & 64),
-						InternalOffset = BitConverter.ToInt16(BitConverter.GetBytes((x.c.status & 0xFFFF0000) >> 16), 0),
-						PartitionColumnGuid = x.c.colguid != null ? (Guid?)(new Guid(x.c.colguid)) : null,
-						InternalNullBit = BitConverter.ToInt16(BitConverter.GetBytes((x.c.nullbit & 0xFFFF0000) >> 16), 0),
-						LeafNullBit = BitConverter.ToInt16(BitConverter.GetBytes(x.c.nullbit & 0xFFFF), 0)
-				    });
+			if (!db.ObjectCache.ContainsKey(CACHE_KEY))
+			{
+				db.ObjectCache[CACHE_KEY] = db.BaseTables.sysrscols
+					.Select(c => new {c, ti = new SysrscolTIParser(c.ti)})
+					.Select(x => new SystemInternalsPartitionColumn
+					    {
+					        PartitionID = x.c.rsid,
+					        PartitionColumnID = x.c.rscolid,
+					        ModifiedCount = x.c.rcmodified,
+					        KeyOrdinal = x.c.ordkey,
+					        SystemTypeID = x.ti.TypeID,
+					        MaxLength = x.ti.MaxLength,
+					        Precision = x.ti.Precision,
+					        Scale = x.ti.Scale,
+					        MaxInrowLength = x.c.maxinrowlen == 0 ? x.ti.MaxLength : x.c.maxinrowlen,
+					        LeafOffset = BitConverter.ToInt16(BitConverter.GetBytes(x.c.offset & 0xFFFF), 0),
+					        IsReplicated = Convert.ToBoolean(x.c.status & 1),
+					        IsLoggedForReplication = Convert.ToBoolean(x.c.status & 4),
+					        IsDropped = Convert.ToBoolean(x.c.status & 2),
+					        IsFilestream = Convert.ToBoolean(x.c.status & 32),
+					        IsNullable = Convert.ToBoolean(1 - (x.c.status & 128) / 128),
+					        IsDescendingKey = Convert.ToBoolean(x.c.status & 8),
+					        IsUniqueifier = Convert.ToBoolean(x.c.status & 16),
+					        LeafBitPosition = Convert.ToByte(x.c.bitpos & 0xFF),
+					        InternalBitPosition = Convert.ToByte(x.c.bitpos / 0x100),
+					        IsSparse = Convert.ToBoolean(x.c.status & 0x100),
+					        IsAntiMatter = Convert.ToBoolean(x.c.status & 64),
+					        InternalOffset = BitConverter.ToInt16(BitConverter.GetBytes((x.c.status & 0xFFFF0000) >> 16), 0),
+					        PartitionColumnGuid = x.c.colguid != null ? (Guid?)(new Guid(x.c.colguid)) : null,
+					        InternalNullBit = BitConverter.ToInt16(BitConverter.GetBytes((x.c.nullbit & 0xFFFF0000) >> 16), 0),
+					        LeafNullBit = BitConverter.ToInt16(BitConverter.GetBytes(x.c.nullbit & 0xFFFF), 0)
+					    })
+					.ToList();
+			}
+
+			return (IEnumerable<SystemInternalsPartitionColumn>)db.ObjectCache[CACHE_KEY];
 		}
 	}
 }

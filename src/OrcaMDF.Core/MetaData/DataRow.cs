@@ -1,20 +1,20 @@
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OrcaMDF.Core.MetaData
 {
 	public class DataRow : Row
 	{
-		protected DataRow(IList<DataColumn> columns)
-			: base(columns)
+		public DataRow(IEnumerable<DataColumn> columns)
+			: base(new Schema(columns))
 		{ }
 
-		public DataRow()
+		public DataRow(ISchema schema) : base(schema)
 		{ }
 
 		public override Row NewRow()
 		{
-			return new DataRow(Columns);
+			return new DataRow(Schema);
 		}
 
 		public bool HasSparseColumns

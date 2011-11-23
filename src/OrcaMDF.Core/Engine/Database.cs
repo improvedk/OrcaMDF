@@ -16,6 +16,7 @@ namespace OrcaMDF.Core.Engine
 
 		internal Dictionary<short, DataFile> Files = new Dictionary<short, DataFile>();
 		internal BaseTableData BaseTables;
+		internal Dictionary<string, object> ObjectCache = new Dictionary<string, object>();
 
 		private readonly BufferManager bufferManager;
 		private readonly object metaDataLock = new object();
