@@ -75,9 +75,11 @@
     <Compile Include="Engine\Scanner.cs" />
     <Compile Include="Engine\SlotPointer.cs" />
     <Compile Include="Engine\SparseVectorParser.cs" />
+    <Compile Include="Engine\SqlTypes\SqlSmallMoney.cs" />
     <Compile Include="Engine\SqlTypes\SqlDate.cs" />
     <Compile Include="Engine\SqlTypes\SqlDecimal.cs" />
     <Compile Include="Engine\SqlTypes\SqlImage.cs" />
+    <Compile Include="Engine\SqlTypes\SqlMoney.cs" />
     <Compile Include="Engine\SqlTypes\SqlNText.cs" />
     <Compile Include="Engine\SqlTypes\SqlRID.cs" />
     <Compile Include="Engine\SqlTypes\SqlSmallDateTime.cs" />

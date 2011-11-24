@@ -68,6 +68,10 @@ namespace OrcaMDF.Core.MetaData
 					Type = ColumnType.Int;
 					break;
 
+				case "money":
+					Type = ColumnType.Money;
+					break;
+
 				case "nchar":
 					Type = ColumnType.NChar;
 					VariableFixedLength = Convert.ToInt16(type.Split('(')[1].Split(')')[0]);
@@ -82,6 +86,10 @@ namespace OrcaMDF.Core.MetaData
 				case "sysname":
 					Type = ColumnType.NVarchar;
 					IsVariableLength = true;
+					break;
+
+				case "smallmoney":
+					Type = ColumnType.SmallMoney;
 					break;
 
 				case "smallint":

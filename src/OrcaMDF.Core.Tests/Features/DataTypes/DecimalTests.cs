@@ -1,10 +1,9 @@
-﻿using System;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
 
-namespace OrcaMDF.Core.Tests.Features.DataTypes.Decimal
+namespace OrcaMDF.Core.Tests.Features.DataTypes
 {
 	public class DecimalTests : SqlServerSystemTest
 	{

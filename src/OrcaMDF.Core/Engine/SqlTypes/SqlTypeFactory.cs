@@ -34,6 +34,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 				case ColumnType.Int:
 					return new SqlInt();
 
+				case ColumnType.Money:
+					return new SqlMoney();
+
 				case ColumnType.NChar:
 					return new SqlNChar((short)column.VariableFixedLength);
 
@@ -48,6 +51,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 				case ColumnType.SmallInt:
 					return new SqlSmallInt();
+
+				case ColumnType.SmallMoney:
+					return new SqlSmallMoney();
 
 				case ColumnType.Text:
 					return new SqlText();
