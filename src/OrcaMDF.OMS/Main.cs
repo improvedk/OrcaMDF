@@ -28,15 +28,24 @@ namespace OrcaMDF.OMS
 
 		private void logException(Exception ex)
 		{
-			File.WriteAllText("ErrorLog.txt",
+			File.AppendAllText("ErrorLog.txt",
 				DateTime.Now +
 				Environment.NewLine +
 				"----------" +
 				Environment.NewLine +
 				ex +
+				Environment.NewLine +
 				Environment.NewLine);
 
-			MessageBox.Show("Please send the ErrorLog.txt file, from the application directory, to mark@improve.dk. Make sure to verify it does not contain any sensitive information before you send it.", ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+			string msg =
+				"An exception has occurred:" + Environment.NewLine +
+				ex.Message + Environment.NewLine +
+				Environment.NewLine +
+				"To help improve OrcaMDF, I would appreciate if you would send the ErrorLog.txt file to me at mark@improve.dk" + Environment.NewLine +
+				Environment.NewLine +
+				"The error log does not contain any sensitive information, feel free to check it to be 100% certain. The ErrorLog.txt file is located in the same directory as the OrcaMDF Studio application.";
+
+			MessageBox.Show(msg, "Uh oh!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
 		private void openToolStripMenuItem1_Click(object sender, EventArgs e)

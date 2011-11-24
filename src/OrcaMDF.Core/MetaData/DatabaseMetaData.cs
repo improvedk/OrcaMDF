@@ -142,7 +142,7 @@ namespace OrcaMDF.Core.MetaData
 			
 			foreach(var col in syscols)
 			{
-				var sqlType = db.Dmvs.Types.Where(x => x.UserTypeID == col.UserTypeID).Single();
+				var sqlType = db.Dmvs.Types.Where(x => x.SystemTypeID == col.SystemTypeID && x.UserTypeID == x.SystemTypeID).Single();
 				DataColumn dc;
 
 				switch((SystemType)sqlType.SystemTypeID)
