@@ -1,18 +1,18 @@
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.MetaData;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Engine
 {
-	public class IndexScannerTests : SqlServerSystemTest
+	public class IndexScannerTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void ScanClusteredIndexOnUniqueClusteredTable()
+		[SqlServerTest]
+		public void ScanClusteredIndexOnUniqueClusteredTable(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new IndexScanner(db);
 				var result = scanner.ScanIndex("UniqueClusteredTable", "CX_Num1_Name").ToList();
@@ -21,26 +21,26 @@ namespace OrcaMDF.Core.Tests.Engine
 				Assert.AreEqual("Doe", result[0]["Name"]);
 				Assert.AreEqual(382, result[1]["Num1"]);
 				Assert.AreEqual("John", result[1]["Name"]);
-			}
+			});
 		}
 
-		[Test]
-		public void ScanNonclusteredIndexOnUniqueClusteredTable()
+		[SqlServerTest]
+		public void ScanNonclusteredIndexOnUniqueClusteredTable(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new IndexScanner(db);
 				var result = scanner.ScanIndex("UniqueClusteredTable", "IDX_Num1").ToList();
 
 				Assert.AreEqual(112, result[0]["Num1"]);
 				Assert.AreEqual(382, result[1]["Num1"]);
-			}
+			});
 		}
 
-		[Test]
-		public void ScanHeapAsIndex()
+		[SqlServerTest]
+		public void ScanHeapAsIndex(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new IndexScanner(db);
 				var result = scanner.ScanIndex("Heap", null).ToList();
@@ -49,13 +49,13 @@ namespace OrcaMDF.Core.Tests.Engine
 				Assert.AreEqual("John", result[0]["Name"]);
 				Assert.AreEqual(112, result[1]["Num1"]);
 				Assert.AreEqual("Doe", result[1]["Name"]);
-			}
+			});
 		}
 
-		[Test]
-		public void ScanNonclusteredIndexOnNonUniqueClusteredTable()
+		[SqlServerTest]
+		public void ScanNonclusteredIndexOnNonUniqueClusteredTable(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new IndexScanner(db);
 				var result = scanner.ScanIndex("NonUniqueClusteredTable", "IDX_Num1").ToList();
@@ -66,13 +66,13 @@ namespace OrcaMDF.Core.Tests.Engine
 				Assert.AreEqual(0, result[1][DataColumn.Uniquifier]);
 				Assert.AreEqual(382, result[2]["Num1"]);
 				Assert.AreEqual(1, result[2][DataColumn.Uniquifier]);
-			}
+			});
 		}
 
-		[Test]
-		public void ScanNonclusteredIndexOnHeap()
+		[SqlServerTest]
+		public void ScanNonclusteredIndexOnHeap(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				// Index stored in sorted order
 				var scanner = new IndexScanner(db);
@@ -91,10 +91,10 @@ namespace OrcaMDF.Core.Tests.Engine
 
 				Assert.AreEqual(382, dataResult[0]["Num1"]);
 				Assert.AreEqual(112, dataResult[1]["Num1"]);
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			// Create unique clustered table
 			RunQuery(@"	CREATE TABLE UniqueClusteredTable
@@ -105,11 +105,8 @@ namespace OrcaMDF.Core.Tests.Engine
 						CREATE UNIQUE CLUSTERED INDEX CX_Num1_Name ON UniqueClusteredTable (Num1, Name)
 						CREATE NONCLUSTERED INDEX IDX_Num1 ON UniqueClusteredTable (Num1)
 
-						INSERT INTO
-							UniqueClusteredTable (Num1, Name)
-						VALUES
-							(382, 'John'),
-							(112, 'Doe')", conn);
+						INSERT INTO UniqueClusteredTable (Num1, Name) VALUES (382, 'John')
+						INSERT INTO UniqueClusteredTable (Num1, Name) VALUES (112, 'Doe')", conn);
 
 			// Create non unique clustered table
 			RunQuery(@"	CREATE TABLE NonUniqueClusteredTable
@@ -120,12 +117,9 @@ namespace OrcaMDF.Core.Tests.Engine
 						CREATE CLUSTERED INDEX CX_Num1_Name ON NonUniqueClusteredTable (Num1, Name)
 						CREATE NONCLUSTERED INDEX IDX_Num1 ON NonUniqueClusteredTable (Num1)
 
-						INSERT INTO
-							NonUniqueClusteredTable (Num1, Name)
-						VALUES
-							(382, 'John'),
-							(112, 'Doe'),
-							(382, 'John')", conn);
+						INSERT INTO NonUniqueClusteredTable (Num1, Name) VALUES (382, 'John')
+						INSERT INTO NonUniqueClusteredTable (Num1, Name) VALUES (112, 'Doe')
+						INSERT INTO NonUniqueClusteredTable (Num1, Name) VALUES (382, 'John')", conn);
 
 			// Create heap
 			RunQuery(@"	CREATE TABLE Heap
@@ -135,11 +129,8 @@ namespace OrcaMDF.Core.Tests.Engine
 						)
 						CREATE NONCLUSTERED INDEX IDX_Num1 ON Heap (Num1)
 
-						INSERT INTO
-							Heap (Num1, Name)
-						VALUES
-							(382, 'John'),
-							(112, 'Doe')", conn);
+						INSERT INTO Heap (Num1, Name) VALUES (382, 'John')
+						INSERT INTO Heap (Num1, Name) VALUES (112, 'Doe')", conn);
 		}
 	}
 }

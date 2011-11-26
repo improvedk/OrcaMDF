@@ -2,15 +2,16 @@
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.DataTypes
 {
-	public class DecimalTests : SqlServerSystemTest
+	public class DecimalTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void DecimalTest()
+		[SqlServerTest]
+		public void DecimalTest(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("DecimalTest").ToList();
@@ -20,14 +21,12 @@ namespace OrcaMDF.Core.Tests.Features.DataTypes
 				Assert.AreEqual(-4892384.382090m, rows[0].Field<decimal>("C"));
 				Assert.AreEqual(1328783742987.29m, rows[0].Field<decimal>("D"));
 				Assert.AreEqual(2940382040198493029.235m, rows[0].Field<decimal>("E"));
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
-			SqlCommand cmd;
-
-			cmd = new SqlCommand(@"
+			RunQuery(@"
 				CREATE TABLE DecimalTest
 				(
 					A decimal (5, 0),
@@ -37,7 +36,6 @@ namespace OrcaMDF.Core.Tests.Features.DataTypes
 					E decimal (22, 3)
 				)
 				INSERT INTO DecimalTest VALUES (12345, 39201.230, -4892384.38209, 1328783742987.29, 2940382040198493029.23456)", conn);
-			cmd.ExecuteNonQuery();
 		}
 	}
 }

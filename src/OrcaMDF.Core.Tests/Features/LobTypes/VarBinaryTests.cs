@@ -3,120 +3,121 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.LobTypes
 {
-	public class VarBinaryTests : SqlServerSystemTest
+	public class VarBinaryTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void VarBinaryNull()
+		[SqlServerTest]
+		public void VarBinaryNull(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTestNull").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarBinaryEmpty()
+		[SqlServerTest]
+		public void VarBinaryEmpty(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTestEmpty").ToList();
 
 				Assert.AreEqual("", rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarBinary64()
+		[SqlServerTest]
+		public void VarBinary64(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest64").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(64, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarBinary65()
+		[SqlServerTest]
+		public void VarBinary65(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest65").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(65, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarBinary8040()
+		[SqlServerTest]
+		public void VarBinary8040(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest8040").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(8040, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarBinary8041()
+		[SqlServerTest]
+		public void VarBinary8041(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest8041").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(8041, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarBinary40200()
+		[SqlServerTest]
+		public void VarBinary40200(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest40200").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(40200, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarBinary40201()
+		[SqlServerTest]
+		public void VarBinary40201(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest40201").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(40201, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarBinary20000000()
+		[SqlServerTest]
+		public void VarBinary20000000(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarBinaryTest20000000").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(20000000, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			RunQuery(@"	CREATE TABLE VarBinaryTestNull ( A varbinary(MAX) )
 						INSERT INTO VarBinaryTestNull VALUES (NULL)

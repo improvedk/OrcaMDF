@@ -2,120 +2,121 @@ using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.LobTypes
 {
-	public class TextTests : SqlServerSystemTest
+	public class TextTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void TextNull()
+		[SqlServerTest]
+		public void TextNull(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTestNull").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void TextEmpty()
+		[SqlServerTest]
+		public void TextEmpty(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTestEmpty").ToList();
 
 				Assert.AreEqual("", rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Text64()
+		[SqlServerTest]
+		public void Text64(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest64").ToList();
 
 				Assert.AreEqual("".PadLeft(64, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Text65()
+		[SqlServerTest]
+		public void Text65(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest65").ToList();
 
 				Assert.AreEqual("".PadLeft(65, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
 		[Test]
-		public void Text8040()
+		public void Text8040(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest8040").ToList();
 
 				Assert.AreEqual("".PadLeft(8040, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Text8041()
+		[SqlServerTest]
+		public void Text8041(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest8041").ToList();
 
 				Assert.AreEqual("".PadLeft(8041, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Text40200()
+		[SqlServerTest]
+		public void Text40200(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest40200").ToList();
 
 				Assert.AreEqual("".PadLeft(40200, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Text40201()
+		[SqlServerTest]
+		public void Text40201(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest40201").ToList();
 
 				Assert.AreEqual("".PadLeft(40201, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Text20000000()
+		[SqlServerTest]
+		public void Text20000000(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("TextTest20000000").ToList();
 
 				Assert.AreEqual("".PadLeft(20000000, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			RunQuery(@"	CREATE TABLE TextTestNull ( A text )
 						INSERT INTO TextTestNull VALUES (NULL)

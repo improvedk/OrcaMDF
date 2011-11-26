@@ -2,15 +2,16 @@ using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.SparseColumns
 {
-	public class SparseColumnTests : SqlServerSystemTest
+	public class SparseColumnTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void ScanNonSparseInts()
+		[SqlServer2008PlusTest]
+		public void ScanNonSparseInts(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ScanNonSparseInts").ToList();
@@ -24,13 +25,13 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 				Assert.AreEqual(null, rows[1].Field<int?>("B"));
 				Assert.AreEqual(123982, rows[1].Field<int?>("C"));
 				Assert.AreEqual(null, rows[1].Field<int?>("D"));
-			}
+			});
 		}
 
-		[Test]
-		public void ScanSparseInts()
+		[SqlServer2008PlusTest]
+		public void ScanSparseInts(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ScanSparseInts").ToList();
@@ -48,13 +49,13 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 				Assert.AreEqual(null, rows[1].Field<int?>("C"));
 				Assert.AreEqual(null, rows[1].Field<int?>("D"));
 				Assert.AreEqual(null, rows[1].Field<int?>("E"));
-			}
+			});
 		}
 
-		[Test]
-		public void ScanSparseColumns()
+		[SqlServer2008PlusTest]
+		public void ScanSparseColumns(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ScanSparseColumns").ToList();
@@ -70,26 +71,26 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 				Assert.AreEqual(null, rows[1].Field<long?>("C"));
 				Assert.AreEqual(243, rows[1].Field<byte?>("D"));
 				Assert.AreEqual(null, rows[1].Field<int?>("E"));
-			}
+			});
 		}
 
-		[Test]
-		public void ScanAllNullSparse()
+		[SqlServer2008PlusTest]
+		public void ScanAllNullSparse(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ScanAllNullSparse").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<int?>("A"));
 				Assert.AreEqual(null, rows[0].Field<int?>("B"));
-			}
+			});
 		}
 
-		[Test]
-		public void ScanRecordWithoutSparseVector()
+		[SqlServer2008PlusTest]
+		public void ScanRecordWithoutSparseVector(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ScanRecordWithoutSparseVector").ToList();
@@ -99,13 +100,13 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 
 				Assert.AreEqual(null, rows[1].Field<int?>("A"));
 				Assert.AreEqual(null, rows[1].Field<string>("B"));
-			}
+			});
 		}
 
-		[Test]
-		public void DifferingRecordFormats()
+		[SqlServer2008PlusTest]
+		public void DifferingRecordFormats(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("DifferingRecordFormats").ToList();
@@ -114,10 +115,10 @@ namespace OrcaMDF.Core.Tests.Features.SparseColumns
 				Assert.AreEqual(2, rows[0].Field<int?>("B"));
 				Assert.AreEqual(6, rows[1].Field<int?>("A"));
 				Assert.AreEqual(null, rows[1].Field<int?>("B"));
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			// Scanning of records with differing record formats
 			RunQuery(@"	CREATE TABLE DifferingRecordFormats (A int SPARSE)

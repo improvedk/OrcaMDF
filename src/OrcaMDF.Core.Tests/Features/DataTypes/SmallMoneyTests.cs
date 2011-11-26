@@ -2,15 +2,16 @@ using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.DataTypes
 {
-	public class SmallMoneyTests : SqlServerSystemTest
+	public class SmallMoneyTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void SmallMoneyTest()
+		[SqlServerTest]
+		public void SmallMoneyTest(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("SmallMoneyTest").ToList();
@@ -21,14 +22,19 @@ namespace OrcaMDF.Core.Tests.Features.DataTypes
 				Assert.AreEqual(-123456.0123m, rows[3].Field<decimal>("A"));
 				Assert.AreEqual(-214748.3648m, rows[4].Field<decimal>("A"));
 				Assert.AreEqual(214748.3647m, rows[5].Field<decimal>("A"));
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion	version)
 		{
 			RunQuery(@"
 				CREATE TABLE SmallMoneyTest (A smallmoney)
-				INSERT INTO SmallMoneyTest VALUES (123.456789), (-123.456789), (123456.0123), (-123456.0123), (-214748.3648), (214748.3647)
+				INSERT INTO SmallMoneyTest VALUES (123.456789)
+				INSERT INTO SmallMoneyTest VALUES (-123.456789)
+				INSERT INTO SmallMoneyTest VALUES (123456.0123)
+				INSERT INTO SmallMoneyTest VALUES (-123456.0123)
+				INSERT INTO SmallMoneyTest VALUES (-214748.3648)
+				INSERT INTO SmallMoneyTest VALUES (214748.3647)
 			", conn);
 		}
 	}

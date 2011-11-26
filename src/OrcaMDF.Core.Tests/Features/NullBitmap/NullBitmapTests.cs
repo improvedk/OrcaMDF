@@ -2,15 +2,16 @@ using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.NullBitmap
 {
-	public class NullBitmapTests : SqlServerSystemTest
+	public class NullBitmapTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void Garbage()
+		[SqlServer2008PlusTest]
+		public void Garbage(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("Garbage").ToList();
@@ -19,13 +20,13 @@ namespace OrcaMDF.Core.Tests.Features.NullBitmap
 				Assert.AreEqual(null, rows[0].Field<int?>("B"));
 				Assert.AreEqual(null, rows[0].Field<int?>("C"));
 				Assert.AreEqual(null, rows[0].Field<int?>("D"));
-			}
+			});
 		}
 
-		[Test]
-		public void Garbage2()
+		[SqlServer2008PlusTest]
+		public void Garbage2(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("Garbage2").ToList();
@@ -33,10 +34,10 @@ namespace OrcaMDF.Core.Tests.Features.NullBitmap
 				Assert.AreEqual(5, rows[0].Field<int?>("A"));
 				Assert.AreEqual(2, rows[0].Field<int?>("B"));
 				Assert.AreEqual(null, rows[0].Field<string>("C"));
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			// A garbage bitmap may occur if it's added to an existing column that did not already have a null bitmap
 			RunQuery(@"	CREATE TABLE Garbage (A int sparse)

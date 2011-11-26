@@ -1,123 +1,122 @@
 using System.Data.SqlClient;
 using System.Linq;
-using NUnit.Framework;
-using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.DMVs
 {
-	public class SmokeTests : SqlServerSystemTest
+	public class SmokeTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void SysColumns()
+		[SqlServerTest]
+		public void SysColumns(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.Columns.First();
 				TestHelper.GetAllPublicProperties(row);
-			}
+			});
 		}
 
-		[Test]
-		public void SysForeignKeys()
+		[SqlServerTest]
+		public void SysForeignKeys(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.ForeignKeys.First();
 				TestHelper.GetAllPublicProperties(row);
-			}
+			});
 		}
 
-		[Test]
-		public void SysIndexes()
+		[SqlServerTest]
+		public void SysIndexes(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.Indexes.First();
 				TestHelper.GetAllPublicProperties(row);
-			}
+			});
 		}
 
-		[Test]
-		public void SysIndexColumns()
+		[SqlServerTest]
+		public void SysIndexColumns(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.IndexColumns.First();
 				TestHelper.GetAllPublicProperties(row);
-			}
+			});
 		}
 
-		[Test]
-		public void SysObjects()
+		[SqlServerTest]
+		public void SysObjects(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.Objects.First();
 				TestHelper.GetAllPublicProperties(row);
-			}
+			});
 		}
 
-		[Test]
-		public void SysObjectsDollar()
+		[SqlServerTest]
+		public void SysObjectsDollar(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.ObjectsDollar.First();
 				TestHelper.GetAllPublicProperties(row);
-			}
+			});
 		}
 
-		[Test]
-		public void SysSystemInternalsAllocationUnit()
+		[SqlServerTest]
+		public void SysSystemInternalsAllocationUnit(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.SystemInternalsAllocationUnits.First();
 				TestHelper.GetAllPublicProperties(row);
-			}
+			});
 		}
 
-		[Test]
-		public void SysSystemInternalsPartition()
+		[SqlServerTest]
+		public void SysSystemInternalsPartition(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.SystemInternalsPartitions.First();
 				TestHelper.GetAllPublicProperties(row);
-			}
+			});
 		}
 
-		[Test]
-		public void SysSystemInternalsPartitionColumns()
+		[SqlServerTest]
+		public void SysSystemInternalsPartitionColumns(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.SystemInternalsPartitionColumns.First();
 				TestHelper.GetAllPublicProperties(row);
-			}
+			});
 		}
 
-		[Test]
-		public void SysTables()
+		[SqlServerTest]
+		public void SysTables(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.Tables.First();
 				TestHelper.GetAllPublicProperties(row);
-			}
+			});
 		}
 
-		[Test]
-		public void SysTypes()
+		[SqlServerTest]
+		public void SysTypes(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.Types.First();
 				TestHelper.GetAllPublicProperties(row);
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			RunQuery(@"	CREATE TABLE TestA (A int, PRIMARY KEY CLUSTERED (A))
 						CREATE TABLE TestB (B int, FOREIGN KEY (B) REFERENCES TestA(A))", conn);

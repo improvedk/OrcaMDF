@@ -2,120 +2,121 @@ using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.LobTypes
 {
-	public class VarcharMaxTests : SqlServerSystemTest
+	public class VarcharMaxTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void VarcharMaxNull()
+		[SqlServerTest]
+		public void VarcharMaxNull(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarcharMaxTestNull").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarcharMaxEmpty()
+		[SqlServerTest]
+		public void VarcharMaxEmpty(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarcharMaxTestEmpty").ToList();
 
 				Assert.AreEqual("", rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarcharMax64()
+		[SqlServerTest]
+		public void VarcharMax64(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarcharMaxTest64").ToList();
 
 				Assert.AreEqual("".PadLeft(64, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarcharMax65()
+		[SqlServerTest]
+		public void VarcharMax65(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarcharMaxTest65").ToList();
 
 				Assert.AreEqual("".PadLeft(65, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarcharMax8040()
+		[SqlServerTest]
+		public void VarcharMax8040(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarcharMaxTest8040").ToList();
 
 				Assert.AreEqual("".PadLeft(8040, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarcharMax8041()
+		[SqlServerTest]
+		public void VarcharMax8041(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarcharMaxTest8041").ToList();
 
 				Assert.AreEqual("".PadLeft(8041, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarcharMax40200()
+		[SqlServerTest]
+		public void VarcharMax40200(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarcharMaxTest40200").ToList();
 
 				Assert.AreEqual("".PadLeft(40200, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarcharMax40201()
+		[SqlServerTest]
+		public void VarcharMax40201(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarcharMaxTest40201").ToList();
 
 				Assert.AreEqual("".PadLeft(40201, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void VarcharMax20000000()
+		[SqlServerTest]
+		public void VarcharMax20000000(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("VarcharMaxTest20000000").ToList();
 
 				Assert.AreEqual("".PadLeft(20000000, 'A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			RunQuery(@"	CREATE TABLE VarcharMaxTestNull ( A varchar(MAX) )
 						INSERT INTO VarcharMaxTestNull VALUES (NULL)

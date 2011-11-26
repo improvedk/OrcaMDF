@@ -1,60 +1,60 @@
-using System;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.MultiDataFile
 {
-	public class MultiFileTests : SqlServerSystemTest
+	public class MultiFileTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void RoundRobinHeapAllocation()
+		[SqlServerTest]
+		public void RoundRobinHeapAllocation(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("RoundRobinHeap").ToList();
 
 				Assert.AreEqual(100, rows.Count);
-			}
+			});
 		}
 
-		[Test]
-		public void RoundRobinClusteredAllocation()
+		[SqlServerTest]
+		public void RoundRobinClusteredAllocation(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("RoundRobinClustered").ToList();
 
 				Assert.AreEqual(100, rows.Count);
-			}
+			});
 		}
 
-		[Test]
-		public void FGSpecificHeapAllocation()
+		[SqlServerTest]
+		public void FGSpecificHeapAllocation(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("FGSpecificHeap").ToList();
 
 				Assert.AreEqual(100, rows.Count);
-			}
+			});
 		}
 
-		[Test]
-		public void FGSpecificClusteredAllocation()
+		[SqlServerTest]
+		public void FGSpecificClusteredAllocation(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("FGSpecificClustered").ToList();
 
 				Assert.AreEqual(100, rows.Count);
-			}
+			});
 		}
 
 		protected override short GetNumberOfFiles()
@@ -62,7 +62,7 @@ namespace OrcaMDF.Core.Tests.Features.MultiDataFile
 			return 3;
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			// A normal heap that'll be round robin allocated among the data files.
 			// As first 8 pages are stored in the IAM page header, and thus in the same
@@ -79,8 +79,8 @@ namespace OrcaMDF.Core.Tests.Features.MultiDataFile
 			RunQuery(query, conn);
 
 			// Create a new filegroup, add a new data file and create a new heap on this FG
-			RunQuery("ALTER DATABASE [" + DatabaseName + "] ADD FILEGROUP [SecondaryFilegroup]", conn);
-			RunQuery("ALTER DATABASE [" + DatabaseName + "] ADD FILE ( NAME = N'SecondaryFGFile', FILENAME = N'" + Path.Combine(DataFileRootPath, DatabaseName + "_SecondFG.ndf") + "' , SIZE = 3072KB , FILEGROWTH = 1024KB ) TO FILEGROUP [SecondaryFilegroup]", conn);
+			RunQuery("ALTER DATABASE [" + conn.Database + "] ADD FILEGROUP [SecondaryFilegroup]", conn);
+			RunQuery("ALTER DATABASE [" + conn.Database + "] ADD FILE ( NAME = N'SecondaryFGFile', FILENAME = N'" + Path.Combine(DataFileRootPath, conn.Database + "_SecondFG.ndf") + "' , SIZE = 3072KB , FILEGROWTH = 1024KB ) TO FILEGROUP [SecondaryFilegroup]", conn);
 			query = "CREATE TABLE FGSpecificHeap (A int identity, B char(6000));";
 			for (int i = 0; i < 100; i++)
 				query += "INSERT INTO FGSpecificHeap DEFAULT VALUES;";

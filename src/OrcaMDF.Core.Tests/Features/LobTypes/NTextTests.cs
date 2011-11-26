@@ -2,120 +2,121 @@ using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.LobTypes
 {
-	public class NTextTests : SqlServerSystemTest
+	public class NTextTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void NTextNull()
+		[SqlServerTest]
+		public void NTextNull(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("NTextTestNull").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void NTextEmpty()
+		[SqlServerTest]
+		public void NTextEmpty(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("NTextTestEmpty").ToList();
 
 				Assert.AreEqual("", rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void NText32()
+		[SqlServerTest]
+		public void NText32(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("NTextTest32").ToList();
 
 				Assert.AreEqual("".PadLeft(32, '\u040A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void NText33()
+		[SqlServerTest]
+		public void NText33(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("NTextTest33").ToList();
 
 				Assert.AreEqual("".PadLeft(33, '\u040A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void NText4020()
+		[SqlServerTest]
+		public void NText4020(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("NTextTest4020").ToList();
 
 				Assert.AreEqual("".PadLeft(4020, '\u040A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void NText4021()
+		[SqlServerTest]
+		public void NText4021(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("NTextTest4021").ToList();
 
 				Assert.AreEqual("".PadLeft(4021, '\u040A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void NText20100()
+		[SqlServerTest]
+		public void NText20100(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("NTextTest20100").ToList();
 
 				Assert.AreEqual("".PadLeft(20100, '\u040A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void NText20101()
+		[SqlServerTest]
+		public void NText20101(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("NTextTest20101").ToList();
 
 				Assert.AreEqual("".PadLeft(20101, '\u040A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void NText10000000()
+		[SqlServerTest]
+		public void NText10000000(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("NTextTest10000000").ToList();
 
 				Assert.AreEqual("".PadLeft(10000000, '\u040A'), rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			RunQuery(string.Format(@"	CREATE TABLE NTextTestNull ( A ntext )
 										INSERT INTO NTextTestNull VALUES (NULL)

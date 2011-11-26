@@ -2,15 +2,16 @@ using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.DataTypes
 {
-	public class MoneyTests : SqlServerSystemTest
+	public class MoneyTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void MoneyTest()
+		[SqlServerTest]
+		public void MoneyTest(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("MoneyTest").ToList();
@@ -21,14 +22,19 @@ namespace OrcaMDF.Core.Tests.Features.DataTypes
 				Assert.AreEqual(-123456789.0123m, rows[3].Field<decimal>("A"));
 				Assert.AreEqual(-922337203685477.5808m, rows[4].Field<decimal>("A"));
 				Assert.AreEqual(922337203685477.5807m, rows[5].Field<decimal>("A"));
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			RunQuery(@"
 				CREATE TABLE MoneyTest (A money)
-				INSERT INTO MoneyTest VALUES (123.456789), (-123.456789), (123456789.0123), (-123456789.0123), (-922337203685477.5808), (922337203685477.5807)
+				INSERT INTO MoneyTest VALUES (123.456789)
+				INSERT INTO MoneyTest VALUES (-123.456789)
+				INSERT INTO MoneyTest VALUES (123456789.0123)
+				INSERT INTO MoneyTest VALUES (-123456789.0123)
+				INSERT INTO MoneyTest VALUES (-922337203685477.5808)
+				INSERT INTO MoneyTest VALUES (922337203685477.5807)
 			", conn);
 		}
 	}

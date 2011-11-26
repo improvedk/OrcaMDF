@@ -1,18 +1,18 @@
 ﻿using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.MetaData;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Engine
 {
-	public class DataScannerTests : SqlServerSystemTest
+	public class DataScannerTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void ScanUniqueClusteredTable()
+		[SqlServerTest]
+		public void ScanUniqueClusteredTable(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("UniqueClusteredTable").ToList();
@@ -22,13 +22,13 @@ namespace OrcaMDF.Core.Tests.Engine
 
 				Assert.AreEqual(382, rows[1].Field<int>("Num1"));
 				Assert.AreEqual("John", rows[1].Field<string>("Name"));
-			}
+			});
 		}
-		
-		[Test]
-		public void ScanNonUniqueClusteredTable()
+
+		[SqlServerTest]
+		public void ScanNonUniqueClusteredTable(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("NonUniqueClusteredTable").ToList();
@@ -36,14 +36,14 @@ namespace OrcaMDF.Core.Tests.Engine
 				Assert.AreEqual(112, rows[0].Field<int>("Num1"));
 				Assert.AreEqual("Doe", rows[0].Field<string>("Name"));
 				Assert.AreEqual(0, rows[0].Field<int>(DataColumn.Uniquifier));
-				
+
 				Assert.AreEqual(112, rows[1].Field<int>("Num1"));
 				Assert.AreEqual("Doe", rows[1].Field<string>("Name"));
 				Assert.AreEqual(1, rows[1].Field<int>(DataColumn.Uniquifier));
-			}
+			});
 		}
 		
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			// Create unique clustered table
 			RunQuery(@"	CREATE TABLE UniqueClusteredTable
@@ -53,11 +53,8 @@ namespace OrcaMDF.Core.Tests.Engine
 						)
 						CREATE UNIQUE CLUSTERED INDEX CX_Num1_Name ON UniqueClusteredTable (Num1, Name)
 
-						INSERT INTO
-							UniqueClusteredTable (Num1, Name)
-						VALUES
-							(382, 'John'),
-							(112, 'Doe')", conn);
+						INSERT INTO UniqueClusteredTable (Num1, Name) VALUES (382, 'John')
+						INSERT INTO UniqueClusteredTable (Num1, Name) VALUES (112, 'Doe')", conn);
 			
 			// Create non-unique clustered table with uniquifier
 			RunQuery(@"	CREATE TABLE NonUniqueClusteredTable
@@ -67,11 +64,8 @@ namespace OrcaMDF.Core.Tests.Engine
 						)
 						CREATE CLUSTERED INDEX CX_Num1_Name ON NonUniqueClusteredTable (Num1, Name)
 
-						INSERT INTO
-							NonUniqueClusteredTable (Num1, Name)
-						VALUES
-							(112, 'Doe'),
-							(112, 'Doe')", conn);
+						INSERT INTO NonUniqueClusteredTable (Num1, Name) VALUES (112, 'Doe')
+						INSERT INTO NonUniqueClusteredTable (Num1, Name) VALUES (112, 'Doe')", conn);
 		}
 	}
 }

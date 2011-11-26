@@ -3,120 +3,121 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
+using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.LobTypes
 {
-	public class ImageTests : SqlServerSystemTest
+	public class ImageTestsBase : SqlServerSystemTestBase
 	{
-		[Test]
-		public void ImageNull()
+		[SqlServerTest]
+		public void ImageNull(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTestNull").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<string>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void ImageEmpty()
+		[SqlServerTest]
+		public void ImageEmpty(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTestEmpty").ToList();
 
 				Assert.AreEqual("", rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Image64()
+		[SqlServerTest]
+		public void Image64(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest64").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(64, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Image65()
+		[SqlServerTest]
+		public void Image65(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest65").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(65, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Image8040()
+		[SqlServerTest]
+		public void Image8040(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest8040").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(8040, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Image8041()
+		[SqlServerTest]
+		public void Image8041(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest8041").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(8041, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Image40200()
+		[SqlServerTest]
+		public void Image40200(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest40200").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(40200, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Image40201()
+		[SqlServerTest]
+		public void Image40201(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest40201").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(40201, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		[Test]
-		public void Image20000000()
+		[SqlServerTest]
+		public void Image20000000(DatabaseVersion version)
 		{
-			using (var db = new Database(DataFilePaths))
+			RunDatabaseTest(version, db =>
 			{
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable("ImageTest20000000").ToList();
 
 				Assert.AreEqual(Encoding.UTF7.GetBytes("".PadLeft(20000000, 'A')), rows[0].Field<byte[]>("A"));
-			}
+			});
 		}
 
-		protected override void RunSetupQueries(SqlConnection conn)
+		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			RunQuery(@"	CREATE TABLE ImageTestNull ( A image )
 						INSERT INTO ImageTestNull VALUES (NULL)

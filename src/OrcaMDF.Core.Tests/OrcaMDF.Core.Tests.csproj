@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OrcaMDF.Core.Tests</RootNamespace>
     <AssemblyName>OrcaMDF.Core.Tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -44,6 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SqlServerVersion\SqlServer2008PlusTestAttributes.cs" />
+    <Compile Include="SqlServerVersion\SqlServerTestAttribute.cs" />
+    <Compile Include="SqlServerVersion\DatabaseVersion.cs" />
+    <Compile Include="SqlServerSystemTestBase.cs" />
     <Compile Include="Engine\IndexScannerTests.cs" />
     <Compile Include="Engine\Pages\GamPageTests.cs" />
     <Compile Include="Engine\Pages\PFS\PfsPageTests.cs" />
@@ -83,10 +87,10 @@
     <Compile Include="Features\MultiDataFile\MultiFileTests.cs" />
     <Compile Include="Features\NullBitmap\NullBitmapTests.cs" />
     <Compile Include="Features\SparseColumns\SparseColumnTests.cs" />
-    <Compile Include="MetaData\DatabaseMetaDataTests\MetaDataTests.cs" />
     <Compile Include="MetaData\SysrscolTIParserTests.cs" />
-    <Compile Include="SqlServerSystemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlServerVersion\SqlServer2005TestAttribute.cs" />
+    <Compile Include="SqlServerVersion\SqlServer2008R2TestAttribute.cs" />
     <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
