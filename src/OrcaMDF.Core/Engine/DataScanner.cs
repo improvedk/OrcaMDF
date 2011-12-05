@@ -14,16 +14,6 @@ namespace OrcaMDF.Core.Engine
 		{ }
 
 		/// <summary>
-		/// Will scan any table - heap or clustered - and return an IEnumerable of typed rows with data & schema
-		/// </summary>
-		public IEnumerable<TDataRow> ScanTable<TDataRow>(string tableName) where TDataRow : Row, new()
-		{
-			var schema = new TDataRow();
-
-			return scanTable(tableName, schema).Cast<TDataRow>();
-		}
-
-		/// <summary>
 		/// Will scan any table - heap or clustered - and return an IEnumerable of generic rows with data & schema
 		/// </summary>
 		public IEnumerable<Row> ScanTable(string tableName)
@@ -33,6 +23,19 @@ namespace OrcaMDF.Core.Engine
 			return scanTable(tableName, schema);
 		}
 
+		/// <summary>
+		/// Will scan any table - heap or clustered - and return an IEnumerable of typed rows with data & schema
+		/// </summary>
+		internal IEnumerable<TDataRow> ScanTable<TDataRow>(string tableName) where TDataRow : Row, new()
+		{
+			var schema = new TDataRow();
+
+			return scanTable(tableName, schema).Cast<TDataRow>();
+		}
+
+		/// <summary>
+		/// Scans a linked list of pages returning an IEnumerable of typed rows with data & schema
+		/// </summary>
 		internal IEnumerable<TDataRow> ScanLinkedDataPages<TDataRow>(PagePointer loc) where TDataRow : Row, new()
 		{
 			return ScanLinkedDataPages(loc, new TDataRow()).Cast<TDataRow>();

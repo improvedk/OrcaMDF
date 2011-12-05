@@ -14,10 +14,8 @@ namespace OrcaMDF.Core.Engine.Pages
 
 		public IEnumerable<Row> GetEntities(Row schema)
 		{
-			for (int i = 0; i < Records.Length; i++)
+			foreach (var record in Records)
 			{
-				var record = Records[i];
-
 				// Don't process forwarded blob fragments as they should only be processed from the referenced record
 				if (record.Type == RecordType.BlobFragment)
 					continue;

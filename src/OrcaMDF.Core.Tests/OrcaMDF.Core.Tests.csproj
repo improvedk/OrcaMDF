@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\Compression\RowCompressionTests.cs" />
     <Compile Include="SqlServerVersion\SqlServer2008PlusTestAttributes.cs" />
     <Compile Include="SqlServerVersion\SqlServerTestAttribute.cs" />
     <Compile Include="SqlServerVersion\DatabaseVersion.cs" />
