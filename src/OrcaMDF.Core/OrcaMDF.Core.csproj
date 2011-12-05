@@ -108,6 +108,7 @@
     <Compile Include="MetaData\DMVs\IndexColumn.cs" />
     <Compile Include="MetaData\DMVs\Object.cs" />
     <Compile Include="MetaData\DMVs\ObjectDollar.cs" />
+    <Compile Include="MetaData\DMVs\Partition.cs" />
     <Compile Include="MetaData\DMVs\SystemInternalsAllocationUnit.cs" />
     <Compile Include="MetaData\DMVs\SystemInternalsPartition.cs" />
     <Compile Include="MetaData\DMVs\SystemInternalsPartitionColumn.cs" />

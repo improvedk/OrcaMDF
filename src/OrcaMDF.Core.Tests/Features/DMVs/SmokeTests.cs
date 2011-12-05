@@ -67,6 +67,16 @@ namespace OrcaMDF.Core.Tests.Features.DMVs
 		}
 
 		[SqlServerTest]
+		public void SysPartition(DatabaseVersion version)
+		{
+			RunDatabaseTest(version, db =>
+			{
+				var row = db.Dmvs.Partitions.First();
+				TestHelper.GetAllPublicProperties(row);
+			});
+		}
+
+		[SqlServerTest]
 		public void SysSystemInternalsAllocationUnit(DatabaseVersion version)
 		{
 			RunDatabaseTest(version, db =>

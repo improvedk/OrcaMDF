@@ -92,6 +92,7 @@ namespace OrcaMDF.OMS
 			dmvNode.Nodes.Add("sys.index_columns").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.objects").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.objects$").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.partitions").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.system_internals_allocation_units").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.system_internals_partitions").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.system_internals_partition_columns").ContextMenu = dmvMenu;
@@ -218,6 +219,8 @@ namespace OrcaMDF.OMS
 					return db.Dmvs.Objects.ToList();
 				case "sys.objects$":
 					return db.Dmvs.ObjectsDollar.ToList();
+				case "sys.partitions":
+					return db.Dmvs.Partitions.ToList();
 				case "sys.system_internals_allocation_units":
 					return db.Dmvs.SystemInternalsAllocationUnits.ToList();
 				case "sys.system_internals_partitions":

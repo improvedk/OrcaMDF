@@ -43,6 +43,11 @@ namespace OrcaMDF.Core.MetaData
 			get { return ObjectDollar.GetDmvData(db); }
 		}
 
+		public IEnumerable<Partition> Partitions
+		{
+			get { return Partition.GetDmvData(db); }
+		}
+
 		public IEnumerable<Type> Types
 		{
 			get { return Type.GetDmvData(db); }
