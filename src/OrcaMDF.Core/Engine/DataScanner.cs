@@ -36,15 +36,15 @@ namespace OrcaMDF.Core.Engine
 		/// <summary>
 		/// Scans a linked list of pages returning an IEnumerable of typed rows with data & schema
 		/// </summary>
-		internal IEnumerable<TDataRow> ScanLinkedDataPages<TDataRow>(PagePointer loc) where TDataRow : Row, new()
+		internal IEnumerable<TDataRow> ScanLinkedDataPages<TDataRow>(PagePointer loc, CompressionLevel compressionLevel) where TDataRow : Row, new()
 		{
-			return ScanLinkedDataPages(loc, new TDataRow()).Cast<TDataRow>();
+			return ScanLinkedDataPages(loc, new TDataRow(), compressionLevel).Cast<TDataRow>();
 		}
 
 		/// <summary>
 		/// Starts at the data page (loc) and follows the NextPage pointer chain till the end.
 		/// </summary>
-		internal IEnumerable<Row> ScanLinkedDataPages(PagePointer loc, Row schema)
+		internal IEnumerable<Row> ScanLinkedDataPages(PagePointer loc, Row schema, CompressionLevel compressionLevel)
 		{
 			while (loc != PagePointer.Zero)
 			{
@@ -68,31 +68,58 @@ namespace OrcaMDF.Core.Engine
 				throw new ArgumentException("Table does not exist.");
 
 			// Get rowset, prefer clustered index if exists
-			var tableRowset = Database.Dmvs.SystemInternalsPartitions
+			var partitions = Database.Dmvs.Partitions
 				.Where(x => x.ObjectID == tableObject.id && x.IndexID <= 1)
 				.OrderByDescending(x => x.IndexID)
-				.FirstOrDefault();
-			if (tableRowset == null)
-				throw new ArgumentException("Table has no rowsets.");
+				.ThenBy(x => x.PartitionNumber);
+
+			if (partitions.Count() == 0)
+				throw new ArgumentException("Table has no partitions.");
+
+			// Loop all partitions and return results one by one
+			return partitions.SelectMany(partition => scanPartition(partition.PartitionID, partition.PartitionNumber, schema));
+		}
+
+		private IEnumerable<Row> scanPartition(long partitionID, int partitionNumber, Row schema)
+		{
+			// Lookup partition
+			var partition = Database.Dmvs.Partitions
+				.Where(p => p.PartitionID == partitionID && p.PartitionNumber == partitionNumber)
+				.SingleOrDefault();
+
+			if(partition == null)
+				throw new ArgumentException("Partition (" + partitionID + "." + partitionNumber + " does not exist.");
 
 			// Get allocation unit for in-row data
-			var allocUnit = Database.Dmvs.SystemInternalsAllocationUnits
-				.Where(x => x.ContainerID == tableRowset.PartitionID && x.Type == 1)
+			var au = Database.Dmvs.SystemInternalsAllocationUnits
+				.Where(x => x.ContainerID == partition.PartitionID && x.Type == 1)
 				.SingleOrDefault();
-			if (allocUnit == null)
-				throw new ArgumentException("Table has no allocation unit.");
-			
-			// Either scan heap or linked list of pages, depending on index type
-			if (tableRowset.IndexID == ReservedIndexID.Heap)
-				return scanHeap(allocUnit.FirstIamPage, schema);
+
+			if (au == null)
+				throw new ArgumentException("Partition (" + partition.PartitionID + "." + partition.PartitionNumber + " has no HOBT allocation unit.");
+
+			// Before we can scan either heaps or indices, we need to know the compression level as that's set at the partition level, and not at the record/page level
+			var compressionLevel = (CompressionLevel)partition.DataCompression;
+
+			// Heap tables won't have root pages, thus we can check whether a root page is defined for the HOBT allocation unit
+			if(au.RootPage != PagePointer.Zero)
+			{
+				// Index
+				foreach (var row in ScanLinkedDataPages(au.FirstPage, schema, compressionLevel))
+					yield return row;
+			}
 			else
-				return ScanLinkedDataPages(allocUnit.FirstPage, schema);
+			{
+				// Heap
+				foreach (var row in scanHeap(au.FirstIamPage, schema, compressionLevel))
+					yield return row;
+			}
 		}
 
 		/// <summary>
 		/// Scans a heap beginning from the provided IAM page and onwards.
 		/// </summary>
-		private IEnumerable<Row> scanHeap(PagePointer loc, Row schema)
+		private IEnumerable<Row> scanHeap(PagePointer loc, Row schema, CompressionLevel compressionLevel)
 		{
 			while (loc != PagePointer.Zero)
 			{
@@ -100,16 +127,16 @@ namespace OrcaMDF.Core.Engine
 
 				// Gather results from header slots and yield them afterwards
 				var iamPageSlots = new []
-				               	{
-				               		iamPage.Slot0,
-									iamPage.Slot1,
-									iamPage.Slot2,
-									iamPage.Slot3,
-									iamPage.Slot4,
-									iamPage.Slot5,
-									iamPage.Slot6,
-									iamPage.Slot7
-				               	};
+					{
+						iamPage.Slot0,
+						iamPage.Slot1,
+						iamPage.Slot2,
+						iamPage.Slot3,
+						iamPage.Slot4,
+						iamPage.Slot5,
+						iamPage.Slot6,
+						iamPage.Slot7
+					};
 
 				foreach (var slot in iamPageSlots)
 					foreach (var dr in scanIamSlotPage(slot, schema))
@@ -126,13 +153,13 @@ namespace OrcaMDF.Core.Engine
 						// Check if page is allocated according to PFS page
 						var pfsDescription = pfs.GetPageDescription(pageLoc.PageID);
 
-						if (pfsDescription.IsAllocated)
-						{
-							var dataPage = Database.GetDataPage(pageLoc);
+						if(!pfsDescription.IsAllocated)
+							continue;
 
-							foreach (var dr in dataPage.GetEntities(schema))
-								yield return dr;
-						}
+						var dataPage = Database.GetDataPage(pageLoc);
+
+						foreach (var dr in dataPage.GetEntities(schema))
+							yield return dr;
 					}
 				}
 
@@ -142,13 +169,13 @@ namespace OrcaMDF.Core.Engine
 
 		private IEnumerable<Row> scanIamSlotPage(PagePointer loc, Row schema)
 		{
-			if (loc != PagePointer.Zero)
-			{
-				var dataPage = Database.GetDataPage(loc);
+			if(loc == PagePointer.Zero)
+				yield break;
 
-				foreach(var dr in dataPage.GetEntities(schema))
-					yield return dr;
-			}
+			var dataPage = Database.GetDataPage(loc);
+
+			foreach(var dr in dataPage.GetEntities(schema))
+				yield return dr;
 		}
 	}
 }

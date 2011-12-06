@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\BufferManager.cs" />
+    <Compile Include="Engine\CompressionLevel.cs" />
     <Compile Include="Engine\Database.cs" />
     <Compile Include="Engine\DataScanner.cs" />
     <Compile Include="Engine\ExtentPointer.cs" />

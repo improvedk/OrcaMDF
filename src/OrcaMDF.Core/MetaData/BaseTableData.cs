@@ -59,6 +59,8 @@ namespace OrcaMDF.Core.MetaData
 			this.db = db;
 			scanner = new DataScanner(db);
 
+			// These are the very core base tables that we'll need to dynamically construct the schema of any other
+			// required tables. By aggresively parsing these, we can do lazy loading of the rest.
 			parseSysallocunits();
 			parseSysrowsets();
 			parseSyscolpars();
@@ -68,6 +70,7 @@ namespace OrcaMDF.Core.MetaData
 
 		private void parseSysscalartypes()
 		{
+			// Using a fixed object ID, we can look up the partition for sysscalartypes and scan the hobt AU from there
 			long rowsetID = sysrowsets
 				.Where(x => x.idmajor == (int)SystemObject.sysscalartypes && x.idminor == 1)
 				.Single()
@@ -79,12 +82,13 @@ namespace OrcaMDF.Core.MetaData
 					.Single()
 					.pgfirst
 			);
-
-			sysscalartypes = scanner.ScanLinkedDataPages<sysscalartype>(pageLoc).ToList();
+			
+			sysscalartypes = scanner.ScanLinkedDataPages<sysscalartype>(pageLoc, CompressionLevel.None).ToList();
 		}
 
 		private void parseSysobjects()
 		{
+			// Using a fixed object ID, we can look up the partition for sysschobjs and scan the hobt AU from there
 			long rowsetID = sysrowsets
 				.Where(x => x.idmajor == (int)SystemObject.sysschobjs && x.idminor == 1)
 				.Single()
@@ -97,11 +101,12 @@ namespace OrcaMDF.Core.MetaData
 					.pgfirst
 			);
 
-			sysschobjs = scanner.ScanLinkedDataPages<sysschobj>(pageLoc).ToList();
+			sysschobjs = scanner.ScanLinkedDataPages<sysschobj>(pageLoc, CompressionLevel.None).ToList();
 		}
 
 		private void parseSyscolpars()
 		{
+			// Using a fixed object ID, we can look up the partition for syscolpars and scan the hobt AU from there
 			long rowsetID = sysrowsets
 				.Where(x => x.idmajor == (int)SystemObject.syscolpars && x.idminor == 1)
 				.Single()
@@ -114,11 +119,12 @@ namespace OrcaMDF.Core.MetaData
 					.pgfirst
 			);
 
-			syscolpars = scanner.ScanLinkedDataPages<syscolpar>(pageLoc).ToList();
+			syscolpars = scanner.ScanLinkedDataPages<syscolpar>(pageLoc, CompressionLevel.None).ToList();
 		}
 
 		private void parseSysrowsets()
 		{
+			// Using a fixed allocation unit ID, we can look up the hobt AU and scan it
 			var pageLoc = new PagePointer(
 				sysallocunits
 			        .Where(x => x.auid == FixedSystemObjectAllocationUnits.sysrowsets)
@@ -126,14 +132,14 @@ namespace OrcaMDF.Core.MetaData
 			        .pgfirst
 			);
 
-			sysrowsets = scanner.ScanLinkedDataPages<sysrowset>(pageLoc).ToList();
+			sysrowsets = scanner.ScanLinkedDataPages<sysrowset>(pageLoc, CompressionLevel.None).ToList();
 		}
 
 		private void parseSysallocunits()
 		{
 			// Though this has a fixed first-page location at (1:16) we'll read it from the boot page to be sure
 			var bootPage = db.GetBootPage();
-			sysallocunits = scanner.ScanLinkedDataPages<sysallocunit>(bootPage.FirstSysIndexes).ToList();
+			sysallocunits = scanner.ScanLinkedDataPages<sysallocunit>(bootPage.FirstSysIndexes, CompressionLevel.None).ToList();
 		}
 	}
 }
