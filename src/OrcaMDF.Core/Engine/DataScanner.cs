@@ -121,11 +121,12 @@ namespace OrcaMDF.Core.Engine
 		/// </summary>
 		private IEnumerable<Row> scanHeap(PagePointer loc, Row schema, CompressionLevel compressionLevel)
 		{
+			// Traverse the linked list of IAM pages untill the tail pointer is zero
 			while (loc != PagePointer.Zero)
 			{
 				var iamPage = Database.GetIamPage(loc);
 
-				// Gather results from header slots and yield them afterwards
+				// Create an array with all of the header slot pointers
 				var iamPageSlots = new []
 					{
 						iamPage.Slot0,
@@ -138,11 +139,16 @@ namespace OrcaMDF.Core.Engine
 						iamPage.Slot7
 					};
 
-				foreach (var slot in iamPageSlots)
-					foreach (var dr in scanIamSlotPage(slot, schema))
-						yield return dr;
+				// Loop each header slot and yield the results, provided the header slot is allocated
+				foreach (var slot in iamPageSlots.Where(x => x != PagePointer.Zero))
+				{
+					var dataPage = Database.GetDataPage(slot);
 
-				// Then loop through extents and yield results
+					foreach (var dr in dataPage.GetEntities(schema))
+						yield return dr;
+				}
+
+				// Then loop through allocated extents and yield results
 				foreach (var extent in iamPage.GetAllocatedExtents())
 				{
 					// Get PFS page that tracks this extent
@@ -163,19 +169,9 @@ namespace OrcaMDF.Core.Engine
 					}
 				}
 
+				// Update current IAM chain location to the tail pointer
 				loc = iamPage.Header.NextPage;
 			}
-		}
-
-		private IEnumerable<Row> scanIamSlotPage(PagePointer loc, Row schema)
-		{
-			if(loc == PagePointer.Zero)
-				yield break;
-
-			var dataPage = Database.GetDataPage(loc);
-
-			foreach(var dr in dataPage.GetEntities(schema))
-				yield return dr;
 		}
 	}
 }
