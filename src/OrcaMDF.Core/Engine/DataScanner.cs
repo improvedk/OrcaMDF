@@ -36,21 +36,21 @@ namespace OrcaMDF.Core.Engine
 		/// <summary>
 		/// Scans a linked list of pages returning an IEnumerable of typed rows with data & schema
 		/// </summary>
-		internal IEnumerable<TDataRow> ScanLinkedDataPages<TDataRow>(PagePointer loc, CompressionLevel compressionLevel) where TDataRow : Row, new()
+		internal IEnumerable<TDataRow> ScanLinkedDataPages<TDataRow>(PagePointer loc, CompressionContext compression) where TDataRow : Row, new()
 		{
-			return ScanLinkedDataPages(loc, new TDataRow(), compressionLevel).Cast<TDataRow>();
+			return ScanLinkedDataPages(loc, new TDataRow(), compression).Cast<TDataRow>();
 		}
 
 		/// <summary>
 		/// Starts at the data page (loc) and follows the NextPage pointer chain till the end.
 		/// </summary>
-		internal IEnumerable<Row> ScanLinkedDataPages(PagePointer loc, Row schema, CompressionLevel compressionLevel)
+		internal IEnumerable<Row> ScanLinkedDataPages(PagePointer loc, Row schema, CompressionContext compression)
 		{
 			while (loc != PagePointer.Zero)
 			{
 				var page = Database.GetDataPage(loc);
 
-				foreach (var dr in page.GetEntities(schema))
+				foreach (var dr in page.GetEntities(schema, compression))
 					yield return dr;
 
 				loc = page.Header.NextPage;
@@ -70,8 +70,7 @@ namespace OrcaMDF.Core.Engine
 			// Get rowset, prefer clustered index if exists
 			var partitions = Database.Dmvs.Partitions
 				.Where(x => x.ObjectID == tableObject.id && x.IndexID <= 1)
-				.OrderByDescending(x => x.IndexID)
-				.ThenBy(x => x.PartitionNumber);
+				.OrderBy(x => x.PartitionNumber);
 
 			if (partitions.Count() == 0)
 				throw new ArgumentException("Table has no partitions.");
@@ -98,20 +97,22 @@ namespace OrcaMDF.Core.Engine
 			if (au == null)
 				throw new ArgumentException("Partition (" + partition.PartitionID + "." + partition.PartitionNumber + " has no HOBT allocation unit.");
 
-			// Before we can scan either heaps or indices, we need to know the compression level as that's set at the partition level, and not at the record/page level
-			var compressionLevel = (CompressionLevel)partition.DataCompression;
+			// Before we can scan either heaps or indices, we need to know the compression level as that's set at the partition level, and not at the record/page level.
+			// We also need to know whether the partition is using vardecimals.
+			var compression = new CompressionContext((CompressionLevel)partition.DataCompression, MetaData.PartitionHasVardecimalColumns(partition.PartitionID));
 
 			// Heap tables won't have root pages, thus we can check whether a root page is defined for the HOBT allocation unit
 			if(au.RootPage != PagePointer.Zero)
 			{
 				// Index
-				foreach (var row in ScanLinkedDataPages(au.FirstPage, schema, compressionLevel))
+				foreach (var row in ScanLinkedDataPages(au.FirstPage, schema, compression))
 					yield return row;
 			}
 			else
 			{
 				// Heap
-				foreach (var row in scanHeap(au.FirstIamPage, schema, compressionLevel))
+				// TODO
+				foreach (var row in scanHeap(au.FirstIamPage, schema, compression))
 					yield return row;
 			}
 		}
@@ -119,11 +120,18 @@ namespace OrcaMDF.Core.Engine
 		/// <summary>
 		/// Scans a heap beginning from the provided IAM page and onwards.
 		/// </summary>
-		private IEnumerable<Row> scanHeap(PagePointer loc, Row schema, CompressionLevel compressionLevel)
+		private IEnumerable<Row> scanHeap(PagePointer loc, Row schema, CompressionContext compression)
 		{
 			// Traverse the linked list of IAM pages untill the tail pointer is zero
 			while (loc != PagePointer.Zero)
 			{
+				// Before scanning, check that the IAM page itself is allocated
+				var pfsPage = Database.GetPfsPage(PfsPage.GetPfsPointerForPage(loc));
+
+				// If IAM page isn't allocated, there's nothing to return
+				if (!pfsPage.GetPageDescription(loc.PageID).IsAllocated)
+					yield break;
+
 				var iamPage = Database.GetIamPage(loc);
 
 				// Create an array with all of the header slot pointers
@@ -144,7 +152,7 @@ namespace OrcaMDF.Core.Engine
 				{
 					var dataPage = Database.GetDataPage(slot);
 
-					foreach (var dr in dataPage.GetEntities(schema))
+					foreach (var dr in dataPage.GetEntities(schema, compression))
 						yield return dr;
 				}
 
@@ -164,7 +172,7 @@ namespace OrcaMDF.Core.Engine
 
 						var dataPage = Database.GetDataPage(pageLoc);
 
-						foreach (var dr in dataPage.GetEntities(schema))
+						foreach (var dr in dataPage.GetEntities(schema, compression))
 							yield return dr;
 					}
 				}

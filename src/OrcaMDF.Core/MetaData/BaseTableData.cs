@@ -17,25 +17,15 @@ namespace OrcaMDF.Core.MetaData
 		internal IList<sysschobj> sysschobjs { get; private set; }
 		internal IList<sysscalartype> sysscalartypes { get; private set; }
 		internal IList<sysrowset> sysrowsets { get; private set; }
-
-		private IList<sysrscol> _sysrscols;
-		public IList<sysrscol> sysrscols
-		{
-			get { return _sysrscols ?? (_sysrscols = scanner.ScanTable<sysrscol>("sysrscols").ToList()); }
-		}
-
+		internal IList<sysrscol> sysrscols { get; private set; }
+		internal IList<syssingleobjref> syssingleobjrefs { get; private set; }
+		
 		private IList<sysidxstat> _sysidxstats;
 		internal IList<sysidxstat> sysidxstats
 		{
 			get { return _sysidxstats ?? (_sysidxstats = scanner.ScanTable<sysidxstat>("sysidxstats").ToList()); }
 		}
 		
-		private IList<syssingleobjref> _syssingleobjrefs;
-		internal IList<syssingleobjref> syssingleobjrefs
-		{
-			get { return _syssingleobjrefs ?? (_syssingleobjrefs = scanner.ScanTable<syssingleobjref>("syssingleobjrefs").ToList()); }
-		}
-
 		private IList<syspalvalue> _syspalvalues;
 		internal IList<syspalvalue> syspalvalues
 		{
@@ -66,6 +56,44 @@ namespace OrcaMDF.Core.MetaData
 			parseSyscolpars();
 			parseSysobjects();
 			parseSysscalartypes();
+			parseSysrscols();
+			parseSyssingleobjrefs();
+		}
+
+		private void parseSyssingleobjrefs()
+		{
+			// Using a fixed object ID, we can look up the partition for sysscalartypes and scan the hobt AU from there
+			long rowsetID = sysrowsets
+				.Where(x => x.idmajor == (int)SystemObject.syssingleobjrefs && x.idminor == 1)
+				.Single()
+				.rowsetid;
+
+			var pageLoc = new PagePointer(
+				sysallocunits
+					.Where(x => x.auid == rowsetID && x.type == 1)
+					.Single()
+					.pgfirst
+			);
+
+			syssingleobjrefs = scanner.ScanLinkedDataPages<syssingleobjref>(pageLoc, CompressionContext.None).ToList();
+		}
+
+		private void parseSysrscols()
+		{
+			// Using a fixed object ID, we can look up the partition for sysscalartypes and scan the hobt AU from there
+			long rowsetID = sysrowsets
+				.Where(x => x.idmajor == (int)SystemObject.sysrscols && x.idminor == 1)
+				.Single()
+				.rowsetid;
+
+			var pageLoc = new PagePointer(
+				sysallocunits
+					.Where(x => x.auid == rowsetID && x.type == 1)
+					.Single()
+					.pgfirst
+			);
+
+			sysrscols = scanner.ScanLinkedDataPages<sysrscol>(pageLoc, CompressionContext.None).ToList();
 		}
 
 		private void parseSysscalartypes()
@@ -83,7 +111,7 @@ namespace OrcaMDF.Core.MetaData
 					.pgfirst
 			);
 			
-			sysscalartypes = scanner.ScanLinkedDataPages<sysscalartype>(pageLoc, CompressionLevel.None).ToList();
+			sysscalartypes = scanner.ScanLinkedDataPages<sysscalartype>(pageLoc, CompressionContext.None).ToList();
 		}
 
 		private void parseSysobjects()
@@ -101,7 +129,7 @@ namespace OrcaMDF.Core.MetaData
 					.pgfirst
 			);
 
-			sysschobjs = scanner.ScanLinkedDataPages<sysschobj>(pageLoc, CompressionLevel.None).ToList();
+			sysschobjs = scanner.ScanLinkedDataPages<sysschobj>(pageLoc, CompressionContext.None).ToList();
 		}
 
 		private void parseSyscolpars()
@@ -119,7 +147,7 @@ namespace OrcaMDF.Core.MetaData
 					.pgfirst
 			);
 
-			syscolpars = scanner.ScanLinkedDataPages<syscolpar>(pageLoc, CompressionLevel.None).ToList();
+			syscolpars = scanner.ScanLinkedDataPages<syscolpar>(pageLoc, CompressionContext.None).ToList();
 		}
 
 		private void parseSysrowsets()
@@ -132,14 +160,14 @@ namespace OrcaMDF.Core.MetaData
 			        .pgfirst
 			);
 
-			sysrowsets = scanner.ScanLinkedDataPages<sysrowset>(pageLoc, CompressionLevel.None).ToList();
+			sysrowsets = scanner.ScanLinkedDataPages<sysrowset>(pageLoc, CompressionContext.None).ToList();
 		}
 
 		private void parseSysallocunits()
 		{
 			// Though this has a fixed first-page location at (1:16) we'll read it from the boot page to be sure
 			var bootPage = db.GetBootPage();
-			sysallocunits = scanner.ScanLinkedDataPages<sysallocunit>(bootPage.FirstSysIndexes, CompressionLevel.None).ToList();
+			sysallocunits = scanner.ScanLinkedDataPages<sysallocunit>(bootPage.FirstSysIndexes, CompressionContext.None).ToList();
 		}
 	}
 }

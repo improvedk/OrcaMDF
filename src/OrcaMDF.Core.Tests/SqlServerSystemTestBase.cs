@@ -20,11 +20,7 @@ namespace OrcaMDF.Core.Tests
 
 		protected void RunDatabaseTest(DatabaseVersion version, Action<Database> test)
 		{
-			string versionConnectionName = version.ToString();
-
-			// Only run test for this version if a connection string has been provided
-			if (ConfigurationManager.ConnectionStrings[versionConnectionName] == null)
-				Assert.Inconclusive();
+			Debug.WriteLine("Test database: " + databaseBaseName);
 
 			// Setup database and store file paths, if we haven't done so already
 			ensureDatabaseIsSetup(version);

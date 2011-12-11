@@ -12,7 +12,7 @@ namespace OrcaMDF.Core.Engine.Pages
 			: base(bytes, database)
 		{ }
 
-		public IEnumerable<Row> GetEntities(Row schema)
+		public IEnumerable<Row> GetEntities(Row schema, CompressionContext compression)
 		{
 			for (int i = 0; i < Records.Length; i++)
 			{
@@ -26,7 +26,7 @@ namespace OrcaMDF.Core.Engine.Pages
 
 				foreach (DataColumn col in dataRow.Columns)
 				{
-					var sqlType = SqlTypeFactory.Create(col, readState);
+					var sqlType = SqlTypeFactory.Create(col, readState, compression);
 					object columnValue = null;
 
 					if (sqlType.IsVariableLength)

@@ -12,7 +12,7 @@ namespace OrcaMDF.Core.Engine.Pages
 			: base(bytes, database)
 		{ }
 
-		public IEnumerable<Row> GetEntities(Row schema)
+		public IEnumerable<Row> GetEntities(Row schema, CompressionContext compression)
 		{
 			foreach (var record in Records)
 			{
@@ -28,7 +28,7 @@ namespace OrcaMDF.Core.Engine.Pages
 
 				foreach (DataColumn col in dataRow.Columns)
 				{
-					var sqlType = SqlTypeFactory.Create(col, readState);
+					var sqlType = SqlTypeFactory.Create(col, readState, compression);
 					object columnValue = null;
 
 					// Sparse columns needs to retrieve their values from the sparse vector, contained in the very last

@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\Compression\RowCompressionTests.cs" />
-    <Compile Include="SqlServerVersion\SqlServer2008PlusTestAttributes.cs" />
+    <Compile Include="Features\Vardecimal\VardecimalTests.cs" />
+    <Compile Include="SqlServerVersion\SqlServer2005PlusTestAttribute.cs" />
+    <Compile Include="SqlServerVersion\SqlServer2008PlusTestAttribute.cs" />
     <Compile Include="SqlServerVersion\SqlServerTestAttribute.cs" />
     <Compile Include="SqlServerVersion\DatabaseVersion.cs" />
     <Compile Include="SqlServerSystemTestBase.cs" />

@@ -57,6 +57,9 @@ namespace OrcaMDF.Core.MetaData
 					var parts = type.Split('(')[1].Split(')')[0].Split(',');
 					Precision = Convert.ToByte(parts[0].Trim());
 					Scale = Convert.ToByte(parts[1].Trim());
+
+					if (parts.Length == 3)
+						IsVariableLength = Convert.ToBoolean(parts[2]);
 					break;
 				
 				case "image":

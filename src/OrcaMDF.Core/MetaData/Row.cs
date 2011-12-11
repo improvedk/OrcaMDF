@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 namespace OrcaMDF.Core.MetaData
 {
 	/// <summary>
-	/// Most inefficient to store schema with each and every row. Simplicity wins over efficiency for now. Can be optimized later.
+	/// Stores the actual data contained in a row, including a reference to the row schema.
 	/// </summary>
 	public abstract class Row
 	{

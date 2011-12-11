@@ -61,7 +61,8 @@ namespace OrcaMDF.Core.Engine
 						throw new ArgumentException("Table has no allocation unit.");
 
 					// Scan the linked list of nonclustered index pages
-					return ScanLinkedNonclusteredIndexPages(allocUnit.FirstPage, schema);
+					// TODO: Support compressed indexes
+					return ScanLinkedNonclusteredIndexPages(allocUnit.FirstPage, schema, CompressionContext.None);
 
 				default:
 					throw new ArgumentException("Unsupported index type '" + index.Type + "'");
@@ -71,13 +72,13 @@ namespace OrcaMDF.Core.Engine
 		/// <summary>
 		/// Starts at the data page (loc) and follows the NextPage pointer chain till the end.
 		/// </summary>
-		internal IEnumerable<Row> ScanLinkedNonclusteredIndexPages(PagePointer loc, Row schema)
+		internal IEnumerable<Row> ScanLinkedNonclusteredIndexPages(PagePointer loc, Row schema, CompressionContext compression)
 		{
 			while (loc != PagePointer.Zero)
 			{
 				var page = Database.GetNonclusteredIndexPage(loc);
 
-				foreach (var dr in page.GetEntities(schema))
+				foreach (var dr in page.GetEntities(schema, compression))
 					yield return dr;
 
 				loc = page.Header.NextPage;

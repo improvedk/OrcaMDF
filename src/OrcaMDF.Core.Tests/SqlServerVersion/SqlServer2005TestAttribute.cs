@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using NUnit.Framework;
 
 namespace OrcaMDF.Core.Tests.SqlServerVersion
@@ -9,7 +10,8 @@ namespace OrcaMDF.Core.Tests.SqlServerVersion
 		{
 			get
 			{
-				yield return new TestCaseData(DatabaseVersion.SqlServer2005).SetCategory(DatabaseVersion.SqlServer2005.ToString());
+				if (ConfigurationManager.ConnectionStrings[DatabaseVersion.SqlServer2005.ToString()] != null)
+					yield return new TestCaseData(DatabaseVersion.SqlServer2005).SetCategory(DatabaseVersion.SqlServer2005.ToString());
 			}
 		}
 

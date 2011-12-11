@@ -15,17 +15,21 @@ namespace OrcaMDF.Core.Engine.Pages
 
 		private void parseBitmap()
 		{
-			byte[] bitmap = Records[1].FixedLengthData;
-			
-			int index = 0;
+			// During partition rebuilds there may be ghost partitions with empty allocation pages - thus no allocation record
+			//if(Records.Length > 1)
+			//{
+				byte[] bitmap = Records[1].FixedLengthData;
 
-			foreach (byte b in bitmap)
-			{
-				var ba = new BitArray(new[] { b });
+				int index = 0;
 
-				for (int i = 0; i < 8; i++)
-					ExtentMap[index++] = ba[i];
-			}
+				foreach (byte b in bitmap)
+				{
+					var ba = new BitArray(new[] {b});
+
+					for (int i = 0; i < 8; i++)
+						ExtentMap[index++] = ba[i];
+				}
+			//}
 		}
 
 		public IEnumerable<ExtentPointer> GetAllocatedExtents()

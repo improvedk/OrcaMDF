@@ -53,6 +53,7 @@
     <Compile Include="Engine\Pages\IndexRecordPage.cs" />
     <Compile Include="Engine\Pages\NonclusteredIndexPage.cs" />
     <Compile Include="Engine\Pages\PrimaryRecordPage.cs" />
+    <Compile Include="Engine\CompressionContext.cs" />
     <Compile Include="Engine\Records\IndexRecord.cs" />
     <Compile Include="Engine\Records\LobStructures\BaseLobStructure.cs" />
     <Compile Include="Engine\Records\LobStructures\DataLobStructure.cs" />

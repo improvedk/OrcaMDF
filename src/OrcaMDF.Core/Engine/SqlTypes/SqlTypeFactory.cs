@@ -6,7 +6,7 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 {
 	public static class SqlTypeFactory
 	{
-		public static ISqlType Create(DataColumn column, RecordReadState readState)
+		public static ISqlType Create(DataColumn column, RecordReadState readState, CompressionContext compression)
 		{
 			switch(column.Type)
 			{
@@ -26,7 +26,7 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 					return new SqlDateTime();
 
 				case ColumnType.Decimal:
-					return new SqlDecimal(column.Precision, column.Scale);
+					return new SqlDecimal(column.Precision, column.Scale, compression.UsesVardecimals);
 				
 				case ColumnType.Image:
 					return new SqlImage();

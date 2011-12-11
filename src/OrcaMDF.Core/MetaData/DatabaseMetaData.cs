@@ -114,6 +114,37 @@ namespace OrcaMDF.Core.MetaData
 			return new DataRow(columnsList);
 		}
 
+		/// <summary>
+		/// Looks up the partition and determines if it's using vardecimal columns.
+		/// 
+		/// Decimals are special - they may in fact be vardecimals, though type wise there is no distinction in SQL Server.
+		/// Determining whether a given decimal column is vardecimal is done through the built-in OBJECTPROPERTY function,
+		/// however, we do not have access to that. There's a workaround though. Decimals are _always_ fixed length...
+		/// _Except_ when they're vardecimal. If we look in sys.system_internals_partition_columns, all fixed length
+		/// columns have a positive leaf_offset, where as variable length columns have a negative leaf_offset value - 
+		/// including vardecimal. As vardecimals are either all decimal or all vardecimal, we just need to determine
+		/// if _any_ decimal column, for this table, has a negative leaf_offset value.
+		/// </summary>
+		internal bool PartitionHasVardecimalColumns(long partitionID)
+		{
+			// Get the vardecimal type id
+			byte vardecimalTypeID = db.Dmvs.Types
+				.Where(t => t.Name == "decimal")
+				.Select(t => t.SystemTypeID)
+				.Single();
+
+			// Get all partition columns of type decimal with a negative leaf_offset
+			int negativeLeafOffsetDecimalColumns = db.Dmvs.SystemInternalsPartitionColumns
+				.Join(db.Dmvs.SystemInternalsPartitions, pc => pc.PartitionID, p => p.PartitionID, (pc, p) => new { Column = pc, Partition = p })
+				.Where(x => x.Partition.PartitionID == partitionID)
+				.Where(x => x.Column.SystemTypeID == vardecimalTypeID)
+				.Where(x => x.Column.LeafOffset < 0)
+				.Count();
+
+			// If any decimal columns are stored as variable length, we're using vardecimals
+			return negativeLeafOffsetDecimalColumns > 0;
+		}
+
 		public DataRow GetEmptyDataRow(string tableName)
 		{
 			// Get table

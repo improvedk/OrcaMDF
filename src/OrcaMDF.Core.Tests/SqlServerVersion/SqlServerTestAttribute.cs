@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using NUnit.Framework;
 
 namespace OrcaMDF.Core.Tests.SqlServerVersion
@@ -11,7 +12,10 @@ namespace OrcaMDF.Core.Tests.SqlServerVersion
 			get
 			{
 				foreach (var value in Enum.GetValues(typeof(DatabaseVersion)))
-					yield return new TestCaseData(value).SetCategory(value.ToString());
+				{
+					if(ConfigurationManager.ConnectionStrings[value.ToString()] != null)
+						yield return new TestCaseData(value).SetCategory(value.ToString());
+				}
 			}
 		}
 
