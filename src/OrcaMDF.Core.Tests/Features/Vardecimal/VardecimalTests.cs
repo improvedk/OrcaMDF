@@ -29,6 +29,21 @@ namespace OrcaMDF.Core.Tests.Features.Vardecimal
 		}
 
 		[SqlServer2005PlusTest]
+		public void TruncatedZeroes(DatabaseVersion version)
+		{
+			// 4398046511104 = 0b1000000000000000000000000000000000000000000
+			RunDatabaseTest(version, db =>
+			{
+				var scanner = new DataScanner(db);
+				var rows = scanner.ScanTable("TruncatedZeroes").ToList();
+
+				Assert.AreEqual(4398046511104m, rows[0].Field<decimal>("A"));
+				Assert.AreEqual(4398046511104m, rows[0].Field<decimal>("B"));
+				Assert.AreEqual(4398046511104m, rows[0].Field<decimal>("C"));
+			});
+		}
+
+		[SqlServer2005PlusTest]
 		public void EnabledBeforeInserting(DatabaseVersion version)
 		{
 			RunDatabaseTest(version, db =>
@@ -137,6 +152,12 @@ namespace OrcaMDF.Core.Tests.Features.Vardecimal
 				CREATE TABLE Nulls (A decimal(15, 2) NULL)
 				EXEC sp_tableoption 'Nulls', 'vardecimal storage format', 'on'
 				INSERT INTO Nulls VALUES (NULL)
+			", conn);
+
+			RunQuery(@"
+				CREATE TABLE TruncatedZeroes (A decimal(30, 0) NOT NULL, B decimal(30, 5) NOT NULL, C decimal(30, 15) NOT NULL)
+				EXEC sp_tableoption 'TruncatedZeroes', 'vardecimal storage format', 'on'
+				INSERT INTO TruncatedZeroes VALUES (4398046511104, 4398046511104, 4398046511104)
 			", conn);
 		}
 	}

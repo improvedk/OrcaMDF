@@ -77,7 +77,7 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 				
 				// Mantissa is stored in the remaining bytes, in chunks of 10 bits
 				int totalBits = (value.Length - 1) * 8;
-				int mantissaChunks = Math.Max(totalBits / 10, 1);
+				int mantissaChunks = (int)Math.Ceiling(totalBits / 10d);
 				var mantissaBits = new BitArray(value);
 				
 				// Loop each chunk, adding the value to the total mantissa value
