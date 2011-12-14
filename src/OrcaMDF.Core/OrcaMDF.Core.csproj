@@ -54,6 +54,10 @@
     <Compile Include="Engine\Pages\NonclusteredIndexPage.cs" />
     <Compile Include="Engine\Pages\PrimaryRecordPage.cs" />
     <Compile Include="Engine\CompressionContext.cs" />
+    <Compile Include="Engine\Records\Compression\CompressedRecordColumnCDIndicator.cs" />
+    <Compile Include="Engine\Records\Compression\CompressedRecordParser.cs" />
+    <Compile Include="Engine\Records\Compression\CompressedRecordFormat.cs" />
+    <Compile Include="Engine\Records\Compression\CompressedRecordType.cs" />
     <Compile Include="Engine\Records\IndexRecord.cs" />
     <Compile Include="Engine\Records\LobStructures\BaseLobStructure.cs" />
     <Compile Include="Engine\Records\LobStructures\DataLobStructure.cs" />

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\Records\CompressedRecordParserTests.cs" />
     <Compile Include="Features\Compression\RowCompressionTests.cs" />
     <Compile Include="Features\Vardecimal\VardecimalTests.cs" />
     <Compile Include="SqlServerVersion\SqlServer2005PlusTestAttribute.cs" />
