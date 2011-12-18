@@ -28,6 +28,11 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 			}
 		}
 
+		public byte[] NormalizeCompressedValue(byte[] value)
+		{
+			throw new NotImplementedException();
+		}
+
 		public object GetValue(byte[] value)
 		{
 			if(readState.AllBitsConsumed && value.Length != 1)

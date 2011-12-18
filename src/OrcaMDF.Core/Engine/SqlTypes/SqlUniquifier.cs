@@ -14,6 +14,11 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 			get { return null; }
 		}
 
+		public byte[] NormalizeCompressedValue(byte[] value)
+		{
+			throw new NotImplementedException();
+		}
+
 		public object GetValue(byte[] value)
 		{
 			// If uniquifier has a value, convert to int

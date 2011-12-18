@@ -14,6 +14,11 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 			get { return 2; }
 		}
 
+		public byte[] NormalizeCompressedValue(byte[] value)
+		{
+			throw new NotImplementedException();
+		}
+
 		public object GetValue(byte[] value)
 		{
 			if (value.Length != 2)

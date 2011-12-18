@@ -1,3 +1,5 @@
+using System;
+
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
 	public class SqlVarBinary : ISqlType
@@ -10,6 +12,11 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 		public short? FixedLength
 		{
 			get { return null; }
+		}
+
+		public byte[] NormalizeCompressedValue(byte[] value)
+		{
+			throw new NotImplementedException();
 		}
 
 		public object GetValue(byte[] value)

@@ -14,6 +14,11 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 			get { return 16; }
 		}
 
+		public byte[] NormalizeCompressedValue(byte[] value)
+		{
+			throw new NotImplementedException();
+		}
+
 		public object GetValue(byte[] value)
 		{
 			// Uniqueidentifier is always 16 bytes

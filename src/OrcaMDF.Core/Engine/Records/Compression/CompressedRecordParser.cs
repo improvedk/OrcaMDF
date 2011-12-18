@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using OrcaMDF.Core.Framework;
 
 namespace OrcaMDF.Core.Engine.Records.Compression
 {
@@ -7,20 +9,102 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 		internal CompressedRecordFormat RecordFormat { get; private set; }
 		internal bool HasVersioningInformation { get; private set; }
 		internal CompressedRecordType RecordType { get; private set; }
-		internal bool ContainsLongDataRegion { get; private set; }
 		internal short NumberOfColumns { get; private set; }
 
 		private readonly byte[] record;
-		private short recordPointer;
+		private bool containsLongDataRegion;
 		private CompressedRecordColumnCDIndicator[] columnValueIndicators;
+		private short[] shortDataRegionClusterPointers;
 
 		internal CompressedRecordParser(byte[] record)
 		{
 			this.record = record;
 
+			short recordPointer = 1;
+
 			parseHeader();
-			parseCDRegion();
-			parseShortDataRegion();
+			parseCDRegion(ref recordPointer);
+			parseShortDataRegion(ref recordPointer);
+			parseLongDataRegion(ref recordPointer);
+		}
+
+		/// <summary>
+		/// Returns the byte value of a given column index in the record. The value may be compressed, meaning an
+		/// integer value will only use up as many bytes as required to store the value. Normalization may be needed
+		/// before the normal type parsers can read the value.
+		/// </summary>
+		internal byte[] GetPhysicalColumnValue(int index)
+		{
+			// Get column compression indicator
+			var colDescription = columnValueIndicators[index];
+
+			// If it's null, we'll just return it
+			if (colDescription == CompressedRecordColumnCDIndicator.Null)
+				return null;
+
+			// We don't support page compression yet
+			if (colDescription == CompressedRecordColumnCDIndicator.DictionarySymbol)
+				throw new NotSupportedException();
+
+			// If it's a true bit, 
+			if (colDescription == CompressedRecordColumnCDIndicator.TrueBit)
+				return new byte[] { 1 };
+
+			// If it's zero-length
+			if (colDescription == CompressedRecordColumnCDIndicator.ZeroByte)
+				return new byte[0];
+
+			// Is the data long or short?
+			if (colDescription == CompressedRecordColumnCDIndicator.LongData)
+			{
+				throw new NotImplementedException();
+			}
+			else
+			{
+				// Which cluster is the value stored in?
+				int clusterIndex = index / 30;
+				short recordPointer = shortDataRegionClusterPointers[clusterIndex];
+
+				// Traverse columns within the cluster until we reach the desired index
+				for (int i=clusterIndex*30; i<index; i++)
+					recordPointer += getLengthFromColumnIndicator(columnValueIndicators[i]);
+
+				// Get the column value
+				byte[] physicalResult = ArrayHelper.SliceArray(record, recordPointer, getLengthFromColumnIndicator(columnValueIndicators[index]));
+
+				return physicalResult;
+			}
+		}
+
+		/// <summary>
+		/// Returns the value length in bytes of a given column indicator. Only to be used with
+		/// actual byte-length values, all others will fail.
+		/// </summary>
+		private byte getLengthFromColumnIndicator(CompressedRecordColumnCDIndicator indicator)
+		{
+			switch(indicator)
+			{
+				case CompressedRecordColumnCDIndicator.ZeroByte:
+					return 0;
+				case CompressedRecordColumnCDIndicator.OneByte:
+					return 1;
+				case CompressedRecordColumnCDIndicator.TwoByte:
+					return 2;
+				case CompressedRecordColumnCDIndicator.ThreeByte:
+					return 3;
+				case CompressedRecordColumnCDIndicator.FourByte:
+					return 4;
+				case CompressedRecordColumnCDIndicator.FiveByte:
+					return 5;
+				case CompressedRecordColumnCDIndicator.SixByte:
+					return 6;
+				case CompressedRecordColumnCDIndicator.SevenByte:
+					return 7;
+				case CompressedRecordColumnCDIndicator.EightByte:
+					return 8;
+			}
+
+			throw new ArgumentException();
 		}
 
 		private void parseHeader()
@@ -37,15 +121,13 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 			RecordType = (CompressedRecordType)((header << 3) >> 5);
 
 			// Bit 5
-			ContainsLongDataRegion = (header & 0x20) > 0;
+			containsLongDataRegion = (header & 0x20) > 0;
 
 			// Bits 6-7 unused in SQL Server 2008
 		}
 
-		private void parseCDRegion()
+		private void parseCDRegion(ref short recordPointer)
 		{
-			recordPointer = 1;
-
 			// If the high order bit of the first byte is set, numColumns is a two-byte value,
 			// otherwise it's a one-byte value.
 			byte firstByte = record[recordPointer];
@@ -65,14 +147,46 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 
 			// Make sure to increase recordPointer if we end up reading the first 4 bits as the last
 			// column, and thus need to pad up to nearest byte.
-			if(NumberOfColumns % 2 == 0)
+			if(NumberOfColumns % 2 == 1)
 				recordPointer++;
 		}
 
-		private void parseShortDataRegion()
+		private void parseShortDataRegion(ref short recordPointer)
 		{
-			// Going to bed now, brb.
-			throw new NotImplementedException();
+			// Calculate the number of clusters in the record
+			int numClusters = (NumberOfColumns - 1) / 30;
+
+			// If there's less than 30 columns, no clusters lengths are stored
+			if(numClusters == 0)
+			{
+				shortDataRegionClusterPointers = new short[1];
+				shortDataRegionClusterPointers[0] = recordPointer;
+			}
+			else
+			{
+				shortDataRegionClusterPointers = new short[numClusters];
+
+				// Read the length of each cluster
+				short[] clusterLengths = new short[numClusters];
+				for (int i = 0; i < numClusters; i++)
+					clusterLengths[i] = record[recordPointer++];
+
+				// The first cluster always starts right after the cluster length array
+				shortDataRegionClusterPointers[0] = recordPointer;
+
+				// Each consecutive cluster starts after the sum lengt of all previous clusters
+				for (int i = 1; i < numClusters; i++)
+					shortDataRegionClusterPointers[i] = (short)(shortDataRegionClusterPointers[0] + clusterLengths.Take(i).Sum(x => x));
+
+				// Once all the cluster lengths have been read, forward the record pointer to the end of the data
+				recordPointer = (short)(shortDataRegionClusterPointers[numClusters - 1] + clusterLengths[numClusters - 1]);
+			}
+		}
+
+		private void parseLongDataRegion(ref short recordPointer)
+		{
+			if(!containsLongDataRegion)
+				return;
 		}
 	}
 }
