@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.Engine.SqlTypes;
 
 namespace OrcaMDF.Core.Tests.Engine.SqlTypes
@@ -9,7 +10,7 @@ namespace OrcaMDF.Core.Tests.Engine.SqlTypes
 		[Test]
 		public void GetValue()
 		{
-			var type = new SqlVarchar();
+			var type = new SqlVarchar(CompressionContext.NoCompression);
 			byte[] input;
 
 			input = new byte[] { 0x48, 0x65, 0x6C, 0x6C, 0x6F };

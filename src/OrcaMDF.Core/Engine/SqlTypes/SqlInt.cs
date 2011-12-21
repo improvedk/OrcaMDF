@@ -2,24 +2,23 @@ using System;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
-	public class SqlInt : ISqlType
+	public class SqlInt : SqlTypeBase
 	{
-		public bool IsVariableLength
+		public SqlInt(CompressionContext compression)
+			: base(compression)
+		{ }
+
+		public override bool IsVariableLength
 		{
 			get { return false; }
 		}
 
-		public short? FixedLength
+		public override short? FixedLength
 		{
 			get { return 4; }
 		}
 
-		public byte[] NormalizeCompressedValue(byte[] value)
-		{
-			throw new NotImplementedException();
-		}
-
-		public object GetValue(byte[] value)
+		public override object GetValue(byte[] value)
 		{
 			if (value.Length != 4)
 				throw new ArgumentException("Invalid value length: " + value.Length);

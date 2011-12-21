@@ -2,26 +2,25 @@
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
-	public class SqlDateTime : ISqlType
+	public class SqlDateTime : SqlTypeBase
 	{
 		private const double CLOCK_TICK_MS = 10d/3d;
 
-		public bool IsVariableLength
+		public SqlDateTime(CompressionContext compression)
+			: base(compression)
+		{ }
+
+		public override bool IsVariableLength
 		{
 			get { return false; }
 		}
 
-		public short? FixedLength
+		public override short? FixedLength
 		{
 			get { return 8; }
 		}
 
-		public byte[] NormalizeCompressedValue(byte[] value)
-		{
-			throw new NotImplementedException();
-		}
-
-		public object GetValue(byte[] value)
+		public override object GetValue(byte[] value)
 		{
 			if (value.Length != 8)
 				throw new ArgumentException("Invalid value length: " + value.Length);

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.Engine.SqlTypes;
 
 namespace OrcaMDF.Core.Tests.Engine.SqlTypes
@@ -9,7 +10,7 @@ namespace OrcaMDF.Core.Tests.Engine.SqlTypes
 		[Test]
 		public void GetValue()
 		{
-			var type = new SqlVarBinary();
+			var type = new SqlVarBinary(CompressionContext.NoCompression);
 			byte[] input;
 
 			input = new byte[] { 0x25, 0xF8, 0x32 };

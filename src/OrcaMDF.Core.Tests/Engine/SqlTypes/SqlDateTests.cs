@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.Engine.SqlTypes;
 
 namespace OrcaMDF.Core.Tests.Engine.SqlTypes
@@ -10,7 +11,7 @@ namespace OrcaMDF.Core.Tests.Engine.SqlTypes
 		[Test]
 		public void GetValue()
 		{
-			var type = new SqlDate();
+			var type = new SqlDate(CompressionContext.NoCompression);
 
 			var input = new byte[] { 0xf6, 0x4c, 0x0b };
 			Assert.AreEqual(new DateTime(2028, 09, 09), Convert.ToDateTime(type.GetValue(input)));
@@ -22,7 +23,7 @@ namespace OrcaMDF.Core.Tests.Engine.SqlTypes
 		[Test]
 		public void Length()
 		{
-			var type = new SqlDate();
+			var type = new SqlDate(CompressionContext.NoCompression);
 
 			Assert.Throws<ArgumentException>(() => type.GetValue(new byte[2]));
 			Assert.Throws<ArgumentException>(() => type.GetValue(new byte[4]));

@@ -1,5 +1,6 @@
 using System;
 using NUnit.Framework;
+using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.Engine.SqlTypes;
 
 namespace OrcaMDF.Core.Tests.Engine.SqlTypes
@@ -10,7 +11,7 @@ namespace OrcaMDF.Core.Tests.Engine.SqlTypes
 		[Test]
 		public void GetValue()
 		{
-			var type = new SqlDateTime();
+			var type = new SqlDateTime(CompressionContext.NoCompression);
 			byte[] input;
 
 			input = new byte[] { 0x5e, 0x3b, 0x5d, 0x00, 0x25, 0x91, 0x00, 0x00 };
@@ -29,7 +30,7 @@ namespace OrcaMDF.Core.Tests.Engine.SqlTypes
 		[Test]
 		public void Length()
 		{
-			var type = new SqlDateTime();
+			var type = new SqlDateTime(CompressionContext.NoCompression);
 
 			Assert.Throws<ArgumentException>(() => type.GetValue(new byte[9]));
 			Assert.Throws<ArgumentException>(() => type.GetValue(new byte[7]));

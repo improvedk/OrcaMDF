@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.Engine.Records;
 using OrcaMDF.Core.Engine.SqlTypes;
 
@@ -11,7 +12,7 @@ namespace OrcaMDF.Core.Tests.Engine.SqlTypes
 		public void GetValue()
 		{
 			var readState = new RecordReadState();
-			var type = new SqlBit(readState);
+			var type = new SqlBit(readState, CompressionContext.NoCompression);
 
 			// No bytes read - length is one
 			Assert.AreEqual(1, type.FixedLength);

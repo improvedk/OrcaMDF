@@ -75,7 +75,7 @@ namespace OrcaMDF.Core.MetaData
 					.pgfirst
 			);
 
-			syssingleobjrefs = scanner.ScanLinkedDataPages<syssingleobjref>(pageLoc, CompressionContext.None).ToList();
+			syssingleobjrefs = scanner.ScanLinkedDataPages<syssingleobjref>(pageLoc, CompressionContext.NoCompression).ToList();
 		}
 
 		private void parseSysrscols()
@@ -93,7 +93,7 @@ namespace OrcaMDF.Core.MetaData
 					.pgfirst
 			);
 
-			sysrscols = scanner.ScanLinkedDataPages<sysrscol>(pageLoc, CompressionContext.None).ToList();
+			sysrscols = scanner.ScanLinkedDataPages<sysrscol>(pageLoc, CompressionContext.NoCompression).ToList();
 		}
 
 		private void parseSysscalartypes()
@@ -111,7 +111,7 @@ namespace OrcaMDF.Core.MetaData
 					.pgfirst
 			);
 			
-			sysscalartypes = scanner.ScanLinkedDataPages<sysscalartype>(pageLoc, CompressionContext.None).ToList();
+			sysscalartypes = scanner.ScanLinkedDataPages<sysscalartype>(pageLoc, CompressionContext.NoCompression).ToList();
 		}
 
 		private void parseSysobjects()
@@ -129,7 +129,7 @@ namespace OrcaMDF.Core.MetaData
 					.pgfirst
 			);
 
-			sysschobjs = scanner.ScanLinkedDataPages<sysschobj>(pageLoc, CompressionContext.None).ToList();
+			sysschobjs = scanner.ScanLinkedDataPages<sysschobj>(pageLoc, CompressionContext.NoCompression).ToList();
 		}
 
 		private void parseSyscolpars()
@@ -147,7 +147,7 @@ namespace OrcaMDF.Core.MetaData
 					.pgfirst
 			);
 
-			syscolpars = scanner.ScanLinkedDataPages<syscolpar>(pageLoc, CompressionContext.None).ToList();
+			syscolpars = scanner.ScanLinkedDataPages<syscolpar>(pageLoc, CompressionContext.NoCompression).ToList();
 		}
 
 		private void parseSysrowsets()
@@ -160,14 +160,14 @@ namespace OrcaMDF.Core.MetaData
 			        .pgfirst
 			);
 
-			sysrowsets = scanner.ScanLinkedDataPages<sysrowset>(pageLoc, CompressionContext.None).ToList();
+			sysrowsets = scanner.ScanLinkedDataPages<sysrowset>(pageLoc, CompressionContext.NoCompression).ToList();
 		}
 
 		private void parseSysallocunits()
 		{
 			// Though this has a fixed first-page location at (1:16) we'll read it from the boot page to be sure
 			var bootPage = db.GetBootPage();
-			sysallocunits = scanner.ScanLinkedDataPages<sysallocunit>(bootPage.FirstSysIndexes, CompressionContext.None).ToList();
+			sysallocunits = scanner.ScanLinkedDataPages<sysallocunit>(bootPage.FirstSysIndexes, CompressionContext.NoCompression).ToList();
 		}
 	}
 }

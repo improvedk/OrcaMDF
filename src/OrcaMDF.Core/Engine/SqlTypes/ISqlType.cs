@@ -5,6 +5,5 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 		bool IsVariableLength { get; }
 		short? FixedLength { get; }
 		object GetValue(byte[] value);
-		byte[] NormalizeCompressedValue(byte[] value);
 	}
 }

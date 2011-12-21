@@ -3,21 +3,22 @@ using OrcaMDF.Core.Engine.Records;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
-	public class SqlBit : ISqlType
+	public class SqlBit : SqlTypeBase
 	{
 		private readonly RecordReadState readState;
 
-		public SqlBit(RecordReadState readState)
+		public SqlBit(RecordReadState readState, CompressionContext compression)
+			: base(compression)
 		{
 			this.readState = readState;
 		}
 
-		public bool IsVariableLength
+		public override bool IsVariableLength
 		{
 			get { return false; }
 		}
 
-		public short? FixedLength
+		public override short? FixedLength
 		{
 			get
 			{
@@ -28,12 +29,7 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 			}
 		}
 
-		public byte[] NormalizeCompressedValue(byte[] value)
-		{
-			throw new NotImplementedException();
-		}
-
-		public object GetValue(byte[] value)
+		public override object GetValue(byte[] value)
 		{
 			if(readState.AllBitsConsumed && value.Length != 1)
 				throw new ArgumentException("All bits consumed, invalid value length: " + value.Length);

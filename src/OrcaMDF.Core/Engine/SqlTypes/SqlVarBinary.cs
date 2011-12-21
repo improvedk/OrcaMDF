@@ -1,25 +1,22 @@
-using System;
-
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
-	public class SqlVarBinary : ISqlType
+	public class SqlVarBinary : SqlTypeBase
 	{
-		public bool IsVariableLength
+		public SqlVarBinary(CompressionContext compression)
+			: base(compression)
+		{ }
+
+		public override bool IsVariableLength
 		{
 			get { return true; }
 		}
 
-		public short? FixedLength
+		public override short? FixedLength
 		{
 			get { return null; }
 		}
 
-		public byte[] NormalizeCompressedValue(byte[] value)
-		{
-			throw new NotImplementedException();
-		}
-
-		public object GetValue(byte[] value)
+		public override object GetValue(byte[] value)
 		{
 			return value;
 		}

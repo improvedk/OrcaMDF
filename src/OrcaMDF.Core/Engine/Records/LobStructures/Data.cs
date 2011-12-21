@@ -12,12 +12,12 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 	 * 8-9		Type (short)
 	 * 10-X		Data
 	 */
-	public class DataLobStructure : BaseLobStructure, ILobStructure
+	public class Data : LobStructureBase, ILobStructure
 	{
 		public long BlobID { get; private set; }
 		private byte[] data;
 
-		public DataLobStructure(byte[] bytes, Database database)
+		public Data(byte[] bytes, Database database)
 			: base(database)
 		{
 			short type = BitConverter.ToInt16(bytes, 8);

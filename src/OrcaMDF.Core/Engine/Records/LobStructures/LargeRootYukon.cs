@@ -21,7 +21,7 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 	 * 30-31	SlotID[0] (short)
 	 * ...
 	 */
-	public class LargeRootYukonLobStructure : BaseLobStructure, ILobStructure
+	public class LargeRootYukon : LobStructureBase, ILobStructure
 	{
 		public long BlobID { get; private set; }
 		public short MaxLinks { get; private set; }
@@ -29,7 +29,7 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 		public short Level { get; private set; }
 		public LobSlotPointer[] DataSlotPointers { get; private set; }
 
-		public LargeRootYukonLobStructure(byte[] bytes, Database database)
+		public LargeRootYukon(byte[] bytes, Database database)
 			: base(database)
 		{
 			short type = BitConverter.ToInt16(bytes, 8);

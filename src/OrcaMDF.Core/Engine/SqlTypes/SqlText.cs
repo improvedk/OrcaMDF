@@ -3,24 +3,23 @@ using System.Text;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
-	public class SqlText : ISqlType
+	public class SqlText : SqlTypeBase
 	{
-		public bool IsVariableLength
+		public SqlText(CompressionContext compression)
+			: base(compression)
+		{ }
+
+		public override bool IsVariableLength
 		{
 			get { return true; }
 		}
 
-		public short? FixedLength
+		public override short? FixedLength
 		{
 			get { return null; }
 		}
 
-		public byte[] NormalizeCompressedValue(byte[] value)
-		{
-			throw new NotImplementedException();
-		}
-
-		public object GetValue(byte[] value)
+		public override object GetValue(byte[] value)
 		{
 			return Encoding.UTF7.GetString(value);
 		}

@@ -13,13 +13,13 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 	 * 12-15	?
 	 * 16-79	Data (everything above [Length] is to be considered garbage). Max SMALL_ROOT data storage = 64 bytes
 	 */
-	public class SmallRootLobStructure : BaseLobStructure, ILobStructure
+	public class SmallRoot : LobStructureBase, ILobStructure
 	{
 		public long BlobID { get; private set; }
 		public short Length { get; private set; }
 		private byte[] data;
 
-		public SmallRootLobStructure(byte[] bytes, Database database)
+		public SmallRoot(byte[] bytes, Database database)
 			: base(database)
 		{
 			short type = BitConverter.ToInt16(bytes, 8);

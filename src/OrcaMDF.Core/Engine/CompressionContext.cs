@@ -11,7 +11,7 @@
 			UsesVardecimals = usesVardecimals;
 		}
 
-		internal static CompressionContext None
+		internal static CompressionContext NoCompression
 		{
 			get { return new CompressionContext(CompressionLevel.None, false); }
 		}

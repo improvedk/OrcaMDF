@@ -11,67 +11,67 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 			switch(column.Type)
 			{
 				case ColumnType.Binary:
-					return new SqlBinary((short)column.VariableFixedLength);
+					return new SqlBinary((short)column.VariableFixedLength, compression);
 
 				case ColumnType.BigInt:
-					return new SqlBigInt();
+					return new SqlBigInt(compression);
 
 				case ColumnType.Bit:
-					return new SqlBit(readState);
+					return new SqlBit(readState, compression);
 
 				case ColumnType.Char:
-					return new SqlChar((short)column.VariableFixedLength);
+					return new SqlChar((short)column.VariableFixedLength, compression);
 
 				case ColumnType.DateTime:
-					return new SqlDateTime();
+					return new SqlDateTime(compression);
 
 				case ColumnType.Decimal:
-					return new SqlDecimal(column.Precision, column.Scale, compression.UsesVardecimals);
+					return new SqlDecimal(column.Precision, column.Scale, compression);
 				
 				case ColumnType.Image:
-					return new SqlImage();
+					return new SqlImage(compression);
 
 				case ColumnType.Int:
-					return new SqlInt();
+					return new SqlInt(compression);
 
 				case ColumnType.Money:
-					return new SqlMoney();
+					return new SqlMoney(compression);
 
 				case ColumnType.NChar:
-					return new SqlNChar((short)column.VariableFixedLength);
+					return new SqlNChar((short)column.VariableFixedLength, compression);
 
 				case ColumnType.NText:
-					return new SqlNText();
+					return new SqlNText(compression);
 
 				case ColumnType.NVarchar:
-					return new SqlNVarchar();
+					return new SqlNVarchar(compression);
 
 				case ColumnType.RID:
-					return new SqlRID();
+					return new SqlRID(compression);
 
 				case ColumnType.SmallInt:
-					return new SqlSmallInt();
+					return new SqlSmallInt(compression);
 
 				case ColumnType.SmallMoney:
-					return new SqlSmallMoney();
+					return new SqlSmallMoney(compression);
 
 				case ColumnType.Text:
-					return new SqlText();
+					return new SqlText(compression);
 
 				case ColumnType.TinyInt:
-					return new SqlTinyInt();
+					return new SqlTinyInt(compression);
 
 				case ColumnType.UniqueIdentifier:
-					return new SqlUniqueIdentifier();
+					return new SqlUniqueIdentifier(compression);
 
 				case ColumnType.Uniquifier:
-					return new SqlUniquifier();
+					return new SqlUniquifier(compression);
 
 				case ColumnType.VarBinary:
-					return new SqlVarBinary();
+					return new SqlVarBinary(compression);
 
 				case ColumnType.Varchar:
-					return new SqlVarchar();
+					return new SqlVarchar(compression);
 			}
 
 			throw new ArgumentException("Unsupported type: " + column);

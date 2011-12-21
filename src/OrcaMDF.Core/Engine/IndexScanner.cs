@@ -62,7 +62,7 @@ namespace OrcaMDF.Core.Engine
 
 					// Scan the linked list of nonclustered index pages
 					// TODO: Support compressed indexes
-					return ScanLinkedNonclusteredIndexPages(allocUnit.FirstPage, schema, CompressionContext.None);
+					return ScanLinkedNonclusteredIndexPages(allocUnit.FirstPage, schema, CompressionContext.NoCompression);
 
 				default:
 					throw new ArgumentException("Unsupported index type '" + index.Type + "'");

@@ -3,29 +3,24 @@ using System.Collections;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
-	public class SqlDecimal : ISqlType
+	public class SqlDecimal : SqlTypeBase
 	{
 		private readonly byte precision;
 		private readonly byte scale;
-		private readonly bool isVariableLength;
 
-		public SqlDecimal(byte precision, byte scale)
-			: this(precision, scale, false)
-		{ }
-
-		public SqlDecimal(byte precision, byte scale, bool isVariableLength)
+		public SqlDecimal(byte precision, byte scale, CompressionContext compression)
+			: base(compression)
 		{
 			this.precision = precision;
 			this.scale = scale;
-			this.isVariableLength = isVariableLength;
 		}
 
-		public bool IsVariableLength
+		public override bool IsVariableLength
 		{
-			get { return isVariableLength; }
+			get { return CompressionContext.UsesVardecimals; }
 		}
 
-		public short? FixedLength
+		public override short? FixedLength
 		{
 			get { return Convert.ToInt16(1 + getNumberOfRequiredStorageInts() * 4); }
 		}
@@ -44,14 +39,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 			return 4;
 		}
 
-		public byte[] NormalizeCompressedValue(byte[] value)
+		public override object GetValue(byte[] value)
 		{
-			throw new NotImplementedException();
-		}
-
-		public object GetValue(byte[] value)
-		{
-			if(!isVariableLength)
+			if(!CompressionContext.UsesVardecimals)
 			{
 				if (value.Length != FixedLength.Value)
 					throw new ArgumentException("Invalid value length: " + value.Length);

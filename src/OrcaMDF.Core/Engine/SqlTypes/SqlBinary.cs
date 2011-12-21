@@ -1,33 +1,28 @@
 ﻿using System;
-using System.Linq;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
-	public class SqlBinary : ISqlType
+	public class SqlBinary : SqlTypeBase
 	{
-		private short length;
+		private readonly short length;
 
-		public SqlBinary(short length)
+		public SqlBinary(short length, CompressionContext compression)
+			: base(compression)
 		{
 			this.length = length;
 		}
-		
-		public bool IsVariableLength
+
+		public override bool IsVariableLength
 		{
 			get { return false; }
 		}
 
-		public short? FixedLength
+		public override short? FixedLength
 		{
 			get { return length; }
 		}
 
-		public byte[] NormalizeCompressedValue(byte[] value)
-		{
-			throw new NotImplementedException();
-		}
-
-		public object GetValue(byte[] value)
+		public override object GetValue(byte[] value)
 		{
 			if (value.Length != length)
 				throw new ArgumentException("Invalid value length: " + value.Length);

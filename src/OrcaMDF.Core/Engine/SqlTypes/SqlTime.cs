@@ -2,12 +2,13 @@ using System;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
-	public class SqlTime : ISqlType
+	public class SqlTime : SqlTypeBase
 	{
 		private readonly byte scale;
 		private readonly byte length;
 
-		public SqlTime(byte scale)
+		public SqlTime(byte scale, CompressionContext compression)
+			: base(compression)
 		{
 			this.scale = scale;
 
@@ -21,22 +22,17 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 				throw new ArgumentException("Invalid scale: " + scale);
 		}
 
-		public bool IsVariableLength
+		public override bool IsVariableLength
 		{
 			get { return false; }
 		}
 
-		public short? FixedLength
+		public override short? FixedLength
 		{
 			get { return length; }
 		}
 
-		public byte[] NormalizeCompressedValue(byte[] value)
-		{
-			throw new NotImplementedException();
-		}
-
-		public object GetValue(byte[] value)
+		public override object GetValue(byte[] value)
 		{
 			if (value.Length != length)
 				throw new ArgumentException("Invalid value length: " + value.Length);

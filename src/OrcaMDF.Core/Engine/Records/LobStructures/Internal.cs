@@ -18,7 +18,7 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 	 * 30-31	SlotID[0] (short)
 	 * ...
 	*/
-	public class InternalLobStructure : BaseLobStructure, ILobStructure
+	public class Internal : LobStructureBase, ILobStructure
 	{
 		public long BlobID { get; private set; }
 		public short MaxLinks { get; private set; }
@@ -26,7 +26,7 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 		public short Level { get; private set; }
 		public InternalLobSlotPointer[] DataSlotPointers { get; private set; }
 
-		public InternalLobStructure(byte[] bytes, Database database)
+		public Internal(byte[] bytes, Database database)
 			: base(database)
 		{
 			short type = BitConverter.ToInt16(bytes, 8);

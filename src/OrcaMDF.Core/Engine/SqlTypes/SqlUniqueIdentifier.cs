@@ -2,24 +2,23 @@ using System;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
-	public class SqlUniqueIdentifier : ISqlType
+	public class SqlUniqueIdentifier : SqlTypeBase
 	{
-		public bool IsVariableLength
+		public SqlUniqueIdentifier(CompressionContext compression)
+			: base(compression)
+		{ }
+
+		public override bool IsVariableLength
 		{
 			get { return false; }
 		}
 
-		public short? FixedLength
+		public override short? FixedLength
 		{
 			get { return 16; }
 		}
 
-		public byte[] NormalizeCompressedValue(byte[] value)
-		{
-			throw new NotImplementedException();
-		}
-
-		public object GetValue(byte[] value)
+		public override object GetValue(byte[] value)
 		{
 			// Uniqueidentifier is always 16 bytes
 			if (value.Length != 16)

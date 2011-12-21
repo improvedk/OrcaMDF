@@ -19,16 +19,16 @@ namespace OrcaMDF.Core.Engine.Records.LobStructures
 			switch(lobType)
 			{
 				case LobStructureType.SMALL_ROOT:
-					return new SmallRootLobStructure(bytes, database);
+					return new SmallRoot(bytes, database);
 
 				case LobStructureType.LARGE_ROOT_YUKON:
-					return new LargeRootYukonLobStructure(bytes, database);
+					return new LargeRootYukon(bytes, database);
 
 				case LobStructureType.DATA:
-					return new DataLobStructure(bytes, database);
+					return new Data(bytes, database);
 
 				case LobStructureType.INTERNAL:
-					return new InternalLobStructure(bytes, database);
+					return new Internal(bytes, database);
 
 				default:
 					throw new InvalidLobStructureType(type);
