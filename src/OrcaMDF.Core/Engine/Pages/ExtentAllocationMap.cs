@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class ExtentAllocationMap : PrimaryRecordPage
+	internal class ExtentAllocationMap : PrimaryRecordPage
 	{
 		protected bool[] ExtentMap = new bool[63904];
 
 		public ExtentAllocationMap(byte[] bytes, Database database)
-			: base(bytes, database)
+			: base(bytes, CompressionContext.NoCompression, database)
 		{
 			parseBitmap();
 		}

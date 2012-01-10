@@ -3,9 +3,9 @@ using OrcaMDF.Core.Framework;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public abstract class IndexRecordPage : RecordPage
+	internal abstract class IndexRecordPage : RecordPage
 	{
-		public IndexRecord[] Records { get; protected set; }
+		internal IndexRecord[] Records { get; set; }
 
 		protected IndexRecordPage(byte[] bytes, Database database)
 			: base(bytes, database)

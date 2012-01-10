@@ -3,7 +3,7 @@ using System.Text;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class SgamPage : ExtentAllocationMap
+	internal class SgamPage : ExtentAllocationMap
 	{
 		public SgamPage(byte[] bytes, Database database)
 			: base(bytes, database)

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class BootPage : PrimaryRecordPage
+	internal class BootPage : PrimaryRecordPage
 	{
 		public string DatabaseName { get; private set; }
 		public PagePointer FirstSysIndexes { get; private set; }
@@ -15,7 +15,7 @@ namespace OrcaMDF.Core.Engine.Pages
 		public short DBID { get; private set; }
 
 		public BootPage(byte[] bytes, Database database)
-			: base(bytes, database)
+			: base(bytes, CompressionContext.NoCompression, database)
 		{
 			parseBootRecord();
 		}

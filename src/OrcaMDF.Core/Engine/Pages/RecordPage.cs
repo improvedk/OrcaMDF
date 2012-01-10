@@ -2,11 +2,11 @@ using System;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public abstract class RecordPage : Page
+	internal class RecordPage : Page
 	{
 		public short[] SlotArray { get; private set; }
 
-		protected RecordPage(byte[] bytes, Database database)
+		internal RecordPage(byte[] bytes, Database database)
 			: base(bytes, database)
 		{
 			parseSlotArray();

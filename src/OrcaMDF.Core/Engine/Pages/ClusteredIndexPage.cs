@@ -1,12 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
-using OrcaMDF.Core.Engine.Records;
-using OrcaMDF.Core.Engine.SqlTypes;
-using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class ClusteredIndexPage : IndexRecordPage
+	internal class ClusteredIndexPage : IndexRecordPage
 	{
 		public ClusteredIndexPage(byte[] bytes, Database database)
 			: base(bytes, database)

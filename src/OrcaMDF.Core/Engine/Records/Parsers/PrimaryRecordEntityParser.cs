@@ -1,20 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using OrcaMDF.Core.Engine.Records;
+using OrcaMDF.Core.Engine.Pages;
 using OrcaMDF.Core.Engine.SqlTypes;
 using OrcaMDF.Core.MetaData;
 
-namespace OrcaMDF.Core.Engine.Pages
+namespace OrcaMDF.Core.Engine.Records.Parsers
 {
-	public class DataPage : PrimaryRecordPage
+	internal class PrimaryRecordEntityParser : RecordEntityParser
 	{
-		public DataPage(byte[] bytes, Database database)
-			: base(bytes, database)
-		{ }
+		private readonly PrimaryRecordPage page;
 
-		public IEnumerable<Row> GetEntities(Row schema, CompressionContext compression)
+		internal PrimaryRecordEntityParser(PrimaryRecordPage page)
 		{
-			foreach (var record in Records)
+			this.page = page;
+		}
+
+		internal override IEnumerable<Row> GetEntities(Row schema)
+		{
+			foreach (var record in page.Records)
 			{
 				// Don't process forwarded blob fragments as they should only be processed from the referenced record
 				if (record.Type == RecordType.BlobFragment)
@@ -28,7 +31,7 @@ namespace OrcaMDF.Core.Engine.Pages
 
 				foreach (DataColumn col in dataRow.Columns)
 				{
-					var sqlType = SqlTypeFactory.Create(col, readState, compression);
+					var sqlType = SqlTypeFactory.Create(col, readState, CompressionContext.NoCompression);
 					object columnValue = null;
 
 					// Sparse columns needs to retrieve their values from the sparse vector, contained in the very last

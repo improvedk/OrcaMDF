@@ -4,13 +4,13 @@ using System.Text;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class FileHeaderPage : PrimaryRecordPage
+	internal class FileHeaderPage : PrimaryRecordPage
 	{
 		public Guid BindingID { get; private set; }
 		public short FileID { get; private set; }
 
 		public FileHeaderPage(byte[] bytes, Database database)
-			: base(bytes, database)
+			: base(bytes, CompressionContext.NoCompression, database)
 		{
 			parseFileHeaderRecord();
 		}

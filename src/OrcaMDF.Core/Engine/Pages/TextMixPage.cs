@@ -1,10 +1,9 @@
-using System.Linq;
 using OrcaMDF.Core.Engine.Records;
 using OrcaMDF.Core.Framework;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class TextMixPage : RecordPage
+	internal class TextMixPage : RecordPage
 	{
 		public TextRecord[] Records { get; protected set; }
 

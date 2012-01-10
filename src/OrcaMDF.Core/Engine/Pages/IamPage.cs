@@ -4,7 +4,7 @@ using System.Text;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class IamPage : ExtentAllocationMap
+	internal class IamPage : ExtentAllocationMap
 	{
 		public short Status { get; private set; }
 		public byte PageCount { get; private set; }

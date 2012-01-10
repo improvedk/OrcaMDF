@@ -4,7 +4,7 @@ using OrcaMDF.Core.Framework;
 
 namespace OrcaMDF.Core.Engine.Records.Compression
 {
-	internal class CompressedRecordParser
+	internal class CompressedRecord
 	{
 		internal CompressedRecordFormat RecordFormat { get; private set; }
 		internal bool HasVersioningInformation { get; private set; }
@@ -16,7 +16,7 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 		private CompressedRecordColumnCDIndicator[] columnValueIndicators;
 		private short[] shortDataRegionClusterPointers;
 
-		internal CompressedRecordParser(byte[] record)
+		internal CompressedRecord(byte[] record)
 		{
 			this.record = record;
 
@@ -33,7 +33,7 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 		/// integer value will only use up as many bytes as required to store the value. Normalization may be needed
 		/// before the normal type parsers can read the value.
 		/// </summary>
-		internal byte[] GetPhysicalColumnValue(int index)
+		internal byte[] GetPhysicalColumnBytes(int index)
 		{
 			// Get column compression indicator
 			var colDescription = columnValueIndicators[index];

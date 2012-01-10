@@ -48,9 +48,9 @@ namespace OrcaMDF.Core.Engine
 		{
 			while (loc != PagePointer.Zero)
 			{
-				var page = Database.GetDataPage(loc);
+				var page = Database.GetDataPage(loc, compression);
 
-				foreach (var dr in page.GetEntities(schema, compression))
+				foreach (var dr in page.GetEntities(schema))
 					yield return dr;
 
 				loc = page.Header.NextPage;
@@ -150,9 +150,9 @@ namespace OrcaMDF.Core.Engine
 				// Loop each header slot and yield the results, provided the header slot is allocated
 				foreach (var slot in iamPageSlots.Where(x => x != PagePointer.Zero))
 				{
-					var dataPage = Database.GetDataPage(slot);
+					var dataPage = Database.GetDataPage(slot, compression);
 
-					foreach (var dr in dataPage.GetEntities(schema, compression))
+					foreach (var dr in dataPage.GetEntities(schema))
 						yield return dr;
 				}
 
@@ -170,9 +170,9 @@ namespace OrcaMDF.Core.Engine
 						if(!pfsDescription.IsAllocated)
 							continue;
 
-						var dataPage = Database.GetDataPage(pageLoc);
+						var dataPage = Database.GetDataPage(pageLoc, compression);
 
-						foreach (var dr in dataPage.GetEntities(schema, compression))
+						foreach (var dr in dataPage.GetEntities(schema))
 							yield return dr;
 					}
 				}

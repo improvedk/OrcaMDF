@@ -3,13 +3,17 @@ using OrcaMDF.Core.Framework;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class PrimaryRecordPage : RecordPage
+	internal class PrimaryRecordPage : RecordPage
 	{
-		public PrimaryRecord[] Records { get; protected set; }
+		internal PrimaryRecord[] Records { get; set; }
 
-		public PrimaryRecordPage(byte[] bytes, Database database)
+		protected CompressionContext CompressionContext;
+
+		internal PrimaryRecordPage(byte[] bytes, CompressionContext compression, Database database)
 			: base(bytes, database)
 		{
+			CompressionContext = compression;
+
 			parseRecords();
 		}
 

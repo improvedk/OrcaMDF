@@ -6,13 +6,13 @@ using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Core.Engine.Pages
 {
-	public class NonclusteredIndexPage : IndexRecordPage
+	internal class NonclusteredIndexPage : IndexRecordPage
 	{
-		public NonclusteredIndexPage(byte[] bytes, Database database)
+		internal NonclusteredIndexPage(byte[] bytes, Database database)
 			: base(bytes, database)
 		{ }
 
-		public IEnumerable<Row> GetEntities(Row schema, CompressionContext compression)
+		internal IEnumerable<Row> GetEntities(Row schema, CompressionContext compression)
 		{
 			for (int i = 0; i < Records.Length; i++)
 			{
