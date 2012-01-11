@@ -85,11 +85,11 @@ namespace OrcaMDF.Core.Engine
 		}
 
 		[DebuggerStepThrough]
-		internal RecordPage GetRecordPage(PagePointer loc)
+		internal PrimaryRecordPage GetPrimaryRecordPage(PagePointer loc, CompressionContext compression)
 		{
-			Debug.WriteLine("Loading Record Page " + loc);
+			Debug.WriteLine("Loading Primary Record Page " + loc);
 
-			return new RecordPage(bufferManager.GetPageBytes(loc.FileID, loc.PageID), this);
+			return new PrimaryRecordPage(bufferManager.GetPageBytes(loc.FileID, loc.PageID), compression, this);
 		}
 
 		[DebuggerStepThrough]
