@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OrcaMDF.Core.Engine.Pages.PFS;
+using OrcaMDF.Core.Engine.Records.Parsers;
 using OrcaMDF.Core.MetaData;
 using OrcaMDF.Core.MetaData.Enumerations;
 
@@ -48,12 +49,12 @@ namespace OrcaMDF.Core.Engine
 		{
 			while (loc != PagePointer.Zero)
 			{
-				var page = Database.GetDataPage(loc, compression);
-
-				foreach (var dr in page.GetEntities(schema))
+				var recordParser = RecordEntityParser.CreateEntityParserForPage(loc, compression, Database);
+				
+				foreach (var dr in recordParser.GetEntities(schema))
 					yield return dr;
 
-				loc = page.Header.NextPage;
+				loc = recordParser.NextPage;
 			}
 		}
 
@@ -64,6 +65,7 @@ namespace OrcaMDF.Core.Engine
 				.Where(x => x.name == tableName)
 				.Where(x => x.type.Trim() == ObjectType.INTERNAL_TABLE || x.type.Trim() == ObjectType.SYSTEM_TABLE || x.type.Trim() == ObjectType.USER_TABLE)
 				.SingleOrDefault();
+
 			if (tableObject == null)
 				throw new ArgumentException("Table does not exist.");
 
@@ -150,9 +152,9 @@ namespace OrcaMDF.Core.Engine
 				// Loop each header slot and yield the results, provided the header slot is allocated
 				foreach (var slot in iamPageSlots.Where(x => x != PagePointer.Zero))
 				{
-					var dataPage = Database.GetDataPage(slot, compression);
+					var recordParser = RecordEntityParser.CreateEntityParserForPage(slot, compression, Database);
 
-					foreach (var dr in dataPage.GetEntities(schema))
+					foreach (var dr in recordParser.GetEntities(schema))
 						yield return dr;
 				}
 
@@ -170,9 +172,9 @@ namespace OrcaMDF.Core.Engine
 						if(!pfsDescription.IsAllocated)
 							continue;
 
-						var dataPage = Database.GetDataPage(pageLoc, compression);
+						var recordParser = RecordEntityParser.CreateEntityParserForPage(pageLoc, compression, Database);
 
-						foreach (var dr in dataPage.GetEntities(schema))
+						foreach (var dr in recordParser.GetEntities(schema))
 							yield return dr;
 					}
 				}

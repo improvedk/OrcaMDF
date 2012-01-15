@@ -93,6 +93,17 @@ namespace OrcaMDF.Core.Engine
 		}
 
 		[DebuggerStepThrough]
+		internal CompressedRecordPage GetCompressedRecordPage(PagePointer loc, CompressionContext compression)
+		{
+			if (compression.CompressionLevel == CompressionLevel.None)
+				throw new ArgumentException("Can't load compressed page with a compression level of none.");
+
+			Debug.WriteLine("Loading compressed record page " + loc);
+
+			return new CompressedRecordPage(bufferManager.GetPageBytes(loc.FileID, loc.PageID), compression, this);
+		}
+
+		[DebuggerStepThrough]
 		internal Page GetPage(PagePointer loc)
 		{
 			Debug.WriteLine("Loading Generic Page " + loc);

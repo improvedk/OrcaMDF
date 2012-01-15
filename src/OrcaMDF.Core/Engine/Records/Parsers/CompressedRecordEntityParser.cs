@@ -18,5 +18,10 @@ namespace OrcaMDF.Core.Engine.Records.Parsers
 		{
 			throw new NotImplementedException();
 		}
+
+		internal override PagePointer NextPage
+		{
+			get { return page.Header.NextPage; }
+		}
 	}
 }

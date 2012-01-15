@@ -98,5 +98,10 @@ namespace OrcaMDF.Core.Engine.Records.Parsers
 				yield return dataRow;
 			}
 		}
+
+		internal override PagePointer NextPage
+		{
+			get { return page.Header.NextPage; }
+		}
 	}
 }
