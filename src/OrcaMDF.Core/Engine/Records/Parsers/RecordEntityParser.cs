@@ -20,7 +20,7 @@ namespace OrcaMDF.Core.Engine.Records.Parsers
 					return new CompressedRecordEntityParser(database.GetCompressedRecordPage(loc, compression));
 
 				case CompressionLevel.None:
-					return new PrimaryRecordEntityParser(database.GetPrimaryRecordPage(loc, compression));
+					return new PrimaryRecordEntityParser(database.GetPrimaryRecordPage(loc, compression), compression);
 
 				default:
 					throw new ArgumentException("Unsupported compression level: " + compression.CompressionLevel);

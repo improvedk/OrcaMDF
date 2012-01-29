@@ -56,7 +56,7 @@ namespace OrcaMDF.Core.Tests.Features.LobTypes
 			});
 		}
 
-		[Test]
+		[SqlServerTest]
 		public void Text8040(DatabaseVersion version)
 		{
 			RunDatabaseTest(version, db =>

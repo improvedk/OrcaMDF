@@ -56,18 +56,6 @@ namespace OrcaMDF.Core.Tests.Features.Vardecimal
 		}
 
 		[SqlServer2005PlusTest]
-		public void EnabledAfterInserting(DatabaseVersion version)
-		{
-			RunDatabaseTest(version, db =>
-			{
-				var scanner = new DataScanner(db);
-				var rows = scanner.ScanTable("EnabledAfterInserting").ToList();
-
-				Assert.AreEqual(1234.45m, rows[0].Field<decimal>("A"));
-			});
-		}
-
-		[SqlServer2005PlusTest]
 		public void EnabledBeforeInsertingThenDisabled(DatabaseVersion version)
 		{
 			RunDatabaseTest(version, db =>
@@ -100,6 +88,18 @@ namespace OrcaMDF.Core.Tests.Features.Vardecimal
 				var rows = scanner.ScanTable("Nulls").ToList();
 
 				Assert.AreEqual(null, rows[0].Field<decimal?>("A"));
+			});
+		}
+
+		[SqlServer2005PlusTest]
+		public void EnabledAfterInserting(DatabaseVersion version)
+		{
+			RunDatabaseTest(version, db =>
+			{
+				var scanner = new DataScanner(db);
+				var rows = scanner.ScanTable("EnabledAfterInserting").ToList();
+
+				Assert.AreEqual(1234.45m, rows[0].Field<decimal>("A"));
 			});
 		}
 

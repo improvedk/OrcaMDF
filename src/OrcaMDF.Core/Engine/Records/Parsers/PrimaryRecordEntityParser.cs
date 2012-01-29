@@ -9,10 +9,12 @@ namespace OrcaMDF.Core.Engine.Records.Parsers
 	internal class PrimaryRecordEntityParser : RecordEntityParser
 	{
 		private readonly PrimaryRecordPage page;
+		private readonly CompressionContext compression;
 
-		internal PrimaryRecordEntityParser(PrimaryRecordPage page)
+		internal PrimaryRecordEntityParser(PrimaryRecordPage page, CompressionContext compression)
 		{
 			this.page = page;
+			this.compression = compression;
 		}
 
 		internal override IEnumerable<Row> GetEntities(Row schema)
@@ -31,7 +33,7 @@ namespace OrcaMDF.Core.Engine.Records.Parsers
 
 				foreach (DataColumn col in dataRow.Columns)
 				{
-					var sqlType = SqlTypeFactory.Create(col, readState, CompressionContext.NoCompression);
+					var sqlType = SqlTypeFactory.Create(col, readState, compression);
 					object columnValue = null;
 
 					// Sparse columns needs to retrieve their values from the sparse vector, contained in the very last
