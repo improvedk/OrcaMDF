@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using OrcaMDF.Core.Engine.Pages;
+using OrcaMDF.Core.Engine.SqlTypes;
 using OrcaMDF.Core.MetaData;
 
 namespace OrcaMDF.Core.Engine.Records.Parsers
@@ -16,7 +16,28 @@ namespace OrcaMDF.Core.Engine.Records.Parsers
 
 		internal override IEnumerable<Row> GetEntities(Row schema)
 		{
-			throw new NotImplementedException();
+			foreach (var record in page.Records)
+			{
+				var dataRow = schema.NewRow();
+				var readState = new RecordReadState();
+
+				int columnIndex = 0;
+				foreach (DataColumn col in dataRow.Columns)
+				{
+					var sqlType = SqlTypeFactory.Create(col, readState, new CompressionContext(CompressionLevel.Row, true));
+
+					byte[] recordBytes = record.GetPhysicalColumnBytes(columnIndex);
+
+					if (recordBytes == null)
+						dataRow[col] = null;
+					else
+						dataRow[col] = sqlType.GetValue(recordBytes);
+
+					columnIndex++;
+				}
+
+				yield return dataRow;
+			}
 		}
 
 		internal override PagePointer NextPage

@@ -55,7 +55,7 @@ namespace OrcaMDF.Core.MetaData
 			// Exceptions are... The exception.
 			try
 			{
-				return (T)data[name];
+				return (T)Convert.ChangeType(data[name], t);
 			}
 			catch (KeyNotFoundException)
 			{

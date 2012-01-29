@@ -56,6 +56,11 @@ namespace OrcaMDF.Core.Tests.Engine.Records.CompressedRecordParserTests
 			parser = new CompressedRecord(TestHelper.GetBytesFromByteString("0101127f 00000000 00"));
 			Assert.AreEqual(1, parser.NumberOfColumns);
 			Assert.AreEqual(1, parser.GetPhysicalColumnBytes(0).Length);
+
+			// -130
+			parser = new CompressedRecord(TestHelper.GetBytesFromByteString("0101137f 7e000000 00"));
+			Assert.AreEqual(1, parser.NumberOfColumns);
+			Assert.AreEqual(2, parser.GetPhysicalColumnBytes(0).Length);
 			
 			// 127
 			parser = new CompressedRecord(TestHelper.GetBytesFromByteString("010112ff 00000000 00"));

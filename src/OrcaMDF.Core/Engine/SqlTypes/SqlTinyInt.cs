@@ -20,10 +20,21 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 		public override object GetValue(byte[] value)
 		{
-			if (value.Length != 1)
+			if (value.Length > 1)
 				throw new ArgumentException("Invalid value length: " + value.Length);
 
-			return value[0];
+			// If value is compressed, a 0-byte value actually indicates a 0-value
+			if (CompressionContext.CompressionLevel != CompressionLevel.None)
+			{
+				if (value.Length == 0)
+					return 0;
+				else
+					return value[0];
+			}
+			else
+			{
+				return value[0];	
+			}
 		}
 	}
 }
