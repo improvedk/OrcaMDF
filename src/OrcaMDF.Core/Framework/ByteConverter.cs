@@ -37,41 +37,33 @@ namespace OrcaMDF.Core.Framework
 			// Check there's either enough input bytes, or we're allowed to pad
 			if (input.Length - index < 2 && !autoPad)
 				throw new ArgumentException("Not enough bytes.");
-			
-			if (endian == Endian.Little)
-			{
-				switch (input.Length - index)
-				{
-					case 1:
-						if (offset == Offset.Zero)
-							return input[index];
-						else
-							return (short)(-128 + input[index]);
 
-					default:
+			switch (input.Length - index)
+			{
+				case 1:
+					if (offset == Offset.Zero)
+						return input[index];
+					else
+						return (short)(-128 + input[index]);
+
+				default:
+					if (endian == Endian.Little)
+					{
 						fixed (byte* ptr = &input[index])
+						{
 							if (offset == Offset.Zero)
 								return *(short*)ptr;
-							else
-								return (short)(-32768 + *(short*)ptr);
-				}
-			}
-			else
-			{
-				switch (input.Length - index)
-				{
-					case 1:
-						if (offset == Offset.Zero)
-							return input[index];
-						else
-							return (short)(-128 + input[index]);
-
-					default:
+							
+							return (short)(-32768 + *(short*)ptr);
+						}
+					}
+					else
+					{
 						if (offset == Offset.Zero)
 							return (short)(input[index] << 8);
-						else
-							return (short)(-32768 + (short)(input[index] << 8 | input[index + 1]));
-				}
+						
+						return (short)(-32768 + (short)(input[index] << 8 | input[index + 1]));
+					}
 			}
 		}
 	}
