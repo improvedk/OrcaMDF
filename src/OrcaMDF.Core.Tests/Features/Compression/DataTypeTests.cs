@@ -21,7 +21,7 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 				Assert.AreEqual(TestHelper.GetBytesFromByteString("01020304050607080910"), rows[2].Field<byte[]>("A"));
 			});
 		}
-
+		
 		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			RunQuery(@"

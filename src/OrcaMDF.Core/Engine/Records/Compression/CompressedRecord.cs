@@ -15,6 +15,8 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 		private bool containsLongDataRegion;
 		private CompressedRecordColumnCDIndicator[] columnValueIndicators;
 		private short[] shortDataRegionClusterPointers;
+		private short[] longDataColumnPointers;
+		private short[] longDataColumnLengths;
 
 		internal CompressedRecord(byte[] record)
 		{
@@ -57,7 +59,14 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 			// Is the data long or short?
 			if (colDescription == CompressedRecordColumnCDIndicator.LongData)
 			{
-				
+				// What's the long-data column index?
+				int longIndex = 0;
+				for (int i=0; i<index; i++)
+					if (columnValueIndicators[i] == CompressedRecordColumnCDIndicator.LongData)
+						longIndex++;
+
+				// Return bytes
+				return ArrayHelper.SliceArray(record, longDataColumnPointers[longIndex], longDataColumnLengths[longIndex]);
 			}
 			else
 			{
@@ -67,10 +76,11 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 
 				// Traverse columns within the cluster until we reach the desired index
 				for (int i=clusterIndex*30; i<index; i++)
-					recordPointer += getLengthFromColumnIndicator(columnValueIndicators[i]);
+					if (columnValueIndicators[i] != CompressedRecordColumnCDIndicator.LongData)
+						recordPointer += getLengthFromColumnIndicator(columnValueIndicators[i]);
 
 				// Get the column value
-				byte[] physicalResult = ArrayHelper.SliceArray(record, recordPointer, getLengthFromColumnIndicator(columnValueIndicators[index]));
+				byte[] physicalResult = ArrayHelper.SliceArray(record, recordPointer, getLengthFromColumnIndicator(colDescription));
 
 				return physicalResult;
 			}
@@ -143,7 +153,7 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 			// the first 4 bits, then the last 4 bits.
 			columnValueIndicators = new CompressedRecordColumnCDIndicator[NumberOfColumns];
 			for(int i=0; i<NumberOfColumns; i++)
-				columnValueIndicators[i] = (CompressedRecordColumnCDIndicator)(i % 2 == 0 ? record[recordPointer] & 0xF : record[recordPointer++] & 0xF0);
+				columnValueIndicators[i] = (CompressedRecordColumnCDIndicator)(i % 2 == 0 ? record[recordPointer] & 0xF : ((record[recordPointer++] & 0xF0) >> 4));
 
 			// Make sure to increase recordPointer if we end up reading the first 4 bits as the last
 			// column, and thus need to pad up to nearest byte.
@@ -156,11 +166,16 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 			// Calculate the number of clusters in the record
 			int numClusters = (NumberOfColumns - 1) / 30;
 
-			// If there's less than 30 columns, no clusters lengths are stored
+			// If there's less than 30 columns, no cluster lengths are stored
 			if(numClusters == 0)
 			{
 				shortDataRegionClusterPointers = new short[1];
 				shortDataRegionClusterPointers[0] = recordPointer;
+
+				// Loop all short data fields to advance the record pointer to the end of the fixed length data
+				foreach (var col in columnValueIndicators)
+					if (col >= CompressedRecordColumnCDIndicator.OneByte && col <= CompressedRecordColumnCDIndicator.EightByte)
+						recordPointer += getLengthFromColumnIndicator(col);
 			}
 			else
 			{
@@ -174,7 +189,7 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 				// The first cluster always starts right after the cluster length array
 				shortDataRegionClusterPointers[0] = recordPointer;
 
-				// Each consecutive cluster starts after the sum lengt of all previous clusters
+				// Each consecutive cluster starts after the sum length of all previous clusters
 				for (int i = 1; i < numClusters; i++)
 					shortDataRegionClusterPointers[i] = (short)(shortDataRegionClusterPointers[0] + clusterLengths.Take(i).Sum(x => x));
 
@@ -187,6 +202,41 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 		{
 			if(!containsLongDataRegion)
 				return;
+
+			// Read header
+			bool containsTwoByteOffsets = Convert.ToBoolean(record[recordPointer] & 0x1);
+			bool containsComplexColumns = Convert.ToBoolean(record[recordPointer] & 0x2);
+			recordPointer++;
+
+			// Read number of entries
+			short numEntries = BitConverter.ToInt16(record, recordPointer);
+			longDataColumnPointers = new short[numEntries];
+			longDataColumnLengths = new short[numEntries];
+			recordPointer += 2;
+
+			// Read offset entries
+			short[] offsetEntries = new short[numEntries];
+			for (int i=0; i<numEntries; i++)
+			{
+				offsetEntries[i] = BitConverter.ToInt16(record, recordPointer);
+				recordPointer += 2;
+			}
+
+			// Read cluster counts
+			int numClusters = (NumberOfColumns - 1) / 30;
+			byte[] clusterCount = new byte[numClusters];
+
+			// We don't care about the clusters for now, so we'll just forward the pointer right past them
+			recordPointer += (short)numClusters;
+
+			// For each long data column, calculate its starting index and length
+			for (int i=0; i<numEntries; i++)
+			{
+				longDataColumnPointers[i] = recordPointer;
+				longDataColumnLengths[i] = (short)(offsetEntries[i] - (i > 0 ? offsetEntries[i - 1] : 0));
+
+				recordPointer += longDataColumnLengths[i];
+			}
 		}
 	}
 }
