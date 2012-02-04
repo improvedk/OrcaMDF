@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Engine\Records\CompressedRecordParserTests\DateCompressionTests.cs" />
     <Compile Include="Engine\Records\CompressedRecordParserTests\IntegerCompressionTests.cs" />
+    <Compile Include="Features\Compression\DataTypeTests.cs" />
     <Compile Include="Features\Compression\DateTests.cs" />
     <Compile Include="Features\Compression\IntegerTests.cs" />
     <Compile Include="Features\Vardecimal\VardecimalTests.cs" />
