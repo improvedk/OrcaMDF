@@ -92,6 +92,23 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 				Assert.AreEqual(TestHelper.GetBytesFromByteString("01020304050607080910"), rows[2].Field<byte[]>("A"));
 			});
 		}
+
+		[SqlServer2008PlusTest]
+		public void MoneyTests(DatabaseVersion version)
+		{
+			RunDatabaseTest(version, db =>
+			{
+				var scanner = new DataScanner(db);
+				var rows = scanner.ScanTable("MoneyTests").ToList();
+
+				Assert.AreEqual(123.4568m, rows[0].Field<decimal>("A"));
+				Assert.AreEqual(-123.4568m, rows[1].Field<decimal>("A"));
+				Assert.AreEqual(123456789.0123m, rows[2].Field<decimal>("A"));
+				Assert.AreEqual(-123456789.0123m, rows[3].Field<decimal>("A"));
+				Assert.AreEqual(-922337203685477.5808m, rows[4].Field<decimal>("A"));
+				Assert.AreEqual(922337203685477.5807m, rows[5].Field<decimal>("A"));
+			});
+		}
 		
 		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
@@ -103,6 +120,17 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 					(NULL),
 					(0x25FF25),
 					(0x01020304050607080910)
+
+				CREATE TABLE MoneyTests (A money) WITH (DATA_COMPRESSION = ROW)
+				INSERT INTO
+					MoneyTests
+				VALUES
+					(123.456789),
+					(-123.456789),
+					(123456789.0123),
+					(-123456789.0123),
+					(-922337203685477.5808),
+					(922337203685477.5807)
 
 				CREATE TABLE BitTests (A bit) WITH (DATA_COMPRESSION = ROW)
 				INSERT INTO
