@@ -49,6 +49,7 @@
     <Compile Include="Features\Compression\DateTests.cs" />
     <Compile Include="Features\Compression\IntegerTests.cs" />
     <Compile Include="Features\Vardecimal\VardecimalTests.cs" />
+    <Compile Include="Framework\SqlBitConverterTests.cs" />
     <Compile Include="SqlServerVersion\SqlServer2005PlusTestAttribute.cs" />
     <Compile Include="SqlServerVersion\SqlServer2008PlusTestAttribute.cs" />
     <Compile Include="SqlServerVersion\SqlServerTestAttribute.cs" />

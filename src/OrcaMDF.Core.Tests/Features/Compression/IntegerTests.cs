@@ -43,6 +43,7 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 				Assert.AreEqual(32767, rows[7].Field<short?>("A"));
 				Assert.AreEqual(null, rows[8].Field<short?>("A"));
 				Assert.AreEqual(0, rows[9].Field<short?>("A"));
+				Assert.AreEqual(127, rows[10].Field<int?>("A"));
 			});
 		}
 
@@ -137,7 +138,8 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 					(-32768),
 					(32767),
 					(NULL),
-					(0)
+					(0),
+					(127)
 					
 				CREATE TABLE IntTests (A int) WITH (DATA_COMPRESSION = ROW)
 				INSERT INTO

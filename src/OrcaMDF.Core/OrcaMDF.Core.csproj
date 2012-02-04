@@ -102,6 +102,9 @@
     <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
     <Compile Include="Framework\ArrayHelper.cs" />
     <Compile Include="Framework\ByteConverter.cs" />
+    <Compile Include="Framework\Endian.cs" />
+    <Compile Include="Framework\Offset.cs" />
+    <Compile Include="Framework\SqlBitConverter.cs" />
     <Compile Include="MetaData\BaseTableData.cs" />
     <Compile Include="MetaData\BaseTables\sysiscol.cs" />
     <Compile Include="MetaData\BaseTables\syspalname.cs" />

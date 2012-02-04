@@ -7,18 +7,6 @@ namespace OrcaMDF.Core.Framework
 	/// </summary>
 	public static class ByteConverter
 	{
-		public enum Endian
-		{
-			Big,
-			Little
-		}
-
-		public enum Offset
-		{
-			MinValue,
-			Zero
-		}
-
 		public static short ToInt16(byte[] input)
 		{
 			return ToInt16(input, 0);
