@@ -25,10 +25,20 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 		public override object GetValue(byte[] value)
 		{
-			if (value.Length != length)
-				throw new ArgumentException("Invalid value length: " + value.Length);
+			if (CompressionContext.CompressionLevel != CompressionLevel.None)
+			{
+				if (value.Length > length)
+					throw new ArgumentException("Invalid value length: " + value.Length);
 
-			return Encoding.UTF7.GetString(value);
+				return Encoding.UTF7.GetString(value);
+			}
+			else
+			{
+				if (value.Length != length)
+					throw new ArgumentException("Invalid value length: " + value.Length);
+
+				return Encoding.UTF7.GetString(value);
+			}
 		}
 	}
 }

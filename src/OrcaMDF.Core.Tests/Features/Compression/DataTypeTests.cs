@@ -41,6 +41,23 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 				Assert.AreEqual(true, rows[8].Field<bool?>("A"));
 			});
 		}
+
+		[SqlServer2008PlusTest]
+		public void CharTests(DatabaseVersion version)
+		{
+			RunDatabaseTest(version, db =>
+			{
+				var scanner = new DataScanner(db);
+				var rows = scanner.ScanTable("CharTests").ToList();
+
+				Assert.AreEqual(null, rows[0].Field<string>("A"));
+				Assert.AreEqual("a", rows[1].Field<string>("A"));
+				Assert.AreEqual("1234567890", rows[2].Field<string>("A"));
+				Assert.AreEqual("123", rows[3].Field<string>("A"));
+				Assert.AreEqual("", rows[4].Field<string>("A"));
+				Assert.AreEqual("", rows[5].Field<string>("A"));
+			});
+		}
 		
 		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
@@ -66,6 +83,17 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 					(0),
 					(NULL),
 					(1)
+
+				CREATE TABLE CharTests (A char(10)) WITH (DATA_COMPRESSION = ROW)
+				INSERT INTO
+					CharTests
+				VALUES
+					(NULL),
+					('a'),
+					('1234567890'),
+					('123'),
+					(''),
+					(' ')
 				", conn);
 		}
 	}
