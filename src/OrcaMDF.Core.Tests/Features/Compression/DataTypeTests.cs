@@ -21,6 +21,26 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 				Assert.AreEqual(TestHelper.GetBytesFromByteString("01020304050607080910"), rows[2].Field<byte[]>("A"));
 			});
 		}
+
+		[SqlServer2008PlusTest]
+		public void BitTests(DatabaseVersion version)
+		{
+			RunDatabaseTest(version, db =>
+			{
+				var scanner = new DataScanner(db);
+				var rows = scanner.ScanTable("BitTests").ToList();
+
+				Assert.AreEqual(null, rows[0].Field<bool?>("A"));
+				Assert.AreEqual(true, rows[1].Field<bool?>("A"));
+				Assert.AreEqual(true, rows[2].Field<bool?>("A"));
+				Assert.AreEqual(false, rows[3].Field<bool?>("A"));
+				Assert.AreEqual(true, rows[4].Field<bool?>("A"));
+				Assert.AreEqual(false, rows[5].Field<bool?>("A"));
+				Assert.AreEqual(false, rows[6].Field<bool?>("A"));
+				Assert.AreEqual(null, rows[7].Field<bool?>("A"));
+				Assert.AreEqual(true, rows[8].Field<bool?>("A"));
+			});
+		}
 		
 		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
@@ -32,6 +52,20 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 					(NULL),
 					(0x25FF25),
 					(0x01020304050607080910)
+
+				CREATE TABLE BitTests (A bit) WITH (DATA_COMPRESSION = ROW)
+				INSERT INTO
+					BitTests
+				VALUES
+					(NULL),
+					(1),
+					(1),
+					(0),
+					(1),
+					(0),
+					(0),
+					(NULL),
+					(1)
 				", conn);
 		}
 	}

@@ -31,13 +31,23 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 		public override object GetValue(byte[] value)
 		{
-			if(readState.AllBitsConsumed && value.Length != 1)
-				throw new ArgumentException("All bits consumed, invalid value length: " + value.Length);
+			if (CompressionContext.CompressionLevel != CompressionLevel.None)
+			{
+				if (value.Length > 1)
+					throw new ArgumentException("Invalid value length: " + value.Length);
 
-			if (value.Length == 1)
-				readState.LoadBitByte(value[0]);
+				return value.Length == 1;
+			}
+			else
+			{
+				if (readState.AllBitsConsumed && value.Length != 1)
+					throw new ArgumentException("All bits consumed, invalid value length: " + value.Length);
 
-			return readState.GetNextBit();
+				if (value.Length == 1)
+					readState.LoadBitByte(value[0]);
+
+				return readState.GetNextBit();
+			}
 		}
 	}
 }
