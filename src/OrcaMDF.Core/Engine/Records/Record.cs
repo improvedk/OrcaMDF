@@ -70,7 +70,7 @@ namespace OrcaMDF.Core.Engine.Records
 				// for a better description of the issue. Currently there are three cases:
 				// - Back pointers (two-byte value of 1024)
 				// - Sparse vectors (two-byte value of 5)
-				// - BLOB Inline ROot (one-byte value of 4)
+				// - BLOB Inline Root (one-byte value of 4)
 				// - Row-overflow pointer (one-byte value of 2)
 				// First we'll try to read just the very first pointer - hitting case values like 5 and 2. 1024 will result in a value of 0. In that specific
 				// case we then try to read a two-byte value.

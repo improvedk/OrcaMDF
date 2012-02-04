@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using OrcaMDF.Core.Engine.Pages;
+using OrcaMDF.Core.Engine.Records.VariableLengthDataProxies;
 using OrcaMDF.Core.Engine.SqlTypes;
 using OrcaMDF.Core.MetaData;
 
@@ -26,12 +28,12 @@ namespace OrcaMDF.Core.Engine.Records.Parsers
 				{
 					var sqlType = SqlTypeFactory.Create(col, readState, new CompressionContext(CompressionLevel.Row, true));
 
-					byte[] recordBytes = record.GetPhysicalColumnBytes(columnIndex);
+					IVariableLengthDataProxy dataProxy = record.GetPhysicalColumnBytes(columnIndex);
 
-					if (recordBytes == null)
+					if (dataProxy == null)
 						dataRow[col] = null;
 					else
-						dataRow[col] = sqlType.GetValue(recordBytes);
+						dataRow[col] = sqlType.GetValue(dataProxy.GetBytes().ToArray());
 
 					columnIndex++;
 				}

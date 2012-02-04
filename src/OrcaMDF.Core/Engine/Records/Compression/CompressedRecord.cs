@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using OrcaMDF.Core.Engine.Pages;
+using OrcaMDF.Core.Engine.Records.VariableLengthDataProxies;
 using OrcaMDF.Core.Framework;
 
 namespace OrcaMDF.Core.Engine.Records.Compression
@@ -11,6 +13,7 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 		internal CompressedRecordType RecordType { get; private set; }
 		internal short NumberOfColumns { get; private set; }
 
+		private readonly Page page;
 		private readonly byte[] record;
 		private bool containsLongDataRegion;
 		private CompressedRecordColumnCDIndicator[] columnValueIndicators;
@@ -18,9 +21,10 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 		private short[] longDataColumnPointers;
 		private short[] longDataColumnLengths;
 
-		internal CompressedRecord(byte[] record)
+		internal CompressedRecord(byte[] record, Page page)
 		{
 			this.record = record;
+			this.page = page;
 
 			short recordPointer = 1;
 
@@ -35,7 +39,7 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 		/// integer value will only use up as many bytes as required to store the value. Normalization may be needed
 		/// before the normal type parsers can read the value.
 		/// </summary>
-		internal byte[] GetPhysicalColumnBytes(int index)
+		internal IVariableLengthDataProxy GetPhysicalColumnBytes(int index)
 		{
 			// Get column compression indicator
 			var colDescription = columnValueIndicators[index];
@@ -50,11 +54,11 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 
 			// If it's a true bit, 
 			if (colDescription == CompressedRecordColumnCDIndicator.TrueBit)
-				return new byte[] { 1 };
+				return new RawByteProxy(new byte[] { 1 });
 
 			// If it's zero-length
 			if (colDescription == CompressedRecordColumnCDIndicator.ZeroByte)
-				return new byte[0];
+				return new RawByteProxy(new byte[0]);
 
 			// Is the data long or short?
 			if (colDescription == CompressedRecordColumnCDIndicator.LongData)
@@ -65,8 +69,15 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 					if (columnValueIndicators[i] == CompressedRecordColumnCDIndicator.LongData)
 						longIndex++;
 
-				// Return bytes
-				return ArrayHelper.SliceArray(record, longDataColumnPointers[longIndex], longDataColumnLengths[longIndex]);
+				// Is data stored as a complex value or as raw bytes?
+				if ((longDataColumnLengths[longIndex] & 32768) > 0)
+				{
+					short actualLength = (short)(longDataColumnLengths[longIndex] & 32767);
+
+					return new TextPointerProxy(page, ArrayHelper.SliceArray(record, longDataColumnPointers[longIndex], actualLength));
+				}
+				else
+					return new RawByteProxy(ArrayHelper.SliceArray(record, longDataColumnPointers[longIndex], longDataColumnLengths[longIndex]));
 			}
 			else
 			{
@@ -79,10 +90,8 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 					if (columnValueIndicators[i] != CompressedRecordColumnCDIndicator.LongData)
 						recordPointer += getLengthFromColumnIndicator(columnValueIndicators[i]);
 
-				// Get the column value
-				byte[] physicalResult = ArrayHelper.SliceArray(record, recordPointer, getLengthFromColumnIndicator(colDescription));
-
-				return physicalResult;
+				// Return the column value
+				return new RawByteProxy(ArrayHelper.SliceArray(record, recordPointer, getLengthFromColumnIndicator(colDescription)));
 			}
 		}
 

@@ -23,7 +23,7 @@ namespace OrcaMDF.Core.Engine.Pages
 
 			int cnt = 0;
 			foreach (short recordOffset in SlotArray)
-				Records[cnt++] = new CompressedRecord(ArrayHelper.SliceArray(RawBytes, recordOffset, RawBytes.Length - recordOffset));
+				Records[cnt++] = new CompressedRecord(ArrayHelper.SliceArray(RawBytes, recordOffset, RawBytes.Length - recordOffset), this);
 		}
 	}
 }

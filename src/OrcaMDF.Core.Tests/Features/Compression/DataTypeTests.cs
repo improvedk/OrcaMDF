@@ -78,6 +78,20 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 				Assert.AreEqual(-1m, rows[0].Field<decimal>("I"));
 			});
 		}
+
+		[SqlServer2008PlusTest]
+		public void ImageTests(DatabaseVersion version)
+		{
+			RunDatabaseTest(version, db =>
+			{
+				var scanner = new DataScanner(db);
+				var rows = scanner.ScanTable("ImageTests").ToList();
+
+				Assert.AreEqual(null, rows[0].Field<byte[]>("A"));
+				Assert.AreEqual(TestHelper.GetBytesFromByteString("25FF25"), rows[1].Field<byte[]>("A"));
+				Assert.AreEqual(TestHelper.GetBytesFromByteString("01020304050607080910"), rows[2].Field<byte[]>("A"));
+			});
+		}
 		
 		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
@@ -128,6 +142,14 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 					I decimal(11, 3) NOT NULL
 				) WITH (DATA_COMPRESSION = ROW)
 				INSERT INTO DecimalTests VALUES (12.3, 0, 1, 12345, 39201.230, -4892384.38209, 1328783742987.29, 2940382040198493029.23456, -1)
+
+				CREATE TABLE ImageTests (A image) WITH (DATA_COMPRESSION = ROW)
+				INSERT INTO
+					ImageTests
+				VALUES
+					(NULL),
+					(0x25FF25),
+					(0x01020304050607080910)
 				", conn);
 		}
 	}
