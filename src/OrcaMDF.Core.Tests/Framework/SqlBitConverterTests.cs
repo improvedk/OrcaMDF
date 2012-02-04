@@ -32,7 +32,11 @@ namespace OrcaMDF.Core.Tests.Framework
 		[Test]
 		public void ToInt64FromBigEndian()
 		{
-			Assert.AreEqual(9223372036854775807, SqlBitConverter.ToInt64FromBigEndian(new byte[] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }, 0, Offset.MinValue));
+			Assert.AreEqual(9223372036854775807, SqlBitConverter.ToInt64FromBigEndian(TestHelper.GetBytesFromByteString("FFFFFFFFFFFFFFFF"), 0, Offset.MinValue));
+			Assert.AreEqual(-9223372036854775808, SqlBitConverter.ToInt64FromBigEndian(TestHelper.GetBytesFromByteString("0000000000000000"), 0, Offset.MinValue));
+			Assert.AreEqual(-8877493061872343484, SqlBitConverter.ToInt64FromBigEndian(TestHelper.GetBytesFromByteString("04CCCF185F1AA644"), 0, Offset.MinValue));
+			Assert.AreEqual(-4611686018427387904, SqlBitConverter.ToInt64FromBigEndian(TestHelper.GetBytesFromByteString("4000000000000000"), 0, Offset.MinValue));
+			Assert.AreEqual(461168601842738790, SqlBitConverter.ToInt64FromBigEndian(TestHelper.GetBytesFromByteString("8666666666666666"), 0, Offset.MinValue));
 		}
 	}
 }
