@@ -57,7 +57,7 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 			// Is the data long or short?
 			if (colDescription == CompressedRecordColumnCDIndicator.LongData)
 			{
-				throw new NotImplementedException();
+				
 			}
 			else
 			{

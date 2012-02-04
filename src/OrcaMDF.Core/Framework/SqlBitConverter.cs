@@ -84,16 +84,16 @@ namespace OrcaMDF.Core.Framework
 					return (int)offsetValue + (input[index] << 24 | input[index + 1] << 16 | input[index + 2] << 8 | input[index + 3]);
 
 				case 5:
-					return offsetValue + ((long)input[index] << 32 | (long)input[index + 1] << 24 | input[index + 2] << 16 | input[index + 3] << 8 | input[index + 4]);
+					return offsetValue + ((long)input[index] << 32 | (long)input[index + 1] << 24 | (long)input[index + 2] << 16 | (long)input[index + 3] << 8 | input[index + 4]);
 
 				case 6:
-					return offsetValue + ((long)input[index] << 40 | (long)input[index + 1] << 32 | (long)input[index + 2] << 24 | input[index + 3] << 16 | input[index + 4] << 8 | input[index + 5]);
+					return offsetValue + ((long)input[index] << 40 | (long)input[index + 1] << 32 | (long)input[index + 2] << 24 | (long)input[index + 3] << 16 | (long)input[index + 4] << 8 | input[index + 5]);
 
 				case 7:
-					return offsetValue + ((long)input[index] << 48 | (long)input[index + 1] << 40 | (long)input[index + 2] << 32 | (long)input[index + 3] << 24 | input[index + 4] << 16 | input[index + 5] << 8 | input[index + 6]);
+					return offsetValue + ((long)input[index] << 48 | (long)input[index + 1] << 40 | (long)input[index + 2] << 32 | (long)input[index + 3] << 24 | (long)input[index + 4] << 16 | (long)input[index + 5] << 8 | input[index + 6]);
 					
 				default:
-					return offsetValue + ((long)input[index] << 56 | (long)input[index + 1] << 48 | (long)input[index + 2] << 40 | (long)input[index + 3] << 32 | (long)input[index + 4] << 24 | input[index + 5] << 16 | input[index + 6] << 8 | input[index + 7]);
+					return offsetValue + ((long)input[index] << 56 | (long)input[index + 1] << 48 | (long)input[index + 2] << 40 | (long)input[index + 3] << 32 | (long)input[index + 4] << 24 | (long)input[index + 5] << 16 | (long)input[index + 6] << 8 | input[index + 7]);
 			}
 		}
 	}
