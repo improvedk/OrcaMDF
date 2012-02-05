@@ -24,6 +24,19 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 		}
 
 		[SqlServer2008PlusTest]
+		public void UniqueidentifierTests(DatabaseVersion version)
+		{
+			RunDatabaseTest(version, db =>
+			{
+				var scanner = new DataScanner(db);
+				var rows = scanner.ScanTable("UniqueidentifierTests").ToList();
+
+				Assert.AreEqual(null, rows[0].Field<Guid?>("A"));
+				Assert.AreEqual(new Guid("92F9A6D1-E99E-49AC-9D85-996F4BC08B20"), rows[1].Field<Guid?>("A"));
+			});
+		}
+
+		[SqlServer2008PlusTest]
 		public void BitTests(DatabaseVersion version)
 		{
 			RunDatabaseTest(version, db =>
@@ -360,6 +373,13 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 					(NULL),
 					(0x25FF25),
 					(0x01020304050607080910)
+
+				CREATE TABLE UniqueidentifierTests (A uniqueidentifier) WITH (DATA_COMPRESSION = ROW)
+				INSERT INTO
+					UniqueidentifierTests
+				VALUES
+					(NULL),
+					('92F9A6D1-E99E-49AC-9D85-996F4BC08B20')
 
 				CREATE TABLE NCharTests (A nchar(10)) WITH (DATA_COMPRESSION = ROW)
 				INSERT INTO

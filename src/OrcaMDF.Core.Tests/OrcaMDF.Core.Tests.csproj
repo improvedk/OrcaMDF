@@ -49,6 +49,7 @@
     <Compile Include="Features\Compression\DataTypeTests.cs" />
     <Compile Include="Features\Compression\RecordFormatTests.cs" />
     <Compile Include="Features\Compression\RowOverflowTests.cs" />
+    <Compile Include="Features\Compression\UniquifierTests.cs" />
     <Compile Include="Features\Vardecimal\VardecimalTests.cs" />
     <Compile Include="Framework\SqlBitConverterTests.cs" />
     <Compile Include="SqlServerVersion\SqlServer2005PlusTestAttribute.cs" />
