@@ -73,8 +73,36 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 				if ((longDataColumnLengths[longIndex] & 32768) > 0)
 				{
 					short actualLength = (short)(longDataColumnLengths[longIndex] & 32767);
+					byte[] data = ArrayHelper.SliceArray(record, longDataColumnPointers[longIndex], actualLength);
 
-					return new TextPointerProxy(page, ArrayHelper.SliceArray(record, longDataColumnPointers[longIndex], actualLength));
+					// For length 16 we know it'll be a text pointer
+					if (actualLength == 16)
+						return new TextPointerProxy(page, data);
+
+					// For other lengths we'll have to determine the type of complex column.
+					// TODO: https://github.com/improvedk/OrcaMDF/issues/2
+					short complexColumnID = data[0];
+
+					if (complexColumnID == 0)
+						complexColumnID = BitConverter.ToInt16(data, 0);
+
+					switch (complexColumnID)
+					{
+						// Row-overflow pointer, get referenced data
+						case 2:
+							return new BlobInlineRootProxy(page, data);
+
+						// BLOB Inline Root
+						case 4:
+							return new BlobInlineRootProxy(page, data);
+
+						// Back pointer
+						case 1024:
+							return new RawByteProxy(data);
+
+						default:
+							throw new ArgumentException("Invalid complex column ID encountered: 0x" + BitConverter.ToInt16(data, 0).ToString("X"));
+					}
 				}
 				else
 					return new RawByteProxy(ArrayHelper.SliceArray(record, longDataColumnPointers[longIndex], longDataColumnLengths[longIndex]));

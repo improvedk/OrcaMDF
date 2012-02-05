@@ -25,10 +25,21 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 		public override object GetValue(byte[] value)
 		{
-			if (value.Length != length)
-				throw new ArgumentException("Invalid value length: " + value.Length);
+			if (CompressionContext.CompressionLevel != CompressionLevel.None)
+			{
+				if (value.Length > length)
+					throw new ArgumentException("Invalid value length: " + value.Length);
 
-			return Encoding.Unicode.GetString(value);
+				// TODO: Implement SCSU unicode decompression
+				return Encoding.UTF8.GetString(value);
+			}
+			else
+			{
+				if (value.Length != length)
+					throw new ArgumentException("Invalid value length: " + value.Length);
+
+				return Encoding.Unicode.GetString(value);
+			}
 		}
 	}
 }

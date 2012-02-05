@@ -20,7 +20,15 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 		public override object GetValue(byte[] value)
 		{
-			return Encoding.Unicode.GetString(value);
+			if (CompressionContext.CompressionLevel != CompressionLevel.None)
+			{
+				// TODO: Implement SCSU unicode decompression
+				return Encoding.UTF8.GetString(value);
+			}
+			else
+			{
+				return Encoding.Unicode.GetString(value);
+			}
 		}
 	}
 }
