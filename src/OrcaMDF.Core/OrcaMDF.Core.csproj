@@ -104,6 +104,10 @@
     <Compile Include="Framework\ByteConverter.cs" />
     <Compile Include="Framework\Endian.cs" />
     <Compile Include="Framework\Offset.cs" />
+    <Compile Include="Framework\SCSU\Exceptions\EndOfInputException.cs" />
+    <Compile Include="Framework\SCSU\Exceptions\IllegalInputException.cs" />
+    <Compile Include="Framework\SCSU\ScsuExpander.cs" />
+    <Compile Include="Framework\SCSU\ScsuConstants.cs" />
     <Compile Include="Framework\SqlBitConverter.cs" />
     <Compile Include="MetaData\BaseTableData.cs" />
     <Compile Include="MetaData\BaseTables\sysiscol.cs" />

@@ -1,4 +1,5 @@
 using System.Text;
+using OrcaMDF.Core.Framework.SCSU;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {
@@ -22,8 +23,8 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 		{
 			if (CompressionContext.CompressionLevel != CompressionLevel.None)
 			{
-				// TODO: Implement SCSU unicode decompression
-				return Encoding.UTF8.GetString(value);
+				var expander = new ScsuExpander();
+				return expander.Expand(value);
 			}
 			else
 			{

@@ -289,7 +289,7 @@ namespace OrcaMDF.Core.Tests.Features.Compression
 				Assert.AreEqual("1234567890", rows[2].Field<string>("A"));
 				Assert.AreEqual("123", rows[3].Field<string>("A"));
 				Assert.AreEqual("", rows[4].Field<string>("A"));
-				Assert.AreEqual("", rows[5].Field<string>("A"));
+				Assert.AreEqual(" ", rows[5].Field<string>("A"));
 				Assert.AreEqual("ѨѨѨѨѨѨѨѨѨѨ", rows[6].Field<string>("A"));
 			});
 		}
