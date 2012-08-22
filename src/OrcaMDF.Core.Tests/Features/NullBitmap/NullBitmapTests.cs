@@ -6,7 +6,7 @@ using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.NullBitmap
 {
-	public class NullBitmapTestsBase : SqlServerSystemTestBase
+	public class NullBitmapTests : SqlServerSystemTestBase
 	{
 		[SqlServer2008PlusTest]
 		public void Garbage(DatabaseVersion version)

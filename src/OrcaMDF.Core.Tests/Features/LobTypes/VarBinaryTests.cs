@@ -7,7 +7,7 @@ using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.LobTypes
 {
-	public class VarBinaryTestsBase : SqlServerSystemTestBase
+	public class VarBinaryTests : SqlServerSystemTestBase
 	{
 		[SqlServerTest]
 		public void VarBinaryNull(DatabaseVersion version)
