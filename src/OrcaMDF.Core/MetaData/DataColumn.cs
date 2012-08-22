@@ -91,12 +91,16 @@ namespace OrcaMDF.Core.MetaData
 					IsVariableLength = true;
 					break;
 
-				case "smallmoney":
-					Type = ColumnType.SmallMoney;
+				case "smalldatetime":
+					Type = ColumnType.SmallDatetime;
 					break;
 
 				case "smallint":
 					Type = ColumnType.SmallInt;
+					break;
+
+				case "smallmoney":
+					Type = ColumnType.SmallMoney;
 					break;
 
 				case "text":

@@ -15,6 +15,7 @@ namespace OrcaMDF.Core.MetaData
 		NText,
 		NVarchar,
 		RID,
+		SmallDatetime,
 		SmallInt,
 		SmallMoney,
 		Text,

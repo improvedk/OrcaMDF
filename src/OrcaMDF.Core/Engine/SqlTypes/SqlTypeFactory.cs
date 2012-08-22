@@ -49,6 +49,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 				case ColumnType.RID:
 					return new SqlRID(compression);
 
+				case ColumnType.SmallDatetime:
+					return new SqlSmallDateTime(compression);
+
 				case ColumnType.SmallInt:
 					return new SqlSmallInt(compression);
 
