@@ -42,9 +42,9 @@ namespace OrcaMDF.Core.MetaData.DMVs
 		public bool IsPublished { get { return Field<bool>("IsPublished"); } private set { this["IsPublished"] = value; } }
 		public bool IsSchemaPublished { get { return Field<bool>("IsSchemaPublished"); } private set { this["IsSchemaPublished"] = value; } }
 		public bool IsAutoExecuted { get { return Field<bool>("IsAutoExecuted"); } private set { this["IsAutoExecuted"] = value; } }
-		public bool IsExecutionReplicated { get { return Field<bool>("IsExecutionReplicated"); } private set { this["IsExecutionReplicated"] = value; } }
-		public bool IsReplSerializableOnly { get { return Field<bool>("IsReplSerializableOnly"); } private set { this["IsReplSerializableOnly"] = value; } }
-		public bool SkipsReplConstraints { get { return Field<bool>("SkipsReplConstraints"); } private set { this["SkipsReplConstraints"] = value; } }
+		public bool? IsExecutionReplicated { get { return Field<bool?>("IsExecutionReplicated"); } private set { this["IsExecutionReplicated"] = value; } }
+		public bool? IsReplSerializableOnly { get { return Field<bool?>("IsReplSerializableOnly"); } private set { this["IsReplSerializableOnly"] = value; } }
+		public bool? SkipsReplConstraints { get { return Field<bool?>("SkipsReplConstraints"); } private set { this["SkipsReplConstraints"] = value; } }
 
 		public Procedure()
 			: base(schema)
