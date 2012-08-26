@@ -44,6 +44,12 @@ namespace OrcaMDF.Core.MetaData
 			get { return _sysiscols ?? (_sysiscols = scanner.ScanTable<sysiscol>("sysiscols").ToList()); }
 		}
 
+		private IList<sysobjvalue> _sysobjvalues;
+		internal IList<sysobjvalue> sysobjvalues
+		{
+			get { return _sysobjvalues ?? (_sysobjvalues = scanner.ScanTable<sysobjvalue>("sysobjvalues").ToList()); }
+		}
+
 		internal BaseTableData(Database db)
 		{
 			this.db = db;

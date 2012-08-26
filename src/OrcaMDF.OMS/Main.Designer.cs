@@ -38,6 +38,8 @@
 			this.treeview = new System.Windows.Forms.TreeView();
 			this.splitter1 = new System.Windows.Forms.Splitter();
 			this.panel2 = new System.Windows.Forms.Panel();
+			this.gridStatus = new System.Windows.Forms.StatusStrip();
+			this.gridStatusRows = new System.Windows.Forms.ToolStripStatusLabel();
 			this.grid = new System.Windows.Forms.DataGridView();
 			this.tableMenu = new System.Windows.Forms.ContextMenu();
 			this.menuItem1 = new System.Windows.Forms.MenuItem();
@@ -45,13 +47,14 @@
 			this.menuItem2 = new System.Windows.Forms.MenuItem();
 			this.baseTableMenu = new System.Windows.Forms.ContextMenu();
 			this.menuItem3 = new System.Windows.Forms.MenuItem();
-			this.gridStatus = new System.Windows.Forms.StatusStrip();
-			this.gridStatusRows = new System.Windows.Forms.ToolStripStatusLabel();
+			this.procedureMenu = new System.Windows.Forms.ContextMenu();
+			this.menuItem4 = new System.Windows.Forms.MenuItem();
+			this.txtCode = new System.Windows.Forms.TextBox();
 			this.menuStrip1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.panel2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
 			this.gridStatus.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -129,6 +132,7 @@
 			// 
 			// panel2
 			// 
+			this.panel2.Controls.Add(this.txtCode);
 			this.panel2.Controls.Add(this.gridStatus);
 			this.panel2.Controls.Add(this.grid);
 			this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -136,6 +140,21 @@
 			this.panel2.Name = "panel2";
 			this.panel2.Size = new System.Drawing.Size(445, 453);
 			this.panel2.TabIndex = 5;
+			// 
+			// gridStatus
+			// 
+			this.gridStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gridStatusRows});
+			this.gridStatus.Location = new System.Drawing.Point(0, 431);
+			this.gridStatus.Name = "gridStatus";
+			this.gridStatus.Size = new System.Drawing.Size(445, 22);
+			this.gridStatus.TabIndex = 1;
+			this.gridStatus.Text = "statusStrip2";
+			// 
+			// gridStatusRows
+			// 
+			this.gridStatusRows.Name = "gridStatusRows";
+			this.gridStatusRows.Size = new System.Drawing.Size(0, 17);
 			// 
 			// grid
 			// 
@@ -182,20 +201,25 @@
 			this.menuItem3.Text = "Select All Rows";
 			this.menuItem3.Click += new System.EventHandler(this.menuItem3_Click);
 			// 
-			// gridStatus
+			// procedureMenu
 			// 
-			this.gridStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gridStatusRows});
-			this.gridStatus.Location = new System.Drawing.Point(0, 431);
-			this.gridStatus.Name = "gridStatus";
-			this.gridStatus.Size = new System.Drawing.Size(445, 22);
-			this.gridStatus.TabIndex = 1;
-			this.gridStatus.Text = "statusStrip2";
+			this.procedureMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem4});
 			// 
-			// gridStatusRows
+			// menuItem4
 			// 
-			this.gridStatusRows.Name = "gridStatusRows";
-			this.gridStatusRows.Size = new System.Drawing.Size(0, 17);
+			this.menuItem4.Index = 0;
+			this.menuItem4.Text = "View Code";
+			this.menuItem4.Click += new System.EventHandler(this.menuItem4_Click);
+			// 
+			// txtCode
+			// 
+			this.txtCode.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtCode.Location = new System.Drawing.Point(0, 0);
+			this.txtCode.Multiline = true;
+			this.txtCode.Name = "txtCode";
+			this.txtCode.Size = new System.Drawing.Size(445, 431);
+			this.txtCode.TabIndex = 2;
 			// 
 			// Main
 			// 
@@ -214,9 +238,9 @@
 			this.panel1.ResumeLayout(false);
 			this.panel2.ResumeLayout(false);
 			this.panel2.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
 			this.gridStatus.ResumeLayout(false);
 			this.gridStatus.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -243,6 +267,9 @@
 		private System.Windows.Forms.MenuItem menuItem3;
 		private System.Windows.Forms.StatusStrip gridStatus;
 		private System.Windows.Forms.ToolStripStatusLabel gridStatusRows;
+		private System.Windows.Forms.ContextMenu procedureMenu;
+		private System.Windows.Forms.MenuItem menuItem4;
+		private System.Windows.Forms.TextBox txtCode;
 	}
 }
 

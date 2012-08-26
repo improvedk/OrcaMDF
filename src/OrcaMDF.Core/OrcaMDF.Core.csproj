@@ -86,6 +86,7 @@
     <Compile Include="Engine\Scanner.cs" />
     <Compile Include="Engine\SlotPointer.cs" />
     <Compile Include="Engine\SparseVectorParser.cs" />
+    <Compile Include="Engine\SqlTypes\SqlVariant.cs" />
     <Compile Include="Engine\SqlTypes\SqlSmallMoney.cs" />
     <Compile Include="Engine\SqlTypes\SqlDate.cs" />
     <Compile Include="Engine\SqlTypes\SqlDecimal.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Framework\SCSU\ScsuConstants.cs" />
     <Compile Include="Framework\SqlBitConverter.cs" />
     <Compile Include="MetaData\BaseTableData.cs" />
+    <Compile Include="MetaData\BaseTables\sysobjvalue.cs" />
     <Compile Include="MetaData\BaseTables\sysiscol.cs" />
     <Compile Include="MetaData\BaseTables\syspalname.cs" />
     <Compile Include="MetaData\BaseTables\syspalvalue.cs" />
@@ -123,6 +125,7 @@
     <Compile Include="MetaData\BaseTables\sysscalartype.cs" />
     <Compile Include="MetaData\DmvGenerator.cs" />
     <Compile Include="MetaData\DMVs\Column.cs" />
+    <Compile Include="MetaData\DMVs\SqlModule.cs" />
     <Compile Include="MetaData\DMVs\Procedure.cs" />
     <Compile Include="MetaData\DMVs\ForeignKey.cs" />
     <Compile Include="MetaData\DMVs\Index.cs" />

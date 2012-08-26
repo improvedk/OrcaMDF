@@ -23,6 +23,7 @@ namespace OrcaMDF.Core.MetaData
 		UniqueIdentifier,
 		Uniquifier,
 		VarBinary,
-		Varchar
+		Varchar,
+		Variant
 	}
 }

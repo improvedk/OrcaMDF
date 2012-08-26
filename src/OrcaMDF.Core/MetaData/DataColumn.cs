@@ -136,6 +136,11 @@ namespace OrcaMDF.Core.MetaData
 					IsVariableLength = true;
 					break;
 
+				case "sql_variant":
+					Type = ColumnType.Variant;
+					IsVariableLength = true;
+					break;
+
 				default:
 					throw new ArgumentException("Unsupported type: " + type);
 			}

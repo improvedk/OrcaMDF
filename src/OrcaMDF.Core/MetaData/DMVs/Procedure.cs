@@ -52,7 +52,7 @@ namespace OrcaMDF.Core.MetaData.DMVs
 
 		public override Row NewRow()
 		{
-			return new Table();
+			return new Procedure();
 		}
 
 		internal static IEnumerable<Procedure> GetDmvData(Database db)
