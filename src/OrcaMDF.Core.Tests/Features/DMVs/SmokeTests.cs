@@ -126,10 +126,23 @@ namespace OrcaMDF.Core.Tests.Features.DMVs
 			});
 		}
 
+		[SqlServerTest]
+		public void SysProcedures(DatabaseVersion version)
+		{
+			RunDatabaseTest(version, db =>
+			{
+				var row = db.Dmvs.Procedures.First();
+				TestHelper.GetAllPublicProperties(row);
+			});
+		}
+
 		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
-			RunQuery(@"	CREATE TABLE TestA (A int, PRIMARY KEY CLUSTERED (A))
-						CREATE TABLE TestB (B int, FOREIGN KEY (B) REFERENCES TestA(A))", conn);
+			RunQuery(@"
+				CREATE TABLE TestA (A int, PRIMARY KEY CLUSTERED (A));
+				CREATE TABLE TestB (B int, FOREIGN KEY (B) REFERENCES TestA(A));
+				CREATE PROCEDURE TestC AS SELECT 1 AS A;
+			", conn);
 		}
 	}
 }

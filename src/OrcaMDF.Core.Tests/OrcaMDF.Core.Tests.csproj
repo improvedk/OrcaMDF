@@ -51,6 +51,7 @@
     <Compile Include="Features\Compression\RowOverflowTests.cs" />
     <Compile Include="Features\Compression\UniquifierTests.cs" />
     <Compile Include="Features\DataTypes\SmallDatetimeTests.cs" />
+    <Compile Include="Features\StoredProcedures\StoredProcedureTests.cs" />
     <Compile Include="Features\Vardecimal\VardecimalTests.cs" />
     <Compile Include="Framework\SCSU\ScsuExpanderTests.cs" />
     <Compile Include="Framework\SqlBitConverterTests.cs" />
