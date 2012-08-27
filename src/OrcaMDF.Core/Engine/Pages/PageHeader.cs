@@ -58,7 +58,8 @@ namespace OrcaMDF.Core.Engine.Pages
 				52-55	XdesIDPart2 (int)
 				56-57	XdesIDPart1 (smallint)
 				58-59	GhostRecCnt (smallint)
-				60-95	?
+				60-63	Checksum/Tornbits (int)
+				64-95	?
 			*/
 
 			HeaderVersion = header[0];
