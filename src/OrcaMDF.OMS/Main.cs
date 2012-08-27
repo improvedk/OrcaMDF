@@ -130,6 +130,7 @@ namespace OrcaMDF.OMS
 			baseTableNode.Nodes.Add("sys.sysidxstats").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.sysiscols").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.sysobjvalues").ContextMenu = baseTableMenu;
+			baseTableNode.Nodes.Add("sys.sysowners").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.sysrowsets").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.sysrscols").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.sysscalartypes").ContextMenu = baseTableMenu;
@@ -141,6 +142,7 @@ namespace OrcaMDF.OMS
 		{
 			var dmvNode = rootNode.Nodes.Add("DMVs");
 			dmvNode.Nodes.Add("sys.columns").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.database_principals").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.foreign_keys").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.indexes").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.index_columns").ContextMenu = dmvMenu;
@@ -266,6 +268,8 @@ namespace OrcaMDF.OMS
 			{
 				case "sys.columns":
 					return db.Dmvs.Columns.ToList();
+				case "sys.database_principals":
+					return db.Dmvs.DatabasePrincipals.ToList();
 				case "sys.foreign_keys":
 					return db.Dmvs.ForeignKeys.ToList();
 				case "sys.indexes":
@@ -318,6 +322,8 @@ namespace OrcaMDF.OMS
 					return db.BaseTables.sysiscols;
 				case "sys.sysobjvalues":
 					return db.BaseTables.sysobjvalues;
+				case "sys.sysowners":
+					return db.BaseTables.sysowners;
 				case "sys.sysrowsets":
 					return db.BaseTables.sysrowsets;
 				case "sys.sysrscols":

@@ -15,6 +15,15 @@ namespace OrcaMDF.Core.Tests.Features.BaseTables
 			});
 		}
 
+		[SqlServerTest]
+		public void Sysowners(DatabaseVersion version)
+		{
+			RunDatabaseTest(version, db => {
+				var row = db.BaseTables.sysowners.First();
+				TestHelper.GetAllPublicProperties(row);
+			});
+		}
+
 		protected override void RunSetupQueries(SqlConnection conn, DatabaseVersion version)
 		{
 			RunQuery(@"

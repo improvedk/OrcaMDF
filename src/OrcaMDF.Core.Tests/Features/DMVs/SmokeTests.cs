@@ -1,6 +1,5 @@
 using System.Data.SqlClient;
 using System.Linq;
-using NUnit.Framework;
 using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.DMVs
@@ -153,6 +152,16 @@ namespace OrcaMDF.Core.Tests.Features.DMVs
 			RunDatabaseTest(version, db =>
 			{
 				var row = db.Dmvs.SqlModules.First();
+				TestHelper.GetAllPublicProperties(row);
+			});
+		}
+
+		[SqlServerTest]
+		public void SysDatabasePrincipals(DatabaseVersion version)
+		{
+			RunDatabaseTest(version, db =>
+			{
+				var row = db.Dmvs.DatabasePrincipals.First();
 				TestHelper.GetAllPublicProperties(row);
 			});
 		}

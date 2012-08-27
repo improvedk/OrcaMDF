@@ -111,6 +111,7 @@
     <Compile Include="Framework\SCSU\ScsuConstants.cs" />
     <Compile Include="Framework\SqlBitConverter.cs" />
     <Compile Include="MetaData\BaseTableData.cs" />
+    <Compile Include="MetaData\BaseTables\sysowner.cs" />
     <Compile Include="MetaData\BaseTables\sysobjvalue.cs" />
     <Compile Include="MetaData\BaseTables\sysiscol.cs" />
     <Compile Include="MetaData\BaseTables\syspalname.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="MetaData\BaseTables\sysscalartype.cs" />
     <Compile Include="MetaData\DmvGenerator.cs" />
     <Compile Include="MetaData\DMVs\Column.cs" />
+    <Compile Include="MetaData\DMVs\DatabasePrincipal.cs" />
     <Compile Include="MetaData\DMVs\View.cs" />
     <Compile Include="MetaData\DMVs\SqlModule.cs" />
     <Compile Include="MetaData\DMVs\Procedure.cs" />

@@ -68,6 +68,11 @@ namespace OrcaMDF.Core.MetaData
 			get { return SqlModule.GetDmvData(db); }
 		}
 
+		public IEnumerable<DatabasePrincipal> DatabasePrincipals
+		{
+			get { return DatabasePrincipal.GetDmvData(db); }
+		}
+
 		public IEnumerable<SystemInternalsAllocationUnit> SystemInternalsAllocationUnits
 		{
 			get { return SystemInternalsAllocationUnit.GetDmvData(db); }
