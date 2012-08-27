@@ -6,7 +6,7 @@ using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.LobTypes
 {
-	public class NTextTestsBase : SqlServerSystemTestBase
+	public class NTextTests : SqlServerSystemTestBase
 	{
 		[SqlServerTest]
 		public void NTextNull(DatabaseVersion version)

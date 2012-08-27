@@ -7,7 +7,7 @@ using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.MultiDataFile
 {
-	public class MultiFileTestsBase : SqlServerSystemTestBase
+	public class MultiFileTests : SqlServerSystemTestBase
 	{
 		[SqlServerTest]
 		public void RoundRobinHeapAllocation(DatabaseVersion version)

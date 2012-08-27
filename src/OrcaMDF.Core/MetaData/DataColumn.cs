@@ -91,12 +91,16 @@ namespace OrcaMDF.Core.MetaData
 					IsVariableLength = true;
 					break;
 
-				case "smallmoney":
-					Type = ColumnType.SmallMoney;
+				case "smalldatetime":
+					Type = ColumnType.SmallDatetime;
 					break;
 
 				case "smallint":
 					Type = ColumnType.SmallInt;
+					break;
+
+				case "smallmoney":
+					Type = ColumnType.SmallMoney;
 					break;
 
 				case "text":
@@ -129,6 +133,11 @@ namespace OrcaMDF.Core.MetaData
 
 				case "varchar":
 					Type = ColumnType.Varchar;
+					IsVariableLength = true;
+					break;
+
+				case "sql_variant":
+					Type = ColumnType.Variant;
 					IsVariableLength = true;
 					break;
 

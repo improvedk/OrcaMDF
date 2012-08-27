@@ -15,6 +15,7 @@ namespace OrcaMDF.Core.MetaData
 		NText,
 		NVarchar,
 		RID,
+		SmallDatetime,
 		SmallInt,
 		SmallMoney,
 		Text,
@@ -22,6 +23,7 @@ namespace OrcaMDF.Core.MetaData
 		UniqueIdentifier,
 		Uniquifier,
 		VarBinary,
-		Varchar
+		Varchar,
+		Variant
 	}
 }

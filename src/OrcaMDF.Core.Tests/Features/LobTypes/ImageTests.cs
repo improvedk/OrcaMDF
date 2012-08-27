@@ -7,7 +7,7 @@ using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.LobTypes
 {
-	public class ImageTestsBase : SqlServerSystemTestBase
+	public class ImageTests : SqlServerSystemTestBase
 	{
 		[SqlServerTest]
 		public void ImageNull(DatabaseVersion version)

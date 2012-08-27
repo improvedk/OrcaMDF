@@ -49,6 +49,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 				case ColumnType.RID:
 					return new SqlRID(compression);
 
+				case ColumnType.SmallDatetime:
+					return new SqlSmallDateTime(compression);
+
 				case ColumnType.SmallInt:
 					return new SqlSmallInt(compression);
 
@@ -72,6 +75,9 @@ namespace OrcaMDF.Core.Engine.SqlTypes
 
 				case ColumnType.Varchar:
 					return new SqlVarchar(compression);
+
+				case ColumnType.Variant:
+					return new SqlVariant(compression);
 			}
 
 			throw new ArgumentException("Unsupported type: " + column);

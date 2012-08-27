@@ -6,7 +6,7 @@ using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.DataTypes
 {
-	public class MoneyTestsBase : SqlServerSystemTestBase
+	public class MoneyTests : SqlServerSystemTestBase
 	{
 		[SqlServerTest]
 		public void MoneyTest(DatabaseVersion version)

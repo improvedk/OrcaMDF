@@ -73,18 +73,59 @@ namespace OrcaMDF.OMS
 			var rootNode = new TreeNode(db.Name);
 
 			// Add base tables
+			addBaseTablesNode(rootNode);
+
+			// Add DMVs
+			addDmvNodes(rootNode);
+
+			// Add tables
+			addTablesNode(rootNode);
+
+			// Add programmability
+			addProgrammabilityNode(rootNode);
+			
+
+			// Refresh treeview
+			treeview.Nodes.Clear();
+			treeview.Nodes.Add(rootNode);
+		}
+
+		private void addProgrammabilityNode(TreeNode rootNode)
+		{
+			var prgRootNode = rootNode.Nodes.Add("Programmability");
+
+			addStoredProceduresNode(prgRootNode);
+		}
+
+		private void addStoredProceduresNode(TreeNode prgRootNode)
+		{
+			var proceduresNode = prgRootNode.Nodes.Add("Stored Procedures");
+			var procedures = db.Dmvs.Procedures.OrderBy(p => p.Name);
+
+			foreach (var proc in procedures)
+			{
+				var procNode = proceduresNode.Nodes.Add(proc.Name);
+				procNode.ContextMenu = procedureMenu;
+			}
+		}
+
+		private void addBaseTablesNode(TreeNode rootNode)
+		{
 			var baseTableNode = rootNode.Nodes.Add("Base Tables");
 			baseTableNode.Nodes.Add("sys.sysallocunits").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.syscolpars").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.sysidxstats").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.sysiscols").ContextMenu = baseTableMenu;
+			baseTableNode.Nodes.Add("sys.sysobjvalues").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.sysrowsets").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.sysrscols").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.sysscalartypes").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.sysschobjs").ContextMenu = baseTableMenu;
 			baseTableNode.Nodes.Add("sys.syssingleobjrefs").ContextMenu = baseTableMenu;
+		}
 
-			// Add DMVs
+		private void addDmvNodes(TreeNode rootNode)
+		{
 			var dmvNode = rootNode.Nodes.Add("DMVs");
 			dmvNode.Nodes.Add("sys.columns").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.foreign_keys").ContextMenu = dmvMenu;
@@ -93,13 +134,17 @@ namespace OrcaMDF.OMS
 			dmvNode.Nodes.Add("sys.objects").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.objects$").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.partitions").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.procedures").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.sql_modules").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.system_internals_allocation_units").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.system_internals_partitions").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.system_internals_partition_columns").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.tables").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.types").ContextMenu = dmvMenu;
+		}
 
-			// Add tables
+		private void addTablesNode(TreeNode rootNode)
+		{
 			var tableRootNode = rootNode.Nodes.Add("Tables");
 			var tables = db.Dmvs.Tables.OrderBy(t => t.Name);
 
@@ -131,14 +176,10 @@ namespace OrcaMDF.OMS
 					var indexColumns = db.Dmvs.IndexColumns
 						.Where(ic => ic.ObjectID == t.ObjectID && ic.IndexID == i.IndexID);
 
-					foreach(var ic in indexColumns)
+					foreach (var ic in indexColumns)
 						indexNode.Nodes.Add(columns.Where(c => c.ColumnID == ic.ColumnID).Single().Name);
 				}
 			}
-
-			// Refresh treeview
-			treeview.Nodes.Clear();
-			treeview.Nodes.Add(rootNode);
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -194,6 +235,8 @@ namespace OrcaMDF.OMS
 			}
 
 			gridStatusRows.Text = grid.Rows.Count + " Rows";
+			txtCode.Visible = false;
+			grid.Visible = true;
 		}
 
 		private void treeview_MouseUp(object sender, MouseEventArgs e)
@@ -221,6 +264,10 @@ namespace OrcaMDF.OMS
 					return db.Dmvs.ObjectsDollar.ToList();
 				case "sys.partitions":
 					return db.Dmvs.Partitions.ToList();
+				case "sys.procedures":
+					return db.Dmvs.Procedures.ToList();
+				case "sys.sql_modules":
+					return db.Dmvs.SqlModules.ToList();
 				case "sys.system_internals_allocation_units":
 					return db.Dmvs.SystemInternalsAllocationUnits.ToList();
 				case "sys.system_internals_partitions":
@@ -253,6 +300,8 @@ namespace OrcaMDF.OMS
 					return db.BaseTables.sysidxstats;
 				case "sys.sysiscols":
 					return db.BaseTables.sysiscols;
+				case "sys.sysobjvalues":
+					return db.BaseTables.sysobjvalues;
 				case "sys.sysrowsets":
 					return db.BaseTables.sysrowsets;
 				case "sys.sysrscols":
@@ -271,6 +320,32 @@ namespace OrcaMDF.OMS
 		private void menuItem3_Click(object sender, EventArgs e)
 		{
 			showRows(getRowsFromBaseTable(treeview.SelectedNode.Text));
+		}
+
+		private void menuItem4_Click(object sender, EventArgs e)
+		{
+			showProcedureCode(treeview.SelectedNode.Text);
+		}
+
+		private void showProcedureCode(string procedureName)
+		{
+			// Get procedure ID
+			int procID = db.Dmvs.Procedures
+				.Where(p => p.Name == procedureName)
+				.Select(p => p.ObjectID)
+				.Single();
+
+			// Get definition from sql_modules
+			string definition = db.Dmvs.SqlModules
+				.Where(m => m.ObjectID == procID)
+				.Select(m => m.Definition)
+				.Single();
+
+			// Set code
+			txtCode.Text = definition;
+
+			grid.Visible = false;
+			txtCode.Visible = true;
 		}
 	}
 }

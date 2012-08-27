@@ -6,7 +6,7 @@ using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.SparseColumns
 {
-	public class SparseColumnTestsBase : SqlServerSystemTestBase
+	public class SparseColumnTests : SqlServerSystemTestBase
 	{
 		[SqlServer2008PlusTest]
 		public void ScanNonSparseInts(DatabaseVersion version)
