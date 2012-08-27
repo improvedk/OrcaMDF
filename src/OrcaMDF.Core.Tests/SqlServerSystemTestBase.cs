@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using NUnit.Framework;
 using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.Tests.SqlServerVersion;
@@ -84,18 +85,29 @@ namespace OrcaMDF.Core.Tests
 				cmd.CommandText = replaceDBParameters("ALTER DATABASE [<DBNAME>] SET PAGE_VERIFY CHECKSUM", dbName);
 				cmd.ExecuteNonQuery();
 
-				using (var userConn = new SqlConnection(connectionString + ";Initial Catalog=" + dbName))
+				try
 				{
-					userConn.Open();
-					RunSetupQueries(userConn, version);
+					using (var userConn = new SqlConnection(connectionString + ";Initial Catalog=" + dbName))
+					{
+						userConn.Open();
 
-					new SqlCommand("USE master", userConn).ExecuteNonQuery();
+						try
+						{
+							RunSetupQueries(userConn, version);
+						}
+						finally
+						{
+							new SqlCommand("USE master", userConn).ExecuteNonQuery();
+						}
+					}
 				}
-
-				cmd.CommandText = replaceDBParameters(@"
-					ALTER DATABASE [<DBNAME>] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-					EXEC master.dbo.sp_detach_db @dbname = N'<DBNAME>'", dbName);
-				cmd.ExecuteNonQuery();
+				finally
+				{
+					cmd.CommandText = replaceDBParameters(@"
+						ALTER DATABASE [<DBNAME>] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+						EXEC master.dbo.sp_detach_db @dbname = N'<DBNAME>'", dbName);
+					cmd.ExecuteNonQuery();
+				}
 			}
 		}
 
@@ -113,18 +125,9 @@ namespace OrcaMDF.Core.Tests
 
 		protected void RunQuery(string sql, SqlConnection conn)
 		{
-			try
-			{
-				var cmd = new SqlCommand(sql, conn);
-				cmd.CommandTimeout = 600;
-				cmd.ExecuteNonQuery();
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex);
-				Trace.WriteLine(ex);
-				throw;
-			}
+			var cmd = new SqlCommand(sql, conn);
+			cmd.CommandTimeout = 600;
+			cmd.ExecuteNonQuery();
 		}
 
 		[TestFixtureTearDown]
