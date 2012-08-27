@@ -95,6 +95,19 @@ namespace OrcaMDF.OMS
 			var prgRootNode = rootNode.Nodes.Add("Programmability");
 
 			addStoredProceduresNode(prgRootNode);
+			addViewsNode(prgRootNode);
+		}
+
+		private void addViewsNode(TreeNode prgRootNode)
+		{
+			var viewsNode = prgRootNode.Nodes.Add("Views");
+			var views = db.Dmvs.Views.OrderBy(v => v.Name);
+
+			foreach (var view in views)
+			{
+				var viewNode = viewsNode.Nodes.Add(view.Name);
+				viewNode.ContextMenu = viewMenu;
+			}
 		}
 
 		private void addStoredProceduresNode(TreeNode prgRootNode)
@@ -141,6 +154,7 @@ namespace OrcaMDF.OMS
 			dmvNode.Nodes.Add("sys.system_internals_partition_columns").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.tables").ContextMenu = dmvMenu;
 			dmvNode.Nodes.Add("sys.types").ContextMenu = dmvMenu;
+			dmvNode.Nodes.Add("sys.views").ContextMenu = dmvMenu;
 		}
 
 		private void addTablesNode(TreeNode rootNode)
@@ -278,6 +292,8 @@ namespace OrcaMDF.OMS
 					return db.Dmvs.Tables.ToList();
 				case "sys.types":
 					return db.Dmvs.Types.ToList();
+				case "sys.views":
+					return db.Dmvs.Views.ToList();
 				default:
 					throw new ArgumentOutOfRangeException(dmv);
 			}
@@ -330,14 +346,40 @@ namespace OrcaMDF.OMS
 		private void showProcedureCode(string procedureName)
 		{
 			// Get procedure ID
-			int procID = db.Dmvs.Procedures
+			int objID = db.Dmvs.Procedures
 				.Where(p => p.Name == procedureName)
 				.Select(p => p.ObjectID)
 				.Single();
 
 			// Get definition from sql_modules
 			string definition = db.Dmvs.SqlModules
-				.Where(m => m.ObjectID == procID)
+				.Where(m => m.ObjectID == objID)
+				.Select(m => m.Definition)
+				.Single();
+
+			// Set code
+			txtCode.Text = definition;
+
+			grid.Visible = false;
+			txtCode.Visible = true;
+		}
+
+		private void menuItem5_Click(object sender, EventArgs e)
+		{
+			showViewCode(treeview.SelectedNode.Text);
+		}
+
+		private void showViewCode(string viewName)
+		{
+			// Get view ID
+			int objID = db.Dmvs.Views
+				.Where(p => p.Name == viewName)
+				.Select(p => p.ObjectID)
+				.Single();
+
+			// Get definition from sql_modules
+			string definition = db.Dmvs.SqlModules
+				.Where(m => m.ObjectID == objID)
 				.Select(m => m.Definition)
 				.Single();
 

@@ -38,6 +38,7 @@
 			this.treeview = new System.Windows.Forms.TreeView();
 			this.splitter1 = new System.Windows.Forms.Splitter();
 			this.panel2 = new System.Windows.Forms.Panel();
+			this.txtCode = new System.Windows.Forms.TextBox();
 			this.gridStatus = new System.Windows.Forms.StatusStrip();
 			this.gridStatusRows = new System.Windows.Forms.ToolStripStatusLabel();
 			this.grid = new System.Windows.Forms.DataGridView();
@@ -49,7 +50,8 @@
 			this.menuItem3 = new System.Windows.Forms.MenuItem();
 			this.procedureMenu = new System.Windows.Forms.ContextMenu();
 			this.menuItem4 = new System.Windows.Forms.MenuItem();
-			this.txtCode = new System.Windows.Forms.TextBox();
+			this.viewMenu = new System.Windows.Forms.ContextMenu();
+			this.menuItem5 = new System.Windows.Forms.MenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.panel2.SuspendLayout();
@@ -141,6 +143,15 @@
 			this.panel2.Size = new System.Drawing.Size(445, 453);
 			this.panel2.TabIndex = 5;
 			// 
+			// txtCode
+			// 
+			this.txtCode.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtCode.Location = new System.Drawing.Point(0, 0);
+			this.txtCode.Multiline = true;
+			this.txtCode.Name = "txtCode";
+			this.txtCode.Size = new System.Drawing.Size(445, 431);
+			this.txtCode.TabIndex = 2;
+			// 
 			// gridStatus
 			// 
 			this.gridStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -212,14 +223,16 @@
 			this.menuItem4.Text = "View Code";
 			this.menuItem4.Click += new System.EventHandler(this.menuItem4_Click);
 			// 
-			// txtCode
+			// viewMenu
 			// 
-			this.txtCode.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.txtCode.Location = new System.Drawing.Point(0, 0);
-			this.txtCode.Multiline = true;
-			this.txtCode.Name = "txtCode";
-			this.txtCode.Size = new System.Drawing.Size(445, 431);
-			this.txtCode.TabIndex = 2;
+			this.viewMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem5});
+			// 
+			// menuItem5
+			// 
+			this.menuItem5.Index = 0;
+			this.menuItem5.Text = "View Code";
+			this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
 			// 
 			// Main
 			// 
@@ -270,6 +283,8 @@
 		private System.Windows.Forms.ContextMenu procedureMenu;
 		private System.Windows.Forms.MenuItem menuItem4;
 		private System.Windows.Forms.TextBox txtCode;
+		private System.Windows.Forms.ContextMenu viewMenu;
+		private System.Windows.Forms.MenuItem menuItem5;
 	}
 }
 
