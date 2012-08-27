@@ -125,6 +125,7 @@
     <Compile Include="MetaData\BaseTables\sysscalartype.cs" />
     <Compile Include="MetaData\DmvGenerator.cs" />
     <Compile Include="MetaData\DMVs\Column.cs" />
+    <Compile Include="MetaData\DMVs\View.cs" />
     <Compile Include="MetaData\DMVs\SqlModule.cs" />
     <Compile Include="MetaData\DMVs\Procedure.cs" />
     <Compile Include="MetaData\DMVs\ForeignKey.cs" />
