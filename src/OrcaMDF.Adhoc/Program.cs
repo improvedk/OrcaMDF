@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Linq;
-using OrcaMDF.Core.Engine;
+using System.IO;
 
 namespace OrcaMDF.Adhoc
 {
@@ -8,16 +7,14 @@ namespace OrcaMDF.Adhoc
     {
         static void Main()
         {
-        	//Console.WriteLine("VSS Copying...");
-			//VssHelper.CopyFile(@"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\AdventureWorks_Data.mdf", @"C:\Test.mdf");
-        	//Console.WriteLine();
+        	string mdfPath = @"D:\MSSQL Databases\Corrupt1.mdf";
 
-			using (var db = new Database(new[] { @"C:\Test.mdf" }))
+			using (var fs = File.Open(mdfPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 			{
-				foreach (var ic in db.Dmvs.Columns)
-					Console.WriteLine(ic.ObjectID);
+				var headerBytes = new byte[96];
+				
 			}
-			
+
         	Console.WriteLine("Done");
             Console.ReadLine();
         }
