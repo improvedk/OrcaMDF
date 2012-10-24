@@ -176,7 +176,12 @@ namespace OrcaMDF.OMS
 					.OrderBy(c => c.Name);
 
 				foreach (var c in columns)
-					tableColumnsNode.Nodes.Add(c.Name);
+				{
+					var mainColumn = db.Dmvs.Columns.Where(x => x.ColumnID == c.ColumnID && x.ObjectID == c.ObjectID).Single();
+					var type = db.Dmvs.Types.Where(x => x.SystemTypeID == mainColumn.SystemTypeID).First();
+					
+					tableColumnsNode.Nodes.Add(c.Name + " (" + type.Name + "[" + type.MaxLength + "])");
+				}
 
 				// Add indexes
 				var tableIndexesNode = tableNode.Nodes.Add("Indexes");
@@ -193,7 +198,12 @@ namespace OrcaMDF.OMS
 						.Where(ic => ic.ObjectID == t.ObjectID && ic.IndexID == i.IndexID);
 
 					foreach (var ic in indexColumns)
-						indexNode.Nodes.Add(columns.Where(c => c.ColumnID == ic.ColumnID).Single().Name);
+					{
+						var mainColumn = db.Dmvs.Columns.Where(x => x.ColumnID == ic.ColumnID && x.ObjectID == ic.ObjectID).Single();
+						var type = db.Dmvs.Types.Where(x => x.SystemTypeID == mainColumn.SystemTypeID).First();
+
+						indexNode.Nodes.Add(columns.Where(c => c.ColumnID == ic.ColumnID).Single().Name + " (" + type.Name + "[" + type.MaxLength + "])");
+					}
 				}
 			}
 		}
