@@ -17,7 +17,7 @@ namespace OrcaMDF.Adhoc
 				var scanner = new DataScanner(db);
 				var rows = scanner.ScanTable(table.Name);
 				
-				//EntityPrinter.Print(rows);
+				EntityPrinter.Print(rows);
 			}
 			
         	Console.WriteLine("Done");
