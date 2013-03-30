@@ -12,7 +12,7 @@ namespace OrcaMDF.Adhoc
 			//VssHelper.CopyFile(@"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\AdventureWorks_Data.mdf", @"C:\Test.mdf");
         	//Console.WriteLine();
 
-			using (var db = new Database(new[] { @"C:\Test.mdf" }))
+			using (var db = new Database(new[] { @"D:\Test.mdf" }))
 			{
 				foreach (var ic in db.Dmvs.Columns)
 					Console.WriteLine(ic.ObjectID);
