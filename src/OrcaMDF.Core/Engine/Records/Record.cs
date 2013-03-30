@@ -19,7 +19,7 @@ namespace OrcaMDF.Core.Engine.Records
 		public byte[] RawBytes { get; protected set; }
 		public SparseVectorParser SparseVector { get; private set; }
 		public IDictionary<int, IVariableLengthDataProxy> VariableLengthColumnData { get; set; }
-
+		
 		protected Page Page;
 		protected IDictionary<int, byte[]> RawVariableLengthColumnData { get; set; }
 

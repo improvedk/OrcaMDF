@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using System;
 using OrcaMDF.Core.Engine;
 
 namespace OrcaMDF.Adhoc
@@ -8,14 +8,16 @@ namespace OrcaMDF.Adhoc
     {
         static void Main()
         {
-        	//Console.WriteLine("VSS Copying...");
-			//VssHelper.CopyFile(@"C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL\DATA\AdventureWorks_Data.mdf", @"C:\Test.mdf");
-        	//Console.WriteLine();
-
-			using (var db = new Database(new[] { @"C:\Test.mdf" }))
+			using (var db = new Database(new[] { @"D:\Test.mdf" }))
 			{
-				foreach (var ic in db.Dmvs.Columns)
-					Console.WriteLine(ic.ObjectID);
+				// The table we're interested in
+				var table = db.Dmvs.Tables.Single(x => x.Name == "Test");
+
+				// Get all rows
+				var scanner = new DataScanner(db);
+				var rows = scanner.ScanTable(table.Name);
+				
+				//EntityPrinter.Print(rows);
 			}
 			
         	Console.WriteLine("Done");

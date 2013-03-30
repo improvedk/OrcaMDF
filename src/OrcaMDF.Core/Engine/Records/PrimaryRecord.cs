@@ -72,7 +72,7 @@ namespace OrcaMDF.Core.Engine.Records
 			// Bit 0 (versioning bit) we don't care about as it's always 0 in 2k8+
 
 			// Bits 1-3 represents record type
-			Type = (RecordType)((Convert.ToByte(bits[1]) << 2) + (Convert.ToByte(bits[2]) << 1) + Convert.ToByte(bits[3]));
+			Type = (RecordType)((Convert.ToByte(bits[1])) + (Convert.ToByte(bits[2]) << 1) + (Convert.ToByte(bits[3]) << 2));
 
 			// Bit 4 determines whether a null bitmap is present
 			HasNullBitmap = bits[4];
