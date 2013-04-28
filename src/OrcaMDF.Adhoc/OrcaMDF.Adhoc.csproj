@@ -55,20 +55,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\AlphaVSS-1.0-Beta-Bin\Bin\AlphaVSS.Common.dll</HintPath>
     </Reference>
-    <Reference Include="AlphaVSS.Win2008.x64, Version=1.0.9156.0, Culture=neutral, PublicKeyToken=3033cf2dbd31cad3, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AlphaVSS-1.0-Beta-Bin\Bin\AlphaVSS.Win2008.x64.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\lib\NUnit-2.5.10.11092\framework\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityPrinter.cs" />
