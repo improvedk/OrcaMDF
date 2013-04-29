@@ -113,7 +113,7 @@ namespace OrcaMDF.Core.Tests
 
 		private string replaceDBParameters(string sql, string dbName)
 		{
-			return sql.Replace("<DBNAME>", dbName).Replace("<TEMPPATH>", ConfigurationManager.AppSettings["TestTempPath"]);
+			return sql.Replace("<DBNAME>", dbName).Replace("<TEMPPATH>", DataFileRootPath);
 		}
 
 		protected abstract void RunSetupQueries(SqlConnection conn, DatabaseVersion version);
