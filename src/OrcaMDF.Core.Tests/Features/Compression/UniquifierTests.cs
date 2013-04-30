@@ -7,7 +7,7 @@ using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.Compression
 {
-	public class UniquifierTests : SqlServerSystemTestBase
+	public class UniquifierTests : CompressionTestBase
 	{
 		[SqlServer2008PlusTest]
 		public void UniquifierTest(DatabaseVersion version)

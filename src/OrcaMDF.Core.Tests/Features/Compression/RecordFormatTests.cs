@@ -6,7 +6,7 @@ using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.Compression
 {
-	public class RecordFormatTests : SqlServerSystemTestBase
+	public class RecordFormatTests : CompressionTestBase
 	{
 		[SqlServer2008PlusTest]
 		public void MultipleLongDataColumns(DatabaseVersion version)

@@ -44,6 +44,7 @@
     <Compile Include="Engine\Records\CompressedRecordParserTests\DateCompressionTests.cs" />
     <Compile Include="Engine\Records\CompressedRecordParserTests\IntegerCompressionTests.cs" />
     <Compile Include="Features\BaseTables\SmokeTests.cs" />
+    <Compile Include="Features\Compression\CompressionTestBase.cs" />
     <Compile Include="Features\Compression\DataTypeTests.cs" />
     <Compile Include="Features\Compression\RecordFormatTests.cs" />
     <Compile Include="Features\Compression\RowOverflowTests.cs" />
@@ -110,7 +111,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config"/>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
