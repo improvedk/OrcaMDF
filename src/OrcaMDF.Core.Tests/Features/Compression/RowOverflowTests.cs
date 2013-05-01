@@ -6,7 +6,7 @@ using OrcaMDF.Core.Tests.SqlServerVersion;
 
 namespace OrcaMDF.Core.Tests.Features.Compression
 {
-	public class RowOverflowTests : SqlServerSystemTestBase
+	public class RowOverflowTests : CompressionTestBase
 	{
 		[SqlServer2008PlusTest]
 		public void VarcharOverflow(DatabaseVersion version)
