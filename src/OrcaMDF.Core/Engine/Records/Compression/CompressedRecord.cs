@@ -270,7 +270,7 @@ namespace OrcaMDF.Core.Engine.Records.Compression
 			for (int i=0; i<numEntries; i++)
 			{
 				longDataColumnPointers[i] = recordPointer;
-				longDataColumnLengths[i] = (short)(offsetEntries[i] - (i > 0 ? offsetEntries[i - 1] : 0));
+				longDataColumnLengths[i] = (short)(offsetEntries[i] - (i > 0 ? offsetEntries[i - 1] : (short)0));
 
 				recordPointer += longDataColumnLengths[i];
 			}
