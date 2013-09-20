@@ -24,8 +24,11 @@ namespace OrcaMDF.OMS
 		public Main(string[] fileNames)
 			: this()
 		{
-			if (fileNames == null || !fileNames.Any()) { return; }
+			if (fileNames == null || !fileNames.Any()) 
+				return;
+			
 			var badFileNames = fileNames.Where(fileName => !File.Exists(fileName));
+			
 			if (badFileNames.Any())
 			{
 				var msg = new StringBuilder("The following files specified on the command line do not exist:");
@@ -33,11 +36,11 @@ namespace OrcaMDF.OMS
 				foreach (var fileName in badFileNames) { msg.AppendFormat("\t{0}{1}", fileName, Environment.NewLine); }
 				msg.Append("OrcaMDF.OMS must edit");
 				MessageBox.Show(msg.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				//TODO: Can I return a non-0 exit code?
 				Application.Exit();
 				Close();
 				Environment.Exit(4);
 			}
+			
 			try
 			{
 				db = new Database(fileNames);
