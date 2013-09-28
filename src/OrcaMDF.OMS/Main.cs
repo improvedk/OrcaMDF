@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using OrcaMDF.Core.Engine;
 using OrcaMDF.Core.MetaData;
@@ -18,6 +19,37 @@ namespace OrcaMDF.OMS
 			InitializeComponent();
 
 			Disposed += Main_Disposed;
+		}
+
+		public Main(string[] fileNames)
+			: this()
+		{
+			if (fileNames == null || !fileNames.Any()) 
+				return;
+			
+			var badFileNames = fileNames.Where(fileName => !File.Exists(fileName));
+			
+			if (badFileNames.Any())
+			{
+				var msg = new StringBuilder("The following files specified on the command line do not exist:");
+				msg.AppendLine();
+				foreach (var fileName in badFileNames) { msg.AppendFormat("\t{0}{1}", fileName, Environment.NewLine); }
+				msg.Append("OrcaMDF.OMS must edit");
+				MessageBox.Show(msg.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				Application.Exit();
+				Close();
+				Environment.Exit(4);
+			}
+			
+			try
+			{
+				db = new Database(fileNames);
+				refreshTreeview();
+			}
+			catch (Exception ex)
+			{
+				logException(ex);
+			}
 		}
 
 		void Main_Disposed(object sender, EventArgs e)
