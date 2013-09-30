@@ -14,7 +14,7 @@ namespace OrcaMDF.Core.Engine
 	{
 		public string Name { get; private set; }
 		public short ID { get; private set; }
-		public Guid BindingId { get; private set; }
+		public Guid BindingID { get; private set; }
 		public DmvGenerator Dmvs { get; private set; }
 
 		internal Dictionary<short, DataFile> Files = new Dictionary<short, DataFile>();
@@ -50,11 +50,11 @@ namespace OrcaMDF.Core.Engine
 					// later on.
 					var fileHeaderPage = new FileHeaderPage(fileHeaderBytes, this);
 
-					if (BindingId == Guid.Empty)
-						BindingId = fileHeaderPage.BindingID;
+					if (BindingID == Guid.Empty)
+						BindingID = fileHeaderPage.BindingID;
 
-					if (BindingId != fileHeaderPage.BindingID)
-						throw new BindingIdMismatchException(file, BindingId, fileHeaderPage.BindingID);
+					if (BindingID != fileHeaderPage.BindingID)
+						throw new BindingIDMismatchException(file, BindingID, fileHeaderPage.BindingID);
 
 					// Store reference to data file
 					Files.Add(fileHeaderPage.FileID, new DataFile(fileHeaderPage.FileID, file));
