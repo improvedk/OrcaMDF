@@ -1,4 +1,7 @@
-﻿using System;
+﻿using OrcaMDF.Core.Engine.Pages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OrcaMDF.RawCore
 {
@@ -6,6 +9,11 @@ namespace OrcaMDF.RawCore
 	{
 		private readonly RawDatabase db;
 		private readonly RawPage page;
+
+		public IEnumerable<byte> RawBytes
+		{
+			get { return db.Data[page.FileID].Skip(page.DataFileIndex).Take(96); }
+		}
 
 		public short FreeCnt
 		{
@@ -32,9 +40,9 @@ namespace OrcaMDF.RawCore
 			get { return BitConverter.ToInt32(db.Data[page.FileID], page.DataFileIndex + 24); }
 		}
 
-		public byte Type
+		public PageType Type
 		{
-			get { return db.Data[page.FileID][page.DataFileIndex + 1]; }
+			get { return (PageType)db.Data[page.FileID][page.DataFileIndex + 1]; }
 		}
 
 		public short Pminlen

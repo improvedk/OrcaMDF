@@ -1,14 +1,13 @@
 ﻿using OrcaMDF.Core.Engine.Records;
-using System;
 using System.Collections;
 
-namespace OrcaMDF.RawCore
+namespace OrcaMDF.RawCore.Records
 {
 	public class RawRecord
 	{
-		private readonly int index;
-		private readonly RawPage page;
-		private readonly RawDatabase db;
+		protected readonly int Index;
+		protected readonly RawPage Page;
+		protected readonly RawDatabase DB;
 
 		public bool HasNullBitmap { get; private set; }
 		public RecordType Type { get; private set; }
@@ -18,27 +17,22 @@ namespace OrcaMDF.RawCore
 
 		public byte RawStatusByteA
 		{
-			get { return db.Data[page.FileID][index]; }
+			get { return DB.Data[Page.FileID][Index]; }
 		}
 
 		public RawRecord(int index, RawPage page, RawDatabase db)
 		{
-			this.index = index;
-			this.page = page;
-			this.db = db;
+			this.Index = index;
+			this.Page = page;
+			this.DB = db;
 
-			performMinimalParse();
-		}
-
-		private void performMinimalParse()
-		{
-			var bits = new BitArray(new [] { RawStatusByteA });
+			var bits = new BitArray(new[] { RawStatusByteA });
 
 			Version = bits[0];
 			HasNullBitmap = bits[4];
 			HasVariableLengthColumns = bits[5];
 			HasVersioningInformation = bits[6];
-			Type = (RecordType)((Convert.ToByte(bits[1])) + (Convert.ToByte(bits[2]) << 1) + (Convert.ToByte(bits[3]) << 2));
+			Type = (RecordType)((RawStatusByteA & 0xE) >> 1);
 		}
 	}
 }

@@ -18,12 +18,18 @@ namespace OrcaMDF.RawCore
 			return new RawPage(fileID, pageID, this);
 		}
 
-		public IEnumerable<RawPage> GetAllPages(short fileID)
+		public IEnumerable<RawPage> Pages
 		{
-			int numberOfPages = (int)(Data[fileID].LongLength / 8192);
+			get
+			{
+				foreach (short fileID in Data.Keys)
+				{
+					int numberOfPages = (int)(Data[fileID].LongLength / 8192);
 
-			for (int i = 0; i < numberOfPages; i++)
-				yield return GetPage(fileID, i);
+					for (int i = 0; i < numberOfPages; i++)
+						yield return GetPage(fileID, i);
+				}
+			}
 		}
 	}
 }

@@ -43,8 +43,9 @@
     <Compile Include="RawDatabase.cs" />
     <Compile Include="RawPage.cs" />
     <Compile Include="RawPageHeader.cs" />
-    <Compile Include="RawRecord.cs" />
-    <Compile Include="RawSlotArray.cs" />
+    <Compile Include="Records\RawIndexRecord.cs" />
+    <Compile Include="Records\RawPrimaryRecord.cs" />
+    <Compile Include="Records\RawRecord.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OrcaMDF.Core\OrcaMDF.Core.csproj">
