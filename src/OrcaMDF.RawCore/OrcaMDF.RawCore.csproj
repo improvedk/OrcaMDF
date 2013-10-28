@@ -46,6 +46,11 @@
     <Compile Include="Records\RawPrimaryRecord.cs" />
     <Compile Include="Records\RawRecord.cs" />
     <Compile Include="Records\RawRecordType.cs" />
+    <Compile Include="Types\RawDatetime.cs" />
+    <Compile Include="Types\RawUniqueIdentifier.cs" />
+    <Compile Include="Types\RawNChar.cs" />
+    <Compile Include="Types\IRawType.cs" />
+    <Compile Include="Types\RawInt.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
