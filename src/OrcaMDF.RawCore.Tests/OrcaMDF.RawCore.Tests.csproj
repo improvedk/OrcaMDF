@@ -42,7 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawDatabaseFixtures.cs" />
+    <Compile Include="RawPageHeaderTests.cs" />
+    <Compile Include="RawPageTests.cs" />
+    <Compile Include="Records\RawPrimaryRecordTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OrcaMDF.RawCore\OrcaMDF.RawCore.csproj">

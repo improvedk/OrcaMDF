@@ -1,10 +1,8 @@
 <Query Kind="Statements">
   <Output>DataGrids</Output>
-  <Reference Relative="src\OrcaMDF.RawCore\bin\Debug\OrcaMDF.Core.dll">E:\Projects\OrcaMDF (GIT)\src\OrcaMDF.RawCore\bin\Debug\OrcaMDF.Core.dll</Reference>
-  <Reference Relative="src\OrcaMDF.RawCore\bin\Debug\OrcaMDF.RawCore.dll">E:\Projects\OrcaMDF (GIT)\src\OrcaMDF.RawCore\bin\Debug\OrcaMDF.RawCore.dll</Reference>
-  <Namespace>OrcaMDF.Core.Engine.Records</Namespace>
+  <Reference Relative="src\OrcaMDF.RawCore\bin\Debug\OrcaMDF.RawCore.dll">D:\Projects\OrcaMDF (GIT)\src\OrcaMDF.RawCore\bin\Debug\OrcaMDF.RawCore.dll</Reference>
   <Namespace>OrcaMDF.RawCore</Namespace>
-  <Namespace>OrcaMDF.Core.Engine.Pages</Namespace>
+  <Namespace>OrcaMDF.RawCore.Records</Namespace>
 </Query>
 
 // Get single data page

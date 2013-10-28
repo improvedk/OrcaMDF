@@ -1,7 +1,4 @@
-﻿using OrcaMDF.Core.Engine.Pages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 
 namespace OrcaMDF.RawCore
 {
@@ -10,9 +7,9 @@ namespace OrcaMDF.RawCore
 		private readonly RawDatabase db;
 		private readonly RawPage page;
 
-		public IEnumerable<byte> RawBytes
+		public ArraySegment<byte> RawBytes
 		{
-			get { return db.Data[page.FileID].Skip(page.DataFileIndex).Take(96); }
+			get { return new ArraySegment<byte>(db.Data[page.FileID], page.DataFileIndex, 96); }
 		}
 
 		public short FreeCnt
@@ -40,9 +37,9 @@ namespace OrcaMDF.RawCore
 			get { return BitConverter.ToInt32(db.Data[page.FileID], page.DataFileIndex + 24); }
 		}
 
-		public PageType Type
+		public RawPageType Type
 		{
-			get { return (PageType)db.Data[page.FileID][page.DataFileIndex + 1]; }
+			get { return (RawPageType)db.Data[page.FileID][page.DataFileIndex + 1]; }
 		}
 
 		public short Pminlen
@@ -119,22 +116,15 @@ namespace OrcaMDF.RawCore
 		{
 			get { return BitConverter.ToInt32(db.Data[page.FileID], page.DataFileIndex + 32); }
 		}
+
 		public short FileID
 		{
 			get { return BitConverter.ToInt16(db.Data[page.FileID], page.DataFileIndex + 36); }
 		}
 
-		public byte[] Checksum
+		public ArraySegment<byte> Checksum
 		{
-			get
-			{
-				return new[] {
-					db.Data[page.FileID][page.DataFileIndex + 60],
-					db.Data[page.FileID][page.DataFileIndex + 61],
-					db.Data[page.FileID][page.DataFileIndex + 62],
-					db.Data[page.FileID][page.DataFileIndex + 63]
-				};
-			}
+			get { return new ArraySegment<byte>(db.Data[page.FileID], page.DataFileIndex + 60, 4); }
 		}
 
 		public RawPageHeader(RawPage page, RawDatabase db)

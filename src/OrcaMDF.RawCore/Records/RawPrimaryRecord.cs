@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OrcaMDF.RawCore.Records
 {
@@ -38,14 +37,14 @@ namespace OrcaMDF.RawCore.Records
 			get { return BitConverter.ToInt16(DB.Data[Page.FileID], Index + NullBitmapPointer); }
 		}
 
-		public IEnumerable<byte> FixedLengthData
+		public ArraySegment<byte> FixedLengthData
 		{
-			get { return DB.Data[Page.FileID].Skip(Index + 4).Take(NullBitmapPointer - 4); }
+			get { return new ArraySegment<byte>(DB.Data[Page.FileID], Index + 4, NullBitmapPointer - 4); }
 		}
 
-		public IEnumerable<byte> NullBitmapRawBytes
+		public ArraySegment<byte> NullBitmapRawBytes
 		{
-			get { return DB.Data[Page.FileID].Skip(Index + NullBitmapPointer + 2).Take((NullBitmapColumnCount + 7) / 8); }
+			get { return new ArraySegment<byte>(DB.Data[Page.FileID], Index + NullBitmapPointer + 2, (NullBitmapColumnCount + 7) / 8); }
 		}
 
 		public short? NumberOfVariableLengthOffsetArrayEntries
@@ -71,7 +70,7 @@ namespace OrcaMDF.RawCore.Records
 			}
 		}
 
-		public IEnumerable<IEnumerable<byte>> VariableLengthOffsetValues
+		public IEnumerable<ArraySegment<byte>> VariableLengthOffsetValues
 		{
 			get
 			{
@@ -82,7 +81,7 @@ namespace OrcaMDF.RawCore.Records
 					int previousPointer = endOfVariableLengthArray;
 					foreach (short entry in VariableLengthOffsetArray)
 					{
-						yield return DB.Data[Page.FileID].Skip(Index + previousPointer).Take(entry - previousPointer);
+						yield return new ArraySegment<byte>(DB.Data[Page.FileID], Index + previousPointer, entry - previousPointer);
 						
 						previousPointer = entry;
 					}

@@ -1,8 +1,6 @@
-﻿using OrcaMDF.Core.Engine.Records;
-using OrcaMDF.RawCore.Records;
+﻿using OrcaMDF.RawCore.Records;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OrcaMDF.RawCore
 {
@@ -15,9 +13,9 @@ namespace OrcaMDF.RawCore
 		public short FileID { get; private set; }
 		public RawPageHeader Header { get; private set; }
 		
-		public IEnumerable<byte> RawBytes
+		public ArraySegment<byte> RawBytes
 		{
-			get { return db.Data[FileID].Skip(DataFileIndex).Take(8192); }
+			get { return new ArraySegment<byte>(db.Data[FileID], DataFileIndex, 8192); }
 		}
 
 		public IEnumerable<short> SlotArray
@@ -38,15 +36,15 @@ namespace OrcaMDF.RawCore
 				foreach (var entry in SlotArray)
 				{
 					byte statusA = db.Data[FileID][DataFileIndex + entry];
-					var type = (RecordType)((statusA & 0xE) >> 1);
+					var type = (RawRecordType)((statusA & 0xE) >> 1);
 					
 					switch (type)
 					{
-						case RecordType.Primary:
+						case RawRecordType.Primary:
 							yield return new RawPrimaryRecord(DataFileIndex + entry, this, db);
 							break;
 
-						case RecordType.Index:
+						case RawRecordType.Index:
 							yield return new RawIndexRecord(DataFileIndex + entry, this, db);
 							break;
 
