@@ -2,16 +2,16 @@
 
 namespace OrcaMDF.RawCore.Types
 {
-	public class RawNChar : IRawFixedLengthType
+	public class RawNChar : RawType, IRawFixedLengthType
 	{
-		public RawNChar(short length)
+		public short Length { get; private set; }
+		
+		public RawNChar(string name, short length) : base(name)
 		{
 			Length = length;
 		}
 
-		public short Length { get; private set; }
-
-		public object GetValue(byte[] bytes)
+		public override object GetValue(byte[] bytes)
 		{
 			return Encoding.Unicode.GetString(bytes);
 		}

@@ -37,19 +37,24 @@
   <ItemGroup>
     <Compile Include="ArraySegmentExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawColumnParser.cs" />
     <Compile Include="RawDatabase.cs" />
     <Compile Include="RawPage.cs" />
     <Compile Include="RawPageHeader.cs" />
     <Compile Include="RawPageType.cs" />
-    <Compile Include="RawSchema.cs" />
     <Compile Include="Records\RawIndexRecord.cs" />
     <Compile Include="Records\RawPrimaryRecord.cs" />
     <Compile Include="Records\RawRecord.cs" />
     <Compile Include="Records\RawRecordType.cs" />
+    <Compile Include="Types\RawNVarchar.cs" />
+    <Compile Include="Types\RawTinyint.cs" />
+    <Compile Include="Types\IRawType.cs" />
+    <Compile Include="Types\IRawVariableLengthType.cs" />
     <Compile Include="Types\RawDatetime.cs" />
+    <Compile Include="Types\RawType.cs" />
     <Compile Include="Types\RawUniqueIdentifier.cs" />
     <Compile Include="Types\RawNChar.cs" />
-    <Compile Include="Types\IRawType.cs" />
+    <Compile Include="Types\IRawFixedLengthType.cs" />
     <Compile Include="Types\RawInt.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

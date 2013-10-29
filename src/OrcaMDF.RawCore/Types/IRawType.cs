@@ -1,8 +1,8 @@
 ﻿namespace OrcaMDF.RawCore.Types
 {
-	public interface IRawFixedLengthType
+	public interface IRawType
 	{
-		short Length { get; }
 		object GetValue(byte[] bytes);
+		string Name { get; }
 	}
 }
