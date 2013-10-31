@@ -46,11 +46,12 @@
     <Compile Include="Records\RawPrimaryRecord.cs" />
     <Compile Include="Records\RawRecord.cs" />
     <Compile Include="Records\RawRecordType.cs" />
+    <Compile Include="Types\RawSmallInt.cs" />
     <Compile Include="Types\RawNVarchar.cs" />
-    <Compile Include="Types\RawTinyint.cs" />
+    <Compile Include="Types\RawTinyInt.cs" />
     <Compile Include="Types\IRawType.cs" />
     <Compile Include="Types\IRawVariableLengthType.cs" />
-    <Compile Include="Types\RawDatetime.cs" />
+    <Compile Include="Types\RawDateTime.cs" />
     <Compile Include="Types\RawType.cs" />
     <Compile Include="Types\RawUniqueIdentifier.cs" />
     <Compile Include="Types\RawNChar.cs" />

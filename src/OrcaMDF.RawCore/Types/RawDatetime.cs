@@ -2,13 +2,13 @@
 
 namespace OrcaMDF.RawCore.Types
 {
-	public class RawDatetime : RawType, IRawFixedLengthType
+	public class RawDateTime : RawType, IRawFixedLengthType
 	{
 		private const double CLOCK_TICK_MS = 10d / 3d;
 
 		public short Length { get { return 8; } }
 
-		public RawDatetime(string name) : base(name)
+		public RawDateTime(string name) : base(name)
 		{ }
 
 		public override object GetValue(byte[] bytes)

@@ -1,4 +1,5 @@
-﻿using OrcaMDF.RawCore.Types;
+﻿using OrcaMDF.RawCore.Records;
+using OrcaMDF.RawCore.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,11 @@ namespace OrcaMDF.RawCore
 {
 	public class RawColumnParser
 	{
+		public static Dictionary<string, object> Parse(RawPrimaryRecord record, IRawType[] schema)
+		{
+			return Parse(record.FixedLengthData, record.VariableLengthOffsetValues, schema);
+		}
+
 		public static Dictionary<string, object> Parse(ArraySegment<byte> fixedLengthData, IEnumerable<ArraySegment<byte>> variableLengthData, IEnumerable<IRawType> schema)
 		{
 			return Parse(fixedLengthData.ToArray(), variableLengthData.Select(x => x.ToArray()).ToArray(), schema);
