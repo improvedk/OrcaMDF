@@ -46,6 +46,11 @@
     <Compile Include="Records\RawPrimaryRecord.cs" />
     <Compile Include="Records\RawRecord.cs" />
     <Compile Include="Records\RawRecordType.cs" />
+    <Compile Include="Types\RawBit.cs" />
+    <Compile Include="Types\RawDate.cs" />
+    <Compile Include="Types\RawHierarchyID.cs" />
+    <Compile Include="Types\RawXml.cs" />
+    <Compile Include="Types\RawVarBinary.cs" />
     <Compile Include="Types\RawSmallInt.cs" />
     <Compile Include="Types\RawNVarchar.cs" />
     <Compile Include="Types\RawTinyInt.cs" />

@@ -8,7 +8,7 @@ namespace OrcaMDF.RawCore.Types
 		
 		public RawNChar(string name, short length) : base(name)
 		{
-			Length = length;
+			Length = (short)(length * 2);
 		}
 
 		public override object GetValue(byte[] bytes)
