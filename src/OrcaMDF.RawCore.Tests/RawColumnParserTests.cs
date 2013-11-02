@@ -111,5 +111,31 @@ namespace OrcaMDF.RawCore.Tests
 			Assert.AreEqual(new Guid("3f5ae95e-b87d-4aed-95b4-c3797afcb74f"), result["rowguid"]);
 			Assert.AreEqual(Convert.ToDateTime(modifiedDate), result["ModifiedDate"]);
 		}
+
+		[TestCase(AW2005Path, 90, 1, 832, "314f2574-1f75-457f-9bd1-74d1ce53daa5", "2001-08-01", TestName = "2005")]
+		[TestCase(AW2008Path, 178, 29485, 1086, "16765338-dbe4-4421-b5e9-3836b9278e63", "2003-09-01", TestName = "2008")]
+		[TestCase(AW2008R2Path, 109, 29485, 1086, "16765338-dbe4-4421-b5e9-3836b9278e63", "2003-09-01", TestName = "2008R2")]
+		[TestCase(AW2012Path, 178, 29485, 1086, "16765338-dbe4-4421-b5e9-3836b9278e63", "2003-09-01", TestName = "2012")]
+		public void Parse_CustomerAddress(string dbPath, int pageID, int customerID, int addressID, string rowguid, string modifiedDate)
+		{
+			var db = new RawDatabase(dbPath);
+			var page = db.GetPage(1, pageID);
+			var record = page.Records.First() as RawPrimaryRecord;
+
+			var result = RawColumnParser.Parse(record, new IRawType[] {
+				RawType.Int("CustomerID"),
+				RawType.Int("AddressID"),
+				RawType.NVarchar("AddressType"),
+				RawType.UniqueIdentifier("rowguid"),
+				RawType.DateTime("ModifiedDate")
+			});
+
+			Assert.AreEqual(5, result.Count);
+			Assert.AreEqual(customerID, result["CustomerID"]);
+			Assert.AreEqual(addressID, result["AddressID"]);
+			Assert.AreEqual("Main Office", result["AddressType"]);
+			Assert.AreEqual(new Guid(rowguid), result["rowguid"]);
+			Assert.AreEqual(Convert.ToDateTime(modifiedDate), result["ModifiedDate"]);
+		}
 	}
 }
