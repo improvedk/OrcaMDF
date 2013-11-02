@@ -8,11 +8,14 @@ namespace OrcaMDF.RawCore.Tests
 {
 	public class RawColumnParserTests : BaseFixture
 	{
-		[Test]
-		public void Parse_AWBuildVersion()
+		[TestCase(AW2005Path, 118, "9.06.04.26.00", "2006-04-26", TestName = "2005")]
+		[TestCase(AW2008Path, 187, "10.00.80404.00", "2008-04-04", TestName = "2008")]
+		[TestCase(AW2008R2Path, 184, "10.00.80404.00", "2008-04-04", TestName = "2008R2")]
+		[TestCase(AW2012Path, 187, "11.0.2100.60", "2012-03-15", TestName = "2012")]
+		public void Parse_BuildVersion(string dbPath, int pageID, string databaseVersion, string versionDate)
 		{
-			var db = new RawDatabase(AW2008R2Path);
-			var page = db.GetPage(1, 281);
+			var db = new RawDatabase(dbPath);
+			var page = db.GetPage(1, pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
@@ -24,102 +27,43 @@ namespace OrcaMDF.RawCore.Tests
 
 			Assert.AreEqual(4, result.Count);
 			Assert.AreEqual(1, (byte)result["SystemInformationID"]);
-			Assert.AreEqual("10.50.91013.00", result["Database Version"]);
-			Assert.AreEqual(new DateTime(2009, 10, 13), (DateTime)result["VersionDate"]);
-			Assert.AreEqual(new DateTime(2009, 10, 13), (DateTime)result["ModifiedDate"]);
+			Assert.AreEqual(databaseVersion, result["Database Version"]);
+			Assert.AreEqual(Convert.ToDateTime(versionDate), (DateTime)result["VersionDate"]);
+			Assert.AreEqual(Convert.ToDateTime(versionDate), (DateTime)result["ModifiedDate"]);
 		}
 
-		[Test]
-		public void Parse_DatabaseLog()
+		[TestCase(AW2005Path, 356, TestName = "2005")]
+		[TestCase(AW2008Path, 405, TestName = "2008")]
+		[TestCase(AW2008R2Path, 197, TestName = "2008R2")]
+		[TestCase(AW2012Path, 405, TestName = "2012")]
+		public void Parse_Address(string dbPath, int pageID)
 		{
-			var db = new RawDatabase(AW2008R2Path);
-			var page = db.GetPage(1, 150);
+			var db = new RawDatabase(dbPath);
+			var page = db.GetPage(1, pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
-				RawType.Int("DatabaseLogID"),
-				RawType.DateTime("PostTime"),
-				RawType.NVarchar("DatabaseUser"),
-				RawType.NVarchar("Event"),
-				RawType.NVarchar("Schema"),
-				RawType.NVarchar("Object"),
-				RawType.NVarchar("TSQL"),
-				RawType.Xml("XmlEvent")
-			});
-
-			Assert.AreEqual(8, result.Count);
-			Assert.AreEqual(1, (int)result["DatabaseLogID"]);
-			Assert.AreEqual(new DateTime(2012, 03, 29, 13, 52, 01, 163), (DateTime)result["PostTime"]);
-			Assert.AreEqual("dbo", result["DatabaseUser"]);
-			Assert.AreEqual("CREATE_TABLE", result["Event"]);
-			Assert.AreEqual("dbo", result["Schema"]);
-			Assert.AreEqual("ErrorLog", result["Object"]);
-			Assert.AreEqual(451, result["TSQL"].ToString().Length);
-			Assert.AreEqual(1745, ((byte[])result["XmlEvent"]).Length);
-		}
-
-		[Test]
-		public void Parse_HumanResources_Department()
-		{
-			var db = new RawDatabase(AW2008R2Path);
-			var page = db.GetPage(1, 665);
-			var record = page.Records.First() as RawPrimaryRecord;
-
-			var result = RawColumnParser.Parse(record, new IRawType[] {
-				RawType.SmallInt("DepartmentID"),
-				RawType.NVarchar("Name"),
-				RawType.NVarchar("GroupName"),
-				RawType.DateTime("ModifiedDate")
-			});
-
-			Assert.AreEqual(4, result.Count);
-			Assert.AreEqual(1, (short)result["DepartmentID"]);
-			Assert.AreEqual("Engineering", result["Name"]);
-			Assert.AreEqual("Research and Development", result["GroupName"]);
-			Assert.AreEqual(new DateTime(2002, 06, 01), (DateTime)result["ModifiedDate"]);
-		}
-
-		[Test]
-		public void Parse_HumanResources_Employee()
-		{
-			var db = new RawDatabase(AW2008R2Path);
-			var page = db.GetPage(1, 3792);
-			var record = page.Records.First() as RawPrimaryRecord;
-
-			var result = RawColumnParser.Parse(record, new IRawType[] {
-				RawType.Int("BusinessEntityID"),
-				RawType.NVarchar("NationalIDNumber"),
-				RawType.NVarchar("LoginID"),
-				RawType.HierarchyID("OrganizationNode"),
-				RawType.NVarchar("JobTitle"),
-				RawType.Date("BirthDate"),
-				RawType.NChar("MaritalStatus", 1),
-				RawType.NChar("Gender", 1),
-				RawType.Date("HireDate"),
-				RawType.Bit("SalariedFlag"),
-				RawType.SmallInt("VacationHours"),
-				RawType.SmallInt("SickLeaveHours"),
-				RawType.Bit("CurrentFlag"),
+				RawType.Int("AddressID"),
+				RawType.NVarchar("AddressLine1"),
+				RawType.NVarchar("AddressLine2"),
+				RawType.NVarchar("City"),
+				RawType.NVarchar("StateProvince"),
+				RawType.NVarchar("CountryRegion"),
+				RawType.NVarchar("PostalCode"),
 				RawType.UniqueIdentifier("rowguid"),
 				RawType.DateTime("ModifiedDate")
 			});
 
-			Assert.AreEqual(15, result.Count);
-			Assert.AreEqual(1, (int)result["BusinessEntityID"]);
-			Assert.AreEqual("295847284", result["NationalIDNumber"].ToString());
-			Assert.AreEqual(@"adventure-works\ken0", result["LoginID"].ToString());
-			Assert.AreEqual(0, ((byte[])result["OrganizationNode"]).Length);
-			Assert.AreEqual("Chief Executive Officer", result["JobTitle"].ToString());
-			Assert.AreEqual(new DateTime(1963, 03, 02), (DateTime)result["BirthDate"]);
-			Assert.AreEqual("S", result["MaritalStatus"].ToString());
-			Assert.AreEqual("M", result["Gender"].ToString());
-			Assert.AreEqual(new DateTime(2003, 02, 15), (DateTime)result["HireDate"]);
-			Assert.AreEqual(true, (bool)result["SalariedFlag"]);
-			Assert.AreEqual(99, (short)result["VacationHours"]);
-			Assert.AreEqual(69, (short)result["SickLeaveHours"]);
-			Assert.AreEqual(true, (bool)result["CurrentFlag"]);
-			Assert.AreEqual(new Guid("f01251e5-96a3-448d-981e-0f99d789110d"), (Guid)result["rowguid"]);
-			Assert.AreEqual(new DateTime(2008, 7, 31), (DateTime)result["ModifiedDate"]);
+			Assert.AreEqual(9, result.Count);
+			Assert.AreEqual(9, (int)result["AddressID"]);
+			Assert.AreEqual("8713 Yosemite Ct.", result["AddressLine1"].ToString());
+			Assert.AreEqual(null, result["AddressLine2"]);
+			Assert.AreEqual("Bothell", result["City"].ToString());
+			Assert.AreEqual("Washington", result["StateProvince"].ToString());
+			Assert.AreEqual("United States", result["CountryRegion"].ToString());
+			Assert.AreEqual("98011", result["PostalCode"].ToString());
+			Assert.AreEqual(new Guid("268af621-76d7-4c78-9441-144fd139821a"), result["rowguid"]);
+			Assert.AreEqual(new DateTime(2002, 07, 01), (DateTime)result["ModifiedDate"]);
 		}
 	}
 }
