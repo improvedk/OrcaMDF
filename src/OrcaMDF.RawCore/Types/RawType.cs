@@ -20,6 +20,7 @@
 		public static RawTinyInt TinyInt(string name) { return new RawTinyInt(name); }
 		public static RawUniqueIdentifier UniqueIdentifier(string name) { return new RawUniqueIdentifier(name); }
 		public static RawVarBinary VarBinary(string name) { return new RawVarBinary(name); }
+		public static RawVarchar Varchar(string name) { return new RawVarchar(name); }
 		public static RawXml Xml(string name) { return new RawXml(name); }
 
 		public abstract object GetValue(byte[] bytes);

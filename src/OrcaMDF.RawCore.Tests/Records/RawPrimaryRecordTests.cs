@@ -1,7 +1,7 @@
-﻿using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OrcaMDF.RawCore.Records;
 using System.Linq;
+using System.Text;
 
 namespace OrcaMDF.RawCore.Tests.Records
 {

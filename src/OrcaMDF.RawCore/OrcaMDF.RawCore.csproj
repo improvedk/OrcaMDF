@@ -46,6 +46,7 @@
     <Compile Include="Records\RawPrimaryRecord.cs" />
     <Compile Include="Records\RawRecord.cs" />
     <Compile Include="Records\RawRecordType.cs" />
+    <Compile Include="Types\RawVarchar.cs" />
     <Compile Include="Types\RawBit.cs" />
     <Compile Include="Types\RawDate.cs" />
     <Compile Include="Types\RawHierarchyID.cs" />
