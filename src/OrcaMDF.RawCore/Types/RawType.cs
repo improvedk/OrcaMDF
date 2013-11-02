@@ -14,6 +14,7 @@
 		public static RawDateTime DateTime(string name) { return new RawDateTime(name); }
 		public static RawHierarchyID HierarchyID(string name) { return new RawHierarchyID(name); }
 		public static RawInt Int(string name) { return new RawInt(name); }
+		public static RawMoney Money(string name) { return new RawMoney(name); }
 		public static RawNChar NChar(string name, short length) { return new RawNChar(name, length); }
 		public static RawNVarchar NVarchar(string name) { return new RawNVarchar(name); }
 		public static RawSmallInt SmallInt(string name) { return new RawSmallInt(name); }
