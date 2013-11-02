@@ -1,6 +1,7 @@
-﻿using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OrcaMDF.Core.Engine.Records.Compression;
+using OrcaMDF.Framework;
+using System.Linq;
 
 namespace OrcaMDF.Core.Tests.Engine.Records.CompressedRecordParserTests
 {

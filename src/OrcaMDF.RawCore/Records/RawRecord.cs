@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using OrcaMDF.Framework;
+using System.Collections;
 
 namespace OrcaMDF.RawCore.Records
 {
@@ -9,7 +10,7 @@ namespace OrcaMDF.RawCore.Records
 		protected readonly RawDatabase DB;
 
 		public bool HasNullBitmap { get; private set; }
-		public RawRecordType Type { get; private set; }
+		public RecordType Type { get; private set; }
 		public bool HasVariableLengthColumns { get; private set; }
 		public bool HasVersioningInformation { get; private set; }
 		public bool Version { get; private set; }
@@ -31,7 +32,7 @@ namespace OrcaMDF.RawCore.Records
 			HasNullBitmap = bits[4];
 			HasVariableLengthColumns = bits[5];
 			HasVersioningInformation = bits[6];
-			Type = (RawRecordType)((RawStatusByteA & 0xE) >> 1);
+			Type = (RecordType)((RawStatusByteA & 0xE) >> 1);
 		}
 	}
 }

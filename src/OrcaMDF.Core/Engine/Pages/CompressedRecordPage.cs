@@ -1,5 +1,5 @@
 ﻿using OrcaMDF.Core.Engine.Records.Compression;
-using OrcaMDF.Core.Framework;
+using OrcaMDF.Framework;
 
 namespace OrcaMDF.Core.Engine.Pages
 {

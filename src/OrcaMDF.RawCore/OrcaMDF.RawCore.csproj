@@ -41,11 +41,9 @@
     <Compile Include="RawDatabase.cs" />
     <Compile Include="RawPage.cs" />
     <Compile Include="RawPageHeader.cs" />
-    <Compile Include="RawPageType.cs" />
     <Compile Include="Records\RawIndexRecord.cs" />
     <Compile Include="Records\RawPrimaryRecord.cs" />
     <Compile Include="Records\RawRecord.cs" />
-    <Compile Include="Records\RawRecordType.cs" />
     <Compile Include="Types\RawVarchar.cs" />
     <Compile Include="Types\RawBit.cs" />
     <Compile Include="Types\RawDate.cs" />
@@ -63,6 +61,12 @@
     <Compile Include="Types\RawNChar.cs" />
     <Compile Include="Types\IRawFixedLengthType.cs" />
     <Compile Include="Types\RawInt.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj">
+      <Project>{4d581cdb-a39c-4c0c-ae2c-6a3070b8983c}</Project>
+      <Name>OrcaMDF.Framework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

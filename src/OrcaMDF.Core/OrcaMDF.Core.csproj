@@ -104,15 +104,6 @@
     <Compile Include="Engine\SqlTypes\SqlUniqueIdentifier.cs" />
     <Compile Include="Engine\SqlTypes\SqlUniquifier.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarBinary.cs" />
-    <Compile Include="Framework\ArrayHelper.cs" />
-    <Compile Include="Framework\ByteConverter.cs" />
-    <Compile Include="Framework\Endian.cs" />
-    <Compile Include="Framework\Offset.cs" />
-    <Compile Include="Framework\SCSU\Exceptions\EndOfInputException.cs" />
-    <Compile Include="Framework\SCSU\Exceptions\IllegalInputException.cs" />
-    <Compile Include="Framework\SCSU\ScsuExpander.cs" />
-    <Compile Include="Framework\SCSU\ScsuConstants.cs" />
-    <Compile Include="Framework\SqlBitConverter.cs" />
     <Compile Include="MetaData\BaseTableData.cs" />
     <Compile Include="MetaData\BaseTables\sysowner.cs" />
     <Compile Include="MetaData\BaseTables\sysobjvalue.cs" />
@@ -195,7 +186,12 @@
     <Compile Include="Engine\SqlTypes\SqlTypeFactory.cs" />
     <Compile Include="Engine\SqlTypes\SqlVarchar.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj">
+      <Project>{4d581cdb-a39c-4c0c-ae2c-6a3070b8983c}</Project>
+      <Name>OrcaMDF.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\NuGet.Build.2.5.0\tools\NuGet.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

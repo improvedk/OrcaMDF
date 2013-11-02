@@ -1,5 +1,5 @@
+using OrcaMDF.Framework;
 using System;
-using OrcaMDF.Core.Framework;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {

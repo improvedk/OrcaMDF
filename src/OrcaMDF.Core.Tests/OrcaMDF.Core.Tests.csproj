@@ -54,8 +54,6 @@
     <Compile Include="Features\DataTypes\SmallDatetimeTests.cs" />
     <Compile Include="Features\StoredProcedures\StoredProcedureTests.cs" />
     <Compile Include="Features\Vardecimal\VardecimalTests.cs" />
-    <Compile Include="Framework\SCSU\ScsuExpanderTests.cs" />
-    <Compile Include="Framework\SqlBitConverterTests.cs" />
     <Compile Include="SqlServerVersion\SqlServer2005PlusTestAttribute.cs" />
     <Compile Include="SqlServerVersion\SqlServer2008PlusTestAttribute.cs" />
     <Compile Include="SqlServerVersion\SqlServerTestAttribute.cs" />
@@ -104,12 +102,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerVersion\SqlServer2005TestAttribute.cs" />
     <Compile Include="SqlServerVersion\SqlServer2008R2TestAttribute.cs" />
-    <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OrcaMDF.Core\OrcaMDF.Core.csproj">
       <Project>{829A5C51-CB21-4DE2-9021-44F6D804D231}</Project>
       <Name>OrcaMDF.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj">
+      <Project>{4D581CDB-A39C-4C0C-AE2C-6A3070B8983C}</Project>
+      <Name>OrcaMDF.Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

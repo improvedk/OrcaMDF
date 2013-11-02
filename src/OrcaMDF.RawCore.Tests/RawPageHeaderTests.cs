@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using OrcaMDF.Framework;
 
 namespace OrcaMDF.RawCore.Tests
 {
@@ -16,7 +17,7 @@ namespace OrcaMDF.RawCore.Tests
 			Assert.AreEqual(33280, header.FlagBits);
 			Assert.AreEqual("(17:858:20)", header.Lsn);
 			Assert.AreEqual(86, header.ObjectID);
-			Assert.AreEqual(RawPageType.Data, header.Type);
+			Assert.AreEqual(PageType.Data, header.Type);
 			Assert.AreEqual(21, header.Pminlen);
 			Assert.AreEqual(256, header.IndexID);
 			Assert.AreEqual(0x4, header.TypeFlagBits);
@@ -48,7 +49,7 @@ namespace OrcaMDF.RawCore.Tests
 			Assert.AreEqual(33280, header.FlagBits);
 			Assert.AreEqual("(30:848:19)", header.Lsn);
 			Assert.AreEqual(31, header.ObjectID);
-			Assert.AreEqual(RawPageType.Data, header.Type);
+			Assert.AreEqual(PageType.Data, header.Type);
 			Assert.AreEqual(21, header.Pminlen);
 			Assert.AreEqual(256, header.IndexID);
 			Assert.AreEqual(0x4, header.TypeFlagBits);
@@ -80,7 +81,7 @@ namespace OrcaMDF.RawCore.Tests
 			Assert.AreEqual(544, header.FlagBits);
 			Assert.AreEqual("(20:577:120)", header.Lsn);
 			Assert.AreEqual(33, header.ObjectID);
-			Assert.AreEqual(RawPageType.Data, header.Type);
+			Assert.AreEqual(PageType.Data, header.Type);
 			Assert.AreEqual(21, header.Pminlen);
 			Assert.AreEqual(256, header.IndexID);
 			Assert.AreEqual(0x0, header.TypeFlagBits);
@@ -112,7 +113,7 @@ namespace OrcaMDF.RawCore.Tests
 			Assert.AreEqual(33280, header.FlagBits);
 			Assert.AreEqual("(48:49:2)", header.Lsn);
 			Assert.AreEqual(31, header.ObjectID);
-			Assert.AreEqual(RawPageType.Data, header.Type);
+			Assert.AreEqual(PageType.Data, header.Type);
 			Assert.AreEqual(21, header.Pminlen);
 			Assert.AreEqual(256, header.IndexID);
 			Assert.AreEqual(0x4, header.TypeFlagBits);

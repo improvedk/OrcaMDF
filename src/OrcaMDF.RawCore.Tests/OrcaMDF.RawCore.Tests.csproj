@@ -66,6 +66,10 @@
     <Compile Include="Records\RawPrimaryRecordTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj">
+      <Project>{4D581CDB-A39C-4C0C-AE2C-6A3070B8983C}</Project>
+      <Name>OrcaMDF.Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OrcaMDF.RawCore\OrcaMDF.RawCore.csproj">
       <Project>{57cfdbd5-8673-4e96-944a-9f9e4c9b50a4}</Project>
       <Name>OrcaMDF.RawCore</Name>

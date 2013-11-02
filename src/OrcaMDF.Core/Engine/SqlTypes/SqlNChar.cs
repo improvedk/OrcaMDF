@@ -1,6 +1,6 @@
+using OrcaMDF.Framework.SCSU;
 using System;
 using System.Text;
-using OrcaMDF.Core.Framework.SCSU;
 
 namespace OrcaMDF.Core.Engine.SqlTypes
 {

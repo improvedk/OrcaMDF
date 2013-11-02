@@ -1,4 +1,5 @@
-﻿using OrcaMDF.RawCore.Records;
+﻿using OrcaMDF.Framework;
+using OrcaMDF.RawCore.Records;
 using System;
 using System.Collections.Generic;
 
@@ -36,15 +37,15 @@ namespace OrcaMDF.RawCore
 				foreach (var entry in SlotArray)
 				{
 					byte statusA = db.Data[FileID][DataFileIndex + entry];
-					var type = (RawRecordType)((statusA & 0xE) >> 1);
+					var type = (RecordType)((statusA & 0xE) >> 1);
 					
 					switch (type)
 					{
-						case RawRecordType.Primary:
+						case RecordType.Primary:
 							yield return new RawPrimaryRecord(DataFileIndex + entry, this, db);
 							break;
 
-						case RawRecordType.Index:
+						case RecordType.Index:
 							yield return new RawIndexRecord(DataFileIndex + entry, this, db);
 							break;
 

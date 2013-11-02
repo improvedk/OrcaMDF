@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OrcaMDF.Framework;
+using System;
 
 namespace OrcaMDF.RawCore
 {
@@ -37,9 +38,9 @@ namespace OrcaMDF.RawCore
 			get { return BitConverter.ToInt32(db.Data[page.FileID], page.DataFileIndex + 24); }
 		}
 
-		public RawPageType Type
+		public PageType Type
 		{
-			get { return (RawPageType)db.Data[page.FileID][page.DataFileIndex + 1]; }
+			get { return (PageType)db.Data[page.FileID][page.DataFileIndex + 1]; }
 		}
 
 		public short Pminlen

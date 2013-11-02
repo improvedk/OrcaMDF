@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using OrcaMDF.Core.Engine.Pages;
+﻿using OrcaMDF.Core.Engine.Pages;
 using OrcaMDF.Core.Engine.Records.VariableLengthDataProxies;
-using OrcaMDF.Core.Framework;
+using OrcaMDF.Framework;
+using System;
+using System.Linq;
 
 namespace OrcaMDF.Core.Engine.Records.Compression
 {
