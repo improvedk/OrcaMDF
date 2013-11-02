@@ -137,5 +137,25 @@ namespace OrcaMDF.RawCore.Tests
 			Assert.AreEqual(new Guid(rowguid), result["rowguid"]);
 			Assert.AreEqual(Convert.ToDateTime(modifiedDate), result["ModifiedDate"]);
 		}
+
+		[TestCase(AW2005Path, 22, TestName = "2005")]
+		public void Parse_Product(string dbPath, int pageID)
+		{
+			var db = new RawDatabase(dbPath);
+			var page = db.GetPage(1, pageID);
+			var record = page.Records.First() as RawPrimaryRecord;
+
+			var result = RawColumnParser.Parse(record, new IRawType[] {
+				RawType.Int("ProductID"),
+				RawType.NVarchar("Name"),
+				RawType.NVarchar("ProductNumber"),
+				RawType.NVarchar("Color"),
+				RawType.Money("StandardCost"),
+				RawType.Money("ListPrice"),
+				RawType.NVarchar("Size")
+			});
+
+			Assert.AreEqual(5, result.Count);
+		}
 	}
 }

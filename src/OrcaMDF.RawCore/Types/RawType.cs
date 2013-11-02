@@ -12,6 +12,7 @@
 		public static RawBit Bit(string name) { return new RawBit(name); }
 		public static RawDate Date(string name) { return new RawDate(name); }
 		public static RawDateTime DateTime(string name) { return new RawDateTime(name); }
+		public static RawDecimal Decimal(string name, byte precision, byte scale) { return new RawDecimal(name, precision, scale); }
 		public static RawHierarchyID HierarchyID(string name) { return new RawHierarchyID(name); }
 		public static RawInt Int(string name) { return new RawInt(name); }
 		public static RawMoney Money(string name) { return new RawMoney(name); }

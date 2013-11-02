@@ -33,6 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArraySegmentExtensions.cs" />
@@ -44,6 +46,7 @@
     <Compile Include="Records\RawIndexRecord.cs" />
     <Compile Include="Records\RawPrimaryRecord.cs" />
     <Compile Include="Records\RawRecord.cs" />
+    <Compile Include="Types\RawDecimal.cs" />
     <Compile Include="Types\RawMoney.cs" />
     <Compile Include="Types\RawVarchar.cs" />
     <Compile Include="Types\RawBit.cs" />
