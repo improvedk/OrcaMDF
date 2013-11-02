@@ -11,7 +11,7 @@ namespace OrcaMDF.RawCore.Tests
 		[Test]
 		public void Parse_AWBuildVersion()
 		{
-			var db = new RawDatabase(AWPath);
+			var db = new RawDatabase(AW2008R2Path);
 			var page = db.GetPage(1, 281);
 			var record = page.Records.First() as RawPrimaryRecord;
 
@@ -32,7 +32,7 @@ namespace OrcaMDF.RawCore.Tests
 		[Test]
 		public void Parse_DatabaseLog()
 		{
-			var db = new RawDatabase(AWPath);
+			var db = new RawDatabase(AW2008R2Path);
 			var page = db.GetPage(1, 150);
 			var record = page.Records.First() as RawPrimaryRecord;
 
@@ -61,7 +61,7 @@ namespace OrcaMDF.RawCore.Tests
 		[Test]
 		public void Parse_HumanResources_Department()
 		{
-			var db = new RawDatabase(AWPath);
+			var db = new RawDatabase(AW2008R2Path);
 			var page = db.GetPage(1, 665);
 			var record = page.Records.First() as RawPrimaryRecord;
 
@@ -82,7 +82,7 @@ namespace OrcaMDF.RawCore.Tests
 		[Test]
 		public void Parse_HumanResources_Employee()
 		{
-			var db = new RawDatabase(AWPath);
+			var db = new RawDatabase(AW2008R2Path);
 			var page = db.GetPage(1, 3792);
 			var record = page.Records.First() as RawPrimaryRecord;
 

@@ -5,12 +5,15 @@ namespace OrcaMDF.RawCore.Tests
 {
 	public class RawDatabaseFixtures : BaseFixture
 	{
-		[Test]
-		public void Constructor()
+		[TestCase(AW2005Path, 640, TestName = "2005")]
+		[TestCase(AW2008Path, 1064, TestName = "2008")]
+		[TestCase(AW2008R2Path, 664, TestName = "2008R2")]
+		[TestCase(AW2012Path, 1064, TestName = "2012")]
+		public void Constructor(string dbPath, int expectedPageCount)
 		{
-			var db = new RawDatabase(AWPath);
+			var db = new RawDatabase(dbPath);
 
-			Assert.AreEqual(25080, db.Pages.Count());
+			Assert.AreEqual(expectedPageCount, db.Pages.Count());
 		}
 	}
 }

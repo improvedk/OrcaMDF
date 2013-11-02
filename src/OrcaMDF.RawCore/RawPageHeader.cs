@@ -22,9 +22,9 @@ namespace OrcaMDF.RawCore
 			get { return BitConverter.ToInt16(db.Data[page.FileID], page.DataFileIndex + 30); }
 		}
 
-		public short FlagBits
+		public ushort FlagBits
 		{
-			get { return BitConverter.ToInt16(db.Data[page.FileID], page.DataFileIndex + 4); }
+			get { return BitConverter.ToUInt16(db.Data[page.FileID], page.DataFileIndex + 4); }
 		}
 
 		public string Lsn
