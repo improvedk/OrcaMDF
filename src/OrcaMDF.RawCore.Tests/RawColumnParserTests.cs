@@ -213,5 +213,29 @@ namespace OrcaMDF.RawCore.Tests
 			Assert.AreEqual(new Guid("cfbda25c-df71-47a7-b81b-64ee161aa37c"), result["rowguid"]);
 			Assert.AreEqual(Convert.ToDateTime("1998-06-01"), result["ModifiedDate"]);
 		}
+
+		[TestCase(AW2005Path, 592, TestName = "2005")]
+		[TestCase(AW2008Path, 216, TestName = "2008")]
+		[TestCase(AW2008R2Path, 410, TestName = "2008R2")]
+		[TestCase(AW2012Path, 216, TestName = "2012")]
+		public void Parse_ProductDescription(string dbPath, int pageID)
+		{
+			var db = new RawDatabase(dbPath);
+			var page = db.GetPage(1, pageID);
+			var record = page.Records.First() as RawPrimaryRecord;
+
+			var result = RawColumnParser.Parse(record, new IRawType[] {
+				RawType.Int("ProductDescriptionID"),
+				RawType.NVarchar("Description"),
+				RawType.UniqueIdentifier("rowguid"),
+				RawType.DateTime("ModifiedDate")
+			});
+
+			Assert.AreEqual(4, result.Count);
+			Assert.AreEqual(3, result["ProductDescriptionID"]);
+			Assert.AreEqual("Chromoly steel.", result["Description"]);
+			Assert.AreEqual(new Guid("301eed3a-1a82-4855-99cb-2afe8290d641"), result["rowguid"]);
+			Assert.AreEqual(Convert.ToDateTime("2003-06-01"), result["ModifiedDate"]);
+		}
 	}
 }
