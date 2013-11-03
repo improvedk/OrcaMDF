@@ -289,5 +289,37 @@ namespace OrcaMDF.RawCore.Tests
 			Assert.AreEqual(new Guid(rowguid), result["rowguid"]);
 			Assert.AreEqual(Convert.ToDateTime("2003-06-01"), result["ModifiedDate"]);
 		}
+
+		[TestCase(AW2005Path, 337, TestName = "2005")]
+		[TestCase(AW2008Path, 386, TestName = "2008")]
+		[TestCase(AW2008R2Path, 175, TestName = "2008R2")]
+		[TestCase(AW2012Path, 386, TestName = "2012")]
+		public void Parse_SalesOrderDetail(string dbPath, int pageID)
+		{
+			var db = new RawDatabase(dbPath);
+			var page = db.GetPage(1, pageID);
+			var record = page.Records.First() as RawPrimaryRecord;
+
+			var result = RawColumnParser.Parse(record, new IRawType[] {
+				RawType.Int("SalesOrderID"),
+				RawType.Int("SalesOrderDetailID"),
+				RawType.SmallInt("OrderQty"),
+				RawType.Int("ProductID"),
+				RawType.Money("UnitPrice"),
+				RawType.Money("UnitPriceDiscount"),
+				RawType.UniqueIdentifier("rowguid"),
+				RawType.DateTime("ModifiedDate")
+			});
+
+			Assert.AreEqual(8, result.Count);
+			Assert.AreEqual(71774, result["SalesOrderID"]);
+			Assert.AreEqual(110562, result["SalesOrderDetailID"]);
+			Assert.AreEqual(1, result["OrderQty"]);
+			Assert.AreEqual(836, result["ProductID"]);
+			Assert.AreEqual(356.898, result["UnitPrice"]);
+			Assert.AreEqual(0.00, result["UnitPriceDiscount"]);
+			Assert.AreEqual(new Guid("e3a1994c-7a68-4ce8-96a3-77fdd3bbd730"), result["rowguid"]);
+			Assert.AreEqual(Convert.ToDateTime("2004-06-01"), result["ModifiedDate"]);
+		}
 	}
 }
