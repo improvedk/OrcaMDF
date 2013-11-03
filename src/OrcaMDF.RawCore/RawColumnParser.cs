@@ -40,7 +40,7 @@ namespace OrcaMDF.RawCore
 
 			foreach (var type in schema)
 			{
-				object value;
+				object value = null;
 
 				if (type is IRawFixedLengthType)
 				{
@@ -67,8 +67,14 @@ namespace OrcaMDF.RawCore
 				}
 				else
 				{
-					var variableType = (IRawVariableLengthType)type;
-					value = variableType.GetValue(variableLengthData[variableIndex++]);
+					// We may have schema columns that haven't been persisted, in which case we'll simply miss certain
+					// variable length offset entries from the record completely. These can only be at the end. If we're
+					// missing a value, it's an implicit null (ignoring 2012's ability to have non-persisted default values).
+					if (variableIndex < variableLengthData.Length)
+					{
+						var variableType = (IRawVariableLengthType)type;
+						value = variableType.GetValue(variableLengthData[variableIndex++]);
+					}
 				}
 
 				// If null bitmap indicates a null value, ignore the previously found value and return null instead
