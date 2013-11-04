@@ -321,5 +321,61 @@ namespace OrcaMDF.RawCore.Tests
 			Assert.AreEqual(new Guid("e3a1994c-7a68-4ce8-96a3-77fdd3bbd730"), result["rowguid"]);
 			Assert.AreEqual(Convert.ToDateTime("2004-06-01"), result["ModifiedDate"]);
 		}
+
+		[TestCase(AW2005Path, 316, 609, TestName = "2005")]
+		[TestCase(AW2008Path, 393, 29847, TestName = "2008")]
+		[TestCase(AW2008R2Path, 221, 29847, TestName = "2008R2")]
+		[TestCase(AW2012Path, 393, 29847, TestName = "2012")]
+		public void Parse_SalesOrderHeader(string dbPath, int pageID, int customerID)
+		{
+			var db = new RawDatabase(dbPath);
+			var page = db.GetPage(1, pageID);
+			var record = page.Records.First() as RawPrimaryRecord;
+
+			var result = RawColumnParser.Parse(record, new IRawType[] {
+				RawType.Int("SalesOrderID"),
+				RawType.TinyInt("RevisionNumber"),
+				RawType.DateTime("OrderDate"),
+				RawType.DateTime("DueDate"),
+				RawType.DateTime("ShipDate"),
+				RawType.TinyInt("Status"),
+				RawType.Bit("OnlineOrderFlag"),
+				RawType.NVarchar("PurchaseOrderNumber"),
+				RawType.NVarchar("AccountNumber"),
+				RawType.Int("CustomerID"),
+				RawType.Int("ShipToAddressID"),
+				RawType.Int("BillToAddressID"),
+				RawType.NVarchar("ShipMethod"),
+				RawType.Varchar("CreditCardApprovalCode"),
+				RawType.Money("SubTotal"),
+				RawType.Money("TaxAmt"),
+				RawType.Money("Freight"),
+				RawType.NVarchar("Comment"),
+				RawType.UniqueIdentifier("rowguid"),
+				RawType.DateTime("ModifiedDate")
+			});
+
+			Assert.AreEqual(20, result.Count);
+			Assert.AreEqual(71774, result["SalesOrderID"]);
+			Assert.AreEqual(1, result["RevisionNumber"]);
+			Assert.AreEqual(Convert.ToDateTime("2004-06-01"), result["OrderDate"]);
+			Assert.AreEqual(Convert.ToDateTime("2004-06-13"), result["DueDate"]);
+			Assert.AreEqual(Convert.ToDateTime("2004-06-08"), result["ShipDate"]);
+			Assert.AreEqual(5, result["Status"]);
+			Assert.AreEqual(false, result["OnlineOrderFlag"]);
+			Assert.AreEqual("PO348186287", result["PurchaseOrderNumber"]);
+			Assert.AreEqual("10-4020-000609", result["AccountNumber"]);
+			Assert.AreEqual(customerID, result["CustomerID"]);
+			Assert.AreEqual(1092, result["ShipToAddressID"]);
+			Assert.AreEqual(1092, result["BillToAddressID"]);
+			Assert.AreEqual("CARGO TRANSPORT 5", result["ShipMethod"]);
+			Assert.AreEqual(null, result["CreditCardApprovalCode"]);
+			Assert.AreEqual(880.3484, result["SubTotal"]);
+			Assert.AreEqual(70.4279, result["TaxAmt"]);
+			Assert.AreEqual(22.0087, result["Freight"]);
+			Assert.AreEqual(null, result["Comment"]);
+			Assert.AreEqual(new Guid("89e42cdc-8506-48a2-b89b-eb3e64e3554e"), result["rowguid"]);
+			Assert.AreEqual(Convert.ToDateTime("2004-06-08"), result["ModifiedDate"]);
+		}
 	}
 }
