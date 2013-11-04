@@ -6,6 +6,7 @@ using System.Threading;
 using OrcaMDF.Core.Engine.Pages;
 using OrcaMDF.Core.Engine.Pages.PFS;
 using OrcaMDF.Core.MetaData;
+using OrcaMDF.Core.MetaData.Exceptions;
 
 namespace OrcaMDF.Core.Engine
 {
@@ -13,6 +14,7 @@ namespace OrcaMDF.Core.Engine
 	{
 		public string Name { get; private set; }
 		public short ID { get; private set; }
+		public Guid BindingID { get; private set; }
 		public DmvGenerator Dmvs { get; private set; }
 
 		internal Dictionary<short, DataFile> Files = new Dictionary<short, DataFile>();
@@ -47,6 +49,12 @@ namespace OrcaMDF.Core.Engine
 					// We know however that, currently, FileHeaderPage doesn't use the reference. Should be changed
 					// later on.
 					var fileHeaderPage = new FileHeaderPage(fileHeaderBytes, this);
+
+					if (BindingID == Guid.Empty)
+						BindingID = fileHeaderPage.BindingID;
+
+					if (BindingID != fileHeaderPage.BindingID)
+						throw new BindingIDMismatchException(file, BindingID, fileHeaderPage.BindingID);
 
 					// Store reference to data file
 					Files.Add(fileHeaderPage.FileID, new DataFile(fileHeaderPage.FileID, file));

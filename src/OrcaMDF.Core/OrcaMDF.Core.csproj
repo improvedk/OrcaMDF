@@ -138,6 +138,8 @@
     <Compile Include="MetaData\Enumerations\AllocationUnitType.cs" />
     <Compile Include="MetaData\Enumerations\IndexType.cs" />
     <Compile Include="MetaData\Enumerations\SystemType.cs" />
+    <Compile Include="MetaData\Exceptions\BindingIdMismatchException.cs" />
+    <Compile Include="MetaData\Exceptions\OrcaMDFException.cs" />
     <Compile Include="MetaData\Exceptions\UnknownIndexException.cs" />
     <Compile Include="MetaData\Exceptions\UnknownTableException.cs" />
     <Compile Include="MetaData\ISchema.cs" />
