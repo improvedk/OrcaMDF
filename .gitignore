@@ -4,3 +4,4 @@ src/*/obj/
 src/*/bin/
 _ReSharper.OrcaMDF
 DBTests
+*.linq

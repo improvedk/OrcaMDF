@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="ArrayHelper.cs" />
     <Compile Include="ByteConverter.cs" />
+    <Compile Include="Corruptor.cs" />
     <Compile Include="Endian.cs" />
     <Compile Include="Offset.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
