@@ -8,6 +8,11 @@ namespace OrcaMDF.RawCore
 {
 	public class RawColumnParser
 	{
+		public static IEnumerable<Dictionary<string, object>> Parse(IEnumerable<RawPrimaryRecord> records, IRawType[] schema)
+		{
+			return records.Select(x => Parse(x, schema));
+		}
+
 		public static Dictionary<string, object> Parse(RawPrimaryRecord record, IRawType[] schema)
 		{
 			return Parse(
