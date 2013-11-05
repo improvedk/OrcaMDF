@@ -10,6 +10,7 @@
 		}
 
 		public static RawBigInt BigInt(string name) { return new RawBigInt(name); }
+		public static RawBinary Binary(string name, short length) { return new RawBinary(name, length); }
 		public static RawBit Bit(string name) { return new RawBit(name); }
 		public static RawChar Char(string name, short length) { return new RawChar(name, length); }
 		public static RawDate Date(string name) { return new RawDate(name); }
