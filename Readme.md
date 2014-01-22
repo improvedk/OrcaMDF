@@ -6,6 +6,10 @@ SQL Server 2008 R2 is the current target but as the storage format is almost ide
 
 If you have any comments, suggestions or fixes, please let me know.
 
+OrcaMDF
+=======
+OrcaMDF is a parser for Microsoft SQL Server data files. It allows you to read SQL Server data files without the use of SQL Server.
+
 Recommended reading
 -------------------
 Until I get the readme up to date, here's a series of blog posts detailing what OrcaMDF can do as well as how to use it:
