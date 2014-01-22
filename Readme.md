@@ -10,6 +10,17 @@ OrcaMDF
 =======
 OrcaMDF is a parser for Microsoft SQL Server data files. It allows you to read SQL Server data files without the use of SQL Server.
 
+There are two ways in which you can use OrcaMDF to parse data files - either through the ```Database``` or the ```RawDatabase``` class.
+
+Database
+--------
+```Database``` is intended as a complete replacement for SQL Server when it comes to reading data files. It will automatically parse multiple data files, ensure they belong to the same database, read the boot page, read the metadata, expose DMVs are you're used to and allow you to scan both heaps and indexes (clustered & nonclustered).
+
+While this results in a very powerful interface on top of a raw database file, it's also somewhat brittle as the database *must* be a SQL Server 2008 R2 database, and it must be absolutely corruption-free.
+
+RawDatabase
+-----------
+
 Recommended reading
 -------------------
 Until I get the readme up to date, here's a series of blog posts detailing what OrcaMDF can do as well as how to use it:
