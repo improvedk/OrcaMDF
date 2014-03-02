@@ -347,7 +347,14 @@ namespace OrcaMDF.OMS
 
 		private void menuItem2_Click(object sender, EventArgs e)
 		{
-			showRows(getRowsFromDmv(treeview.SelectedNode.Text));
+		    try
+		    {
+		        showRows(getRowsFromDmv(treeview.SelectedNode.Text));
+		    }
+		    catch (Exception ex)
+		    {
+		        logException(ex);
+		    }
 		}
 
 		private IEnumerable<Row> getRowsFromBaseTable(string table)
@@ -383,7 +390,14 @@ namespace OrcaMDF.OMS
 
 		private void menuItem3_Click(object sender, EventArgs e)
 		{
-			showRows(getRowsFromBaseTable(treeview.SelectedNode.Text));
+		    try
+		    {
+		        showRows(getRowsFromBaseTable(treeview.SelectedNode.Text));
+		    }
+		    catch (Exception ex)
+		    {
+		        logException(ex);
+		    }
 		}
 
 		private void menuItem4_Click(object sender, EventArgs e)
