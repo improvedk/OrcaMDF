@@ -9,24 +9,20 @@ namespace OrcaMDF.RawCore
 	{
 		private RawDatabase db;
 
-		public int DataFileIndex { get { return PageID * 8192; } }
 		public int PageID { get; private set; }
 		public short FileID { get; private set; }
 		public RawPageHeader Header { get; private set; }
-		
-		public ArraySegment<byte> RawBytes
-		{
-			get { return new ArraySegment<byte>(db.Data[FileID], DataFileIndex, 8192); }
-		}
 
+		public byte[] RawBytes;
+		
 		public IEnumerable<short> SlotArray
 		{
 			get
 			{
-				int pageEndIndex = DataFileIndex + 8192;
+				int pageEndIndex = 8192;
 
 				for (var i = 1; i <= Header.SlotCnt; i++)
-					yield return BitConverter.ToInt16(db.Data[FileID], pageEndIndex - i * 2);
+					yield return BitConverter.ToInt16(RawBytes, pageEndIndex - i * 2);
 			}
 		}
 
@@ -36,21 +32,21 @@ namespace OrcaMDF.RawCore
 			{
 				foreach (var entry in SlotArray)
 				{
-					byte statusA = db.Data[FileID][DataFileIndex + entry];
+					byte statusA = RawBytes[entry];
 					var type = (RecordType)((statusA & 0xE) >> 1);
 					
 					switch (type)
 					{
 						case RecordType.Primary:
-							yield return new RawPrimaryRecord(DataFileIndex + entry, this, db);
+							yield return new RawPrimaryRecord(entry, this, db);
 							break;
 
 						case RecordType.Index:
-							yield return new RawIndexRecord(DataFileIndex + entry, this, db);
+							yield return new RawIndexRecord(entry, this, db);
 							break;
 
 						default:
-							yield return new RawRecord(DataFileIndex + entry, this, db);
+							yield return new RawRecord(entry, this, db);
 							break;
 					}
 				}
@@ -63,6 +59,7 @@ namespace OrcaMDF.RawCore
 			FileID = fileID;
 			PageID = pageID;
 			Header = new RawPageHeader(this, db);
+			RawBytes = db.GetPageBytes(fileID, pageID);
 		}
 	}
 }

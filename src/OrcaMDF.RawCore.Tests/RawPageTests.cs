@@ -15,9 +15,8 @@ namespace OrcaMDF.RawCore.Tests
 			var page = db.GetPage(1, pageID);
 
 			Assert.AreEqual(1, page.FileID);
-			Assert.AreEqual(pageID * 8192, page.DataFileIndex);
 			Assert.AreEqual(pageID, page.PageID);
-			Assert.AreEqual(8192, page.RawBytes.Count);
+			Assert.AreEqual(8192, page.RawBytes.Length);
 			Assert.AreEqual(25, page.SlotArray.Count());
 			Assert.AreEqual(25, page.Records.Count());
 		}

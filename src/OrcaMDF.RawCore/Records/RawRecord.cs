@@ -17,7 +17,7 @@ namespace OrcaMDF.RawCore.Records
 
 		public byte RawStatusByteA
 		{
-			get { return DB.Data[Page.FileID][Index]; }
+			get { return Page.RawBytes[Index]; }
 		}
 
 		public RawRecord(int index, RawPage page, RawDatabase db)

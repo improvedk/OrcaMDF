@@ -19,7 +19,7 @@ namespace OrcaMDF.RawCore.Records
 
 		public byte RawStatusByteB
 		{
-			get { return DB.Data[Page.FileID][Index + 1]; }
+			get { return Page.RawBytes[Index + 1]; }
 		}
 
 		public bool IsGhostForwardedRecord
@@ -29,22 +29,22 @@ namespace OrcaMDF.RawCore.Records
 
 		public short NullBitmapPointer
 		{
-			get { return BitConverter.ToInt16(DB.Data[Page.FileID], Index + 2); }
+			get { return BitConverter.ToInt16(Page.RawBytes, Index + 2); }
 		}
 
 		public short NullBitmapColumnCount
 		{
-			get { return BitConverter.ToInt16(DB.Data[Page.FileID], Index + NullBitmapPointer); }
+			get { return BitConverter.ToInt16(Page.RawBytes, Index + NullBitmapPointer); }
 		}
 
 		public ArraySegment<byte> FixedLengthData
 		{
-			get { return new ArraySegment<byte>(DB.Data[Page.FileID], Index + 4, NullBitmapPointer - 4); }
+			get { return new ArraySegment<byte>(Page.RawBytes, Index + 4, NullBitmapPointer - 4); }
 		}
 
 		public ArraySegment<byte> NullBitmapRawBytes
 		{
-			get { return new ArraySegment<byte>(DB.Data[Page.FileID], Index + NullBitmapPointer + 2, (NullBitmapColumnCount + 7) / 8); }
+			get { return new ArraySegment<byte>(Page.RawBytes, Index + NullBitmapPointer + 2, (NullBitmapColumnCount + 7) / 8); }
 		}
 
 		public short? NumberOfVariableLengthOffsetArrayEntries
@@ -54,7 +54,7 @@ namespace OrcaMDF.RawCore.Records
 				if (!HasVariableLengthColumns)
 					return null;
 
-				return BitConverter.ToInt16(DB.Data[Page.FileID], Index + pointerToEndOfNullBitmap);
+				return BitConverter.ToInt16(Page.RawBytes, Index + pointerToEndOfNullBitmap);
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace OrcaMDF.RawCore.Records
 				if (HasVariableLengthColumns)
 				{
 					for (int i = 0; i < NumberOfVariableLengthOffsetArrayEntries; i++)
-						yield return BitConverter.ToInt16(DB.Data[Page.FileID], Index + pointerToEndOfNullBitmap + 2 + i * 2);
+						yield return BitConverter.ToInt16(Page.RawBytes, Index + pointerToEndOfNullBitmap + 2 + i * 2);
 				}
 			}
 		}
@@ -81,7 +81,7 @@ namespace OrcaMDF.RawCore.Records
 					int previousPointer = endOfVariableLengthArray;
 					foreach (short entry in VariableLengthOffsetArray)
 					{
-						yield return new ArraySegment<byte>(DB.Data[Page.FileID], Index + previousPointer, entry - previousPointer);
+						yield return new ArraySegment<byte>(Page.RawBytes, Index + previousPointer, entry - previousPointer);
 						
 						previousPointer = entry;
 					}
