@@ -5,3 +5,4 @@ src/*/bin/
 _ReSharper.OrcaMDF
 DBTests
 *.linq
+OrcaMDF.sln.cache
