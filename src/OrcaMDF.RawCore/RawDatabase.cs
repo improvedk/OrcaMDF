@@ -6,14 +6,11 @@ namespace OrcaMDF.RawCore
 {
 	public class RawDatabase : IDisposable
 	{
-		//internal Dictionary<short, byte[]> Data;
 		private Dictionary<short, Stream> fileStreams = new Dictionary<short,Stream>();
 		private Dictionary<short, long> fileSizes = new Dictionary<short,long>();
 
 		public RawDatabase(string filePath)
 		{
-			//Data = new Dictionary<short, byte[]>();
-			//Data.Add(1, File.ReadAllBytes(filePath));
 			fileStreams.Add(1, File.OpenRead(filePath));
 			fileSizes.Add(1, new FileInfo(filePath).Length);
 		}
