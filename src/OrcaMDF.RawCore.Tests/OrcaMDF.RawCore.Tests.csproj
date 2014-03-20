@@ -64,6 +64,7 @@
     <Compile Include="RawPageHeaderTests.cs" />
     <Compile Include="RawPageTests.cs" />
     <Compile Include="Records\RawPrimaryRecordTests.cs" />
+    <Compile Include="Utilities\SQL2012\SQL2012BaseSchemaTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj">
@@ -104,6 +105,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -22,6 +22,7 @@
 		public static RawNChar NChar(string name, short length) { return new RawNChar(name, length); }
 		public static RawNVarchar NVarchar(string name) { return new RawNVarchar(name); }
 		public static RawSmallInt SmallInt(string name) { return new RawSmallInt(name); }
+		public static RawSysname Sysname(string name) { return new RawSysname(name); }
 		public static RawTinyInt TinyInt(string name) { return new RawTinyInt(name); }
 		public static RawUniqueIdentifier UniqueIdentifier(string name) { return new RawUniqueIdentifier(name); }
 		public static RawVarBinary VarBinary(string name) { return new RawVarBinary(name); }

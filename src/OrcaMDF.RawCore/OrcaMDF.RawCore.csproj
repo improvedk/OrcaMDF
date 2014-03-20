@@ -51,6 +51,7 @@
     <Compile Include="Types\RawChar.cs" />
     <Compile Include="Types\RawDecimal.cs" />
     <Compile Include="Types\RawMoney.cs" />
+    <Compile Include="Types\RawSysname.cs" />
     <Compile Include="Types\RawVarchar.cs" />
     <Compile Include="Types\RawBit.cs" />
     <Compile Include="Types\RawDate.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Types\RawNChar.cs" />
     <Compile Include="Types\IRawFixedLengthType.cs" />
     <Compile Include="Types\RawInt.cs" />
+    <Compile Include="Utilities\SQL2012\SQL2012SystemObjects.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj">
