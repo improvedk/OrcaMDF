@@ -14,8 +14,8 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 187, "11.0.2100.60", "2012-03-15", TestName = "2012")]
 		public void Parse_BuildVersion(string dbPath, int pageID, string databaseVersion, string versionDate)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
@@ -38,8 +38,8 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 405, TestName = "2012")]
 		public void Parse_Address(string dbPath, int pageID)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
@@ -72,8 +72,8 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 448, "2001-08-01", TestName = "2012")]
 		public void Parse_Customer(string dbPath, int pageID, string modifiedDate)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
@@ -118,8 +118,8 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 178, 29485, 1086, "16765338-dbe4-4421-b5e9-3836b9278e63", "2003-09-01", TestName = "2012")]
 		public void Parse_CustomerAddress(string dbPath, int pageID, int customerID, int addressID, string rowguid, string modifiedDate)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
@@ -144,8 +144,8 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 520, TestName = "2012")]
 		public void Parse_Product(string dbPath, int pageID)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
@@ -194,8 +194,8 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 186, TestName = "2012")]
 		public void Parse_ProductCategory(string dbPath, int pageID)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
@@ -220,8 +220,8 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 216, TestName = "2012")]
 		public void Parse_ProductDescription(string dbPath, int pageID)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
@@ -244,8 +244,8 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 272, TestName = "2012")]
 		public void Parse_ProductModel(string dbPath, int pageID)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
@@ -270,8 +270,8 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 362, "9fcbccbf-56cc-48e5-9bf9-42fc99af0968", TestName = "2012")]
 		public void Parse_ProductModelProductDescription(string dbPath, int pageID, string rowguid)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
@@ -296,8 +296,8 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 386, TestName = "2012")]
 		public void Parse_SalesOrderDetail(string dbPath, int pageID)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {
@@ -328,8 +328,8 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 393, 29847, TestName = "2012")]
 		public void Parse_SalesOrderHeader(string dbPath, int pageID, int customerID)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = page.Records.First() as RawPrimaryRecord;
 
 			var result = RawColumnParser.Parse(record, new IRawType[] {

@@ -5,7 +5,6 @@ namespace OrcaMDF.RawCore
 {
 	public class RawPageHeader
 	{
-		private readonly RawDatabase db;
 		private readonly RawPage page;
 
 		public ArraySegment<byte> RawBytes
@@ -128,9 +127,8 @@ namespace OrcaMDF.RawCore
 			get { return new ArraySegment<byte>(page.RawBytes, 60, 4); }
 		}
 
-		public RawPageHeader(RawPage page, RawDatabase db)
+		public RawPageHeader(RawPage page)
 		{
-			this.db = db;
 			this.page = page;
 		}
 	}

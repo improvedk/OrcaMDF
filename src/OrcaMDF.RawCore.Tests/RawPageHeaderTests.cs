@@ -8,8 +8,8 @@ namespace OrcaMDF.RawCore.Tests
 		[Test]
 		public void Parse_Header_2005()
 		{
-			var db = new RawDatabase(AW2005Path);
-			var header = db.GetPage(1, 118).Header;
+			var db = new RawDataFile(AW2005Path);
+			var header = db.GetPage(118).Header;
 
 			Assert.AreEqual(96, header.RawBytes.Count);
 			Assert.AreEqual(8040, header.FreeCnt);
@@ -40,8 +40,8 @@ namespace OrcaMDF.RawCore.Tests
 		[Test]
 		public void Parse_Header_2008()
 		{
-			var db = new RawDatabase(AW2008Path);
-			var header = db.GetPage(1, 187).Header;
+			var db = new RawDataFile(AW2008Path);
+			var header = db.GetPage(187).Header;
 
 			Assert.AreEqual(96, header.RawBytes.Count);
 			Assert.AreEqual(8038, header.FreeCnt);
@@ -72,8 +72,8 @@ namespace OrcaMDF.RawCore.Tests
 		[Test]
 		public void Parse_Header_2008R2()
 		{
-			var db = new RawDatabase(AW2008R2Path);
-			var header = db.GetPage(1, 184).Header;
+			var db = new RawDataFile(AW2008R2Path);
+			var header = db.GetPage(184).Header;
 
 			Assert.AreEqual(96, header.RawBytes.Count);
 			Assert.AreEqual(8038, header.FreeCnt);
@@ -104,8 +104,8 @@ namespace OrcaMDF.RawCore.Tests
 		[Test]
 		public void Parse_Header_2012()
 		{
-			var db = new RawDatabase(AW2012Path);
-			var header = db.GetPage(1, 187).Header;
+			var db = new RawDataFile(AW2012Path);
+			var header = db.GetPage(187).Header;
 
 			Assert.AreEqual(96, header.RawBytes.Count);
 			Assert.AreEqual(8042, header.FreeCnt);

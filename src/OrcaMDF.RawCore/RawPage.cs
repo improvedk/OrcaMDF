@@ -7,13 +7,11 @@ namespace OrcaMDF.RawCore
 {
 	public class RawPage
 	{
-		private RawDatabase db;
-
 		public int PageID { get; private set; }
-		public short FileID { get; private set; }
 		public RawPageHeader Header { get; private set; }
-
 		public byte[] RawBytes;
+
+		private readonly RawDataFile dataFile;
 		
 		public IEnumerable<short> SlotArray
 		{
@@ -38,28 +36,27 @@ namespace OrcaMDF.RawCore
 					switch (type)
 					{
 						case RecordType.Primary:
-							yield return new RawPrimaryRecord(entry, this, db);
+							yield return new RawPrimaryRecord(entry, this, dataFile);
 							break;
 
 						case RecordType.Index:
-							yield return new RawIndexRecord(entry, this, db);
+							yield return new RawIndexRecord(entry, this, dataFile);
 							break;
 
 						default:
-							yield return new RawRecord(entry, this, db);
+							yield return new RawRecord(entry, this, dataFile);
 							break;
 					}
 				}
 			}
 		}
 
-		public RawPage(short fileID, int pageID, RawDatabase db)
+		public RawPage(int pageID, RawDataFile dataFile)
 		{
-			this.db = db;
-			FileID = fileID;
+			this.dataFile = dataFile;
 			PageID = pageID;
-			Header = new RawPageHeader(this, db);
-			RawBytes = db.GetPageBytes(fileID, pageID);
+			Header = new RawPageHeader(this);
+			RawBytes = dataFile.GetPageBytes(pageID);
 		}
 	}
 }

@@ -13,8 +13,8 @@ namespace OrcaMDF.RawCore.Tests.Records
 		[TestCase(AW2012Path, 448, 0x00, "Mr.", TestName = "2012")]
 		public void Parse(string dbPath, int pageID, byte secondNullBitmapByte, string title)
 		{
-			var db = new RawDatabase(dbPath);
-			var page = db.GetPage(1, pageID);
+			var db = new RawDataFile(dbPath);
+			var page = db.GetPage(pageID);
 			var record = (RawPrimaryRecord)page.Records.First();
 
 			Assert.AreEqual(true, record.HasNullBitmap);

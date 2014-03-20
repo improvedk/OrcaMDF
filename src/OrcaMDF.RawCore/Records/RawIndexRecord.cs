@@ -2,8 +2,8 @@
 {
 	public class RawIndexRecord : RawRecord
 	{
-		public RawIndexRecord(int index, RawPage page, RawDatabase database)
-			: base (index, page, database)
+		public RawIndexRecord(int index, RawPage page, RawDataFile dataFile)
+			: base (index, page, dataFile)
 		{ }
 	}
 }

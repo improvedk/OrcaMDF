@@ -7,7 +7,7 @@ namespace OrcaMDF.RawCore.Records
 	{
 		protected readonly int Index;
 		protected readonly RawPage Page;
-		protected readonly RawDatabase DB;
+		protected readonly RawDataFile DataFile;
 
 		public bool HasNullBitmap { get; private set; }
 		public RecordType Type { get; private set; }
@@ -20,11 +20,11 @@ namespace OrcaMDF.RawCore.Records
 			get { return Page.RawBytes[Index]; }
 		}
 
-		public RawRecord(int index, RawPage page, RawDatabase db)
+		public RawRecord(int index, RawPage page, RawDataFile dataFile)
 		{
 			this.Index = index;
 			this.Page = page;
-			this.DB = db;
+			this.DataFile = dataFile;
 
 			var bits = new BitArray(new[] { RawStatusByteA });
 

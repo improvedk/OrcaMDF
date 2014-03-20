@@ -11,7 +11,7 @@ namespace OrcaMDF.RawCore.Tests
 		[TestCase(AW2012Path, 1064, TestName = "2012")]
 		public void Constructor(string dbPath, int expectedPageCount)
 		{
-			var db = new RawDatabase(dbPath);
+			var db = new RawDataFile(dbPath);
 
 			Assert.AreEqual(expectedPageCount, db.Pages.Count());
 		}
