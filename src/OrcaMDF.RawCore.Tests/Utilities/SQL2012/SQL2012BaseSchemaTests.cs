@@ -19,17 +19,17 @@ namespace OrcaMDF.RawCore.Tests.Utilities.SQL2012
 
 			Assert.AreEqual(2291, rows.Count());
 
-			var testRow = rows.Single(x => (int)x["id"] == -93184835);
-			Assert.AreEqual("sp_helpsrvrolemember", testRow["name"]);
-			Assert.AreEqual(Convert.ToDateTime("2011-11-04 21:12:23.257"), testRow["created"]);
+			var testRow = rows.Single(x => x.id == -93184835);
+			Assert.AreEqual("sp_helpsrvrolemember", testRow.name);
+			Assert.AreEqual(Convert.ToDateTime("2011-11-04 21:12:23.257"), testRow.created);
 
-			testRow = rows.Single(x => (int)x["id"] == 60);
-			Assert.AreEqual("sysobjvalues", testRow["name"]);
-			Assert.AreEqual(Convert.ToDateTime("2008-07-09 16:20:00.633"), testRow["modified"]);
+			testRow = rows.Single(x => x.id == 60);
+			Assert.AreEqual("sysobjvalues", testRow.name);
+			Assert.AreEqual(Convert.ToDateTime("2008-07-09 16:20:00.633"), testRow.modified);
 
-			testRow = rows.Single(x => (int)x["id"] == 1977058079);
-			Assert.AreEqual("QueryNotificationErrorsQueue", testRow["name"]);
-			Assert.AreEqual(Convert.ToDateTime("2008-07-09 16:20:00.913"), testRow["created"]);
+			testRow = rows.Single(x => x.id == 1977058079);
+			Assert.AreEqual("QueryNotificationErrorsQueue", testRow.name);
+			Assert.AreEqual(Convert.ToDateTime("2008-07-09 16:20:00.913"), testRow.created);
 		}
 	}
 }

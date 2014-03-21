@@ -1,4 +1,6 @@
-﻿using OrcaMDF.RawCore.Records;
+﻿using System;
+using OrcaMDF.Framework;
+using OrcaMDF.RawCore.Records;
 using OrcaMDF.RawCore.Types;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,12 +10,12 @@ namespace OrcaMDF.RawCore
 {
 	public class RawColumnParser
 	{
-		public static IEnumerable<Dictionary<string, object>> Parse(IEnumerable<RawPrimaryRecord> records, IRawType[] schema)
+		public static IEnumerable<dynamic> Parse(IEnumerable<RawPrimaryRecord> records, IRawType[] schema)
 		{
 			return records.Select(x => Parse(x, schema));
 		}
 
-		public static Dictionary<string, object> Parse(RawPrimaryRecord record, IRawType[] schema)
+		public static dynamic Parse(RawPrimaryRecord record, IRawType[] schema)
 		{
 			return Parse(
 				record.FixedLengthData.ToArray(),
@@ -23,9 +25,9 @@ namespace OrcaMDF.RawCore
 			);
 		}
 		
-		public static Dictionary<string, object> Parse(byte[] fixedLengthData, byte[][] variableLengthData, byte[] nullBitmapBytes, IEnumerable<IRawType> schema)
+		public static dynamic Parse(byte[] fixedLengthData, byte[][] variableLengthData, byte[] nullBitmapBytes, IEnumerable<IRawType> schema)
 		{
-			var result = new Dictionary<string, object>();
+			var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 			var nullBitmap = new BitArray(nullBitmapBytes);
 
 			// Pointer to current read position from the fixed length data
@@ -89,7 +91,7 @@ namespace OrcaMDF.RawCore
 				result.Add(type.Name, value);
 			}
 
-			return result;
+			return new DynamicRow(result);
 		}
 	}
 }
