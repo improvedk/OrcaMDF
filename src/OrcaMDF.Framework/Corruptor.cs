@@ -46,6 +46,16 @@ namespace OrcaMDF.Framework
 		}
 
 		/// <summary>
+		/// Overwrites a single page with all zeros
+		/// </summary>
+		/// <param name="path">The MDF file to corrupt</param>
+		/// <param name="pageID">The ID of the page to zero out</param>
+		public static void CorruptPage(string path, int pageID)
+		{
+			CorruptFile(path, 1, pageID, pageID);
+		}
+
+		/// <summary>
 		/// Corrups an MDF file by overwriting pages with all zeros in random locations
 		/// </summary>
 		/// <param name="path">The path of the file to corrupt</param>
