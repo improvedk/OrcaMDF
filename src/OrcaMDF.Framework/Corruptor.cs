@@ -63,8 +63,8 @@ namespace OrcaMDF.Framework
 
 			using (var file = File.OpenWrite(path))
 			{
-				if (endPageID * 8192 + 8192 > file.Length)
-					throw new ArgumentException("endPageID is larger than the amount of pages in the database file.");
+				long numPagesInFile = file.Length / 8192;
+				endPageID = (int)Math.Min(endPageID, numPagesInFile);
 
 				var rnd = new Random();
 				byte[] zeros = new byte[8192];
