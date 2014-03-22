@@ -1,7 +1,7 @@
-﻿using System;
-using OrcaMDF.Framework;
+﻿using OrcaMDF.Framework;
 using OrcaMDF.RawCore.Records;
 using OrcaMDF.RawCore.Types;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +10,11 @@ namespace OrcaMDF.RawCore
 {
 	public class RawColumnParser
 	{
+		public static IEnumerable<dynamic> Parse(IEnumerable<RawPage> pages, IRawType[] schema)
+		{
+			return pages.SelectMany(x => x.Records).Cast<RawPrimaryRecord>().Select(x => Parse(x, schema));
+		}
+
 		public static IEnumerable<dynamic> Parse(IEnumerable<RawPrimaryRecord> records, IRawType[] schema)
 		{
 			return records.Select(x => Parse(x, schema));
