@@ -13,7 +13,7 @@ namespace OrcaMDF.Framework
 		/// <param name="path">The path of the file to corrupt</param>
 		/// <param name="corruptionPercentage">To percentage of the pages to corrupt. 0.1 = 10%</param>
 		/// <returns>A list of the page IDs that were corrupted</returns>
-		public static IEnumerable<int> CorruptFileUsingGarbage(string path, double corruptionPercentage)
+		public static IEnumerable<int> CorruptFileUsingGarbage(string path, double corruptionPercentage, bool onlyBody)
 		{
 			var rnd = new Random();
 
@@ -25,9 +25,6 @@ namespace OrcaMDF.Framework
 
 			using (var file = File.OpenWrite(path))
 			{
-				byte[] garbage = new byte[8192];
-				rnd.NextBytes(garbage);
-
 				int pageCount = (int)(file.Length / 8192);
 				int pageCountToCorrupt = (int)(pageCount * corruptionPercentage);
 
@@ -39,8 +36,19 @@ namespace OrcaMDF.Framework
 
 				foreach (int pageID in pageIDsToCorrupt)
 				{
-					file.Position = pageID * 8192;
-					file.Write(garbage, 0, 8192);
+					byte[] garbage = new byte[8192];
+					rnd.NextBytes(garbage);
+
+					if (onlyBody)
+					{
+						file.Position = pageID * 8192 + 96;
+						file.Write(garbage, 0, 8060);
+					}
+					else
+					{
+						file.Position = pageID * 8192;
+						file.Write(garbage, 0, 8192);
+					}
 				}
 
 				return pageIDsToCorrupt;
