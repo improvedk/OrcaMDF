@@ -8,6 +8,46 @@ namespace OrcaMDF.Framework
 	public static class Corruptor
 	{
 		/// <summary>
+		/// Corrups an MDF file by overwriting random pages with garbage
+		/// </summary>
+		/// <param name="path">The path of the file to corrupt</param>
+		/// <param name="corruptionPercentage">To percentage of the pages to corrupt. 0.1 = 10%</param>
+		/// <returns>A list of the page IDs that were corrupted</returns>
+		public static IEnumerable<int> CorruptFileUsingGarbage(string path, double corruptionPercentage)
+		{
+			var rnd = new Random();
+
+			if (corruptionPercentage > 1)
+				throw new ArgumentException("Corruption percentage can't be more than 100%");
+
+			if (corruptionPercentage <= 0)
+				throw new ArgumentException("Corruption percentage must be positive.");
+
+			using (var file = File.OpenWrite(path))
+			{
+				byte[] garbage = new byte[8192];
+				rnd.NextBytes(garbage);
+
+				int pageCount = (int)(file.Length / 8192);
+				int pageCountToCorrupt = (int)(pageCount * corruptionPercentage);
+
+				IEnumerable<int> pageIDsToCorrupt = Enumerable
+					.Range(0, pageCount)
+					.OrderBy(x => rnd.Next())
+					.Take(pageCountToCorrupt)
+					.ToList();
+
+				foreach (int pageID in pageIDsToCorrupt)
+				{
+					file.Position = pageID * 8192;
+					file.Write(garbage, 0, 8192);
+				}
+
+				return pageIDsToCorrupt;
+			}
+		}
+
+		/// <summary>
 		/// Corrups an MDF file by overwriting pages with all zeros in random locations
 		/// </summary>
 		/// <param name="path">The path of the file to corrupt</param>
