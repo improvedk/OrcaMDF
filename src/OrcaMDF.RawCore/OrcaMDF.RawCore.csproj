@@ -33,6 +33,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -71,7 +72,9 @@
     <Compile Include="Types\RawNChar.cs" />
     <Compile Include="Types\IRawFixedLengthType.cs" />
     <Compile Include="Types\RawInt.cs" />
-    <Compile Include="Utilities\SQL2012\SQL2012SystemObjects.cs" />
+    <Compile Include="Utilities\SQL2012\SQL2012Syscolpars.cs" />
+    <Compile Include="Utilities\SQL2012\SQL2012Sysallocunits.cs" />
+    <Compile Include="Utilities\SQL2012\SQL2012Sysschobjs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj">
