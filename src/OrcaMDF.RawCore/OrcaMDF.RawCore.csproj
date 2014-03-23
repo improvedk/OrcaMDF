@@ -72,6 +72,7 @@
     <Compile Include="Types\RawNChar.cs" />
     <Compile Include="Types\IRawFixedLengthType.cs" />
     <Compile Include="Types\RawInt.cs" />
+    <Compile Include="Utilities\SQL2012\SQL2012Sysrowsets.cs" />
     <Compile Include="Utilities\SQL2012\SQL2012Syscolpars.cs" />
     <Compile Include="Utilities\SQL2012\SQL2012Sysallocunits.cs" />
     <Compile Include="Utilities\SQL2012\SQL2012Sysschobjs.cs" />

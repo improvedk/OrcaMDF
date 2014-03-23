@@ -5,7 +5,7 @@ namespace OrcaMDF.RawCore.Utilities.SQL2012
 	public class SQL2012Sysallocunits
 	{
 		public long auid { get; private set; }
-		public long type { get; private set; }
+		public byte type { get; private set; }
 		public long ownerid { get; private set; }
 		public int status { get; private set; }
 		public byte[] pgfirst { get; private set; }
@@ -19,7 +19,7 @@ namespace OrcaMDF.RawCore.Utilities.SQL2012
 
 		public static IRawType[] Schema = {
 			RawType.BigInt("auid"),
-			RawType.BigInt("type"),
+			RawType.TinyInt("type"),
 			RawType.BigInt("ownerid"),
 			RawType.Int("status"),
 			RawType.SmallInt("fgid"),
