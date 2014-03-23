@@ -13,9 +13,9 @@ namespace OrcaMDF.RawCore.Tests.Utilities.SQL2012
 		public void sysschobjs()
 		{
 			var db = new RawDataFile(AW2012Path);
-			var pages = db.Pages.Where(x => x.Header.ObjectID == SQL2012SystemObjects.sysschobjs.ObjectID && x.Header.Type == PageType.Data);
+			var pages = db.Pages.Where(x => x.Header.ObjectID == SQL2012Sysschobjs.ObjectID && x.Header.Type == PageType.Data);
 			var records = pages.SelectMany(x => x.Records).Cast<RawPrimaryRecord>();
-			var rows = RawColumnParser.Parse(records, SQL2012SystemObjects.sysschobjs.Schema).ToList();
+			var rows = RawColumnParser.Parse(records, SQL2012Sysschobjs.Schema).ToList();
 
 			Assert.AreEqual(2291, rows.Count());
 
