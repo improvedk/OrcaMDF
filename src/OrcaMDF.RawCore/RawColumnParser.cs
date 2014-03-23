@@ -10,6 +10,28 @@ namespace OrcaMDF.RawCore
 {
 	public class RawColumnParser
 	{
+		/// <summary>
+		/// Tries to parse each page according to the schema while silently ignoring failures. Effectively
+		/// this will try to brute-force parse each record on the page and return just the ones that
+		/// physically match the schema.
+		/// </summary>
+		public static IEnumerable<dynamic> BestEffortParse(IEnumerable<RawPage> pages, IRawType[] schema)
+		{
+			var result = new List<dynamic>();
+
+			foreach (var page in pages)
+			{
+				try
+				{
+					result.AddRange(Parse(new[] { page }, schema));
+				}
+				catch
+				{ }
+			}
+
+			return result;
+		}
+
 		public static IEnumerable<dynamic> Parse(IEnumerable<RawPage> pages, IRawType[] schema)
 		{
 			return pages.SelectMany(x => x.Records).Cast<RawPrimaryRecord>().Select(x => Parse(x, schema));
