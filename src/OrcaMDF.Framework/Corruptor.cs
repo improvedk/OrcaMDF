@@ -13,7 +13,7 @@ namespace OrcaMDF.Framework
 		/// <param name="path">The path of the file to corrupt</param>
 		/// <param name="corruptionPercentage">To percentage of the pages to corrupt. 0.1 = 10%</param>
 		/// <returns>A list of the page IDs that were corrupted</returns>
-		public static IEnumerable<int> CorruptFile(string path, double corruptionPercentage)
+		public static IEnumerable<int> CorruptFileUsingZeros(string path, double corruptionPercentage)
 		{
 			if (corruptionPercentage > 1)
 				throw new ArgumentException("Corruption percentage can't be more than 100%");
@@ -50,9 +50,9 @@ namespace OrcaMDF.Framework
 		/// </summary>
 		/// <param name="path">The MDF file to corrupt</param>
 		/// <param name="pageID">The ID of the page to zero out</param>
-		public static void CorruptPage(string path, int pageID)
+		public static void CorruptPageUsingZeros(string path, int pageID)
 		{
-			CorruptFile(path, 1, pageID, pageID);
+			CorruptFileUsingZeros(path, 1, pageID, pageID);
 		}
 
 		/// <summary>
@@ -63,7 +63,7 @@ namespace OrcaMDF.Framework
 		/// <param name="startPageID">The inclusive lower bound page ID that may be corrupted</param>
 		/// <param name="endPageID">The inclusive upper bound page ID that may be corrupted</param>
 		/// <returns>A list of the page IDs that were corrupted</returns>
-		public static IEnumerable<int> CorruptFile(string path, int pagesToCorrupt, int startPageID, int endPageID)
+		public static IEnumerable<int> CorruptFileUsingZeros(string path, int pagesToCorrupt, int startPageID, int endPageID)
 		{
 			if (startPageID > endPageID)
 				throw new ArgumentException("startPageID must be lower than or equal to endPageID.");
