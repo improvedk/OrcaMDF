@@ -22,9 +22,9 @@ namespace OrcaMDF.RawCore.Records
 		public List<short> VariableLengthOffsetArray { get; private set; }
 		public List<ArrayDelimiter<byte>> VariableLengthOffsetValues { get; private set; }
 
-		public byte RawStatusByteA { get; private set; }
-		public byte RawStatusByteB { get; private set; }
-		public ArrayDelimiter<byte> NullBitmapRawBytes {get; private set; }
+		internal byte RawStatusByteA { get; private set; }
+		internal byte RawStatusByteB { get; private set; }
+		internal ArrayDelimiter<byte> NullBitmapRawBytes {get; private set; }
 
 		public RawPrimaryRecord(ArrayDelimiter<byte> bytes)
 		{

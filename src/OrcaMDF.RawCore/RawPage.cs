@@ -9,7 +9,7 @@ namespace OrcaMDF.RawCore
 	{
 		public int PageID { get; private set; }
 		public RawPageHeader Header { get; private set; }
-		public byte[] RawBytes;
+		internal byte[] RawBytes;
 
 		public IEnumerable<short> SlotArray
 		{
