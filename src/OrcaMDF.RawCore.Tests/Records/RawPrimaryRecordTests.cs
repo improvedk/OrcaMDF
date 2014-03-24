@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
+using OrcaMDF.Framework;
 using OrcaMDF.RawCore.Records;
+using OrcaMDF.RawCore.Utilities.SQL2012;
 using System.Linq;
 using System.Text;
 
@@ -31,6 +33,24 @@ namespace OrcaMDF.RawCore.Tests.Records
 			Assert.AreEqual(11, record.VariableLengthOffsetValues.Count());
 			Assert.AreEqual(6, record.VariableLengthOffsetValues.ToArray()[0].Count);
 			Assert.AreEqual(title, Encoding.Unicode.GetString(record.VariableLengthOffsetValues.ToArray()[0].ToArray()));
+		}
+
+		/// <summary>
+		/// This record has no variable length offset section, yet it has a non-null variable length value
+		/// </summary>
+		[Test]
+		public void Regression_EmptyVariableLengthValuePerceivedAsNull()
+		{
+			var rawBytes = TestHelper.GetBytesFromByteString(@"
+				10002d00 d637b35f 01000000 0000e7e7 0000001e
+				00000008 d0003400 02000000 00000000 00000000
+				00000000 00100000 80
+			");
+
+			var record = new RawPrimaryRecord(new ArrayDelimiter<byte>(rawBytes));
+			var row = RawColumnParser.Parse(record, SQL2012Syscolpars.Schema);
+
+			Assert.IsNotNull(row.name);
 		}
 	}
 }

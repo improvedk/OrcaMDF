@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayDelimiter.cs" />
     <Compile Include="ArrayHelper.cs" />
     <Compile Include="ByteConverter.cs" />
     <Compile Include="Corruptor.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PageType.cs" />
     <Compile Include="RecordType.cs" />
+    <Compile Include="RecordTypeParser.cs" />
     <Compile Include="SCSU\Exceptions\EndOfInputException.cs" />
     <Compile Include="SCSU\Exceptions\IllegalInputException.cs" />
     <Compile Include="SCSU\ScsuConstants.cs" />

@@ -2,6 +2,6 @@
 {
 	public interface IRawVariableLengthType : IRawType
 	{
-
+		object EmptyValue { get; }
 	}
 }

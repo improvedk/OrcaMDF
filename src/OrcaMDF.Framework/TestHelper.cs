@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Text.RegularExpressions;
 
 namespace OrcaMDF.Framework
 {
@@ -16,7 +17,8 @@ namespace OrcaMDF.Framework
 
 		public static byte[] GetBytesFromByteString(string input)
 		{
-			input = input.Replace(" ", "");
+			// Remove anything but valid hex characters
+			input = Regex.Replace(input, "[^0-9A-F]", "", RegexOptions.IgnoreCase);
 
 			if(input.Length % 2 != 0)
 				throw new FormatException("input");

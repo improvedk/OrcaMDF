@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayDelimiterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecordTypeParserTests.cs" />
     <Compile Include="SCSU\ScsuExpanderTests.cs" />
     <Compile Include="SqlBitConverterTests.cs" />
   </ItemGroup>

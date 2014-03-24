@@ -4,6 +4,8 @@ namespace OrcaMDF.RawCore.Types
 {
 	public class RawNVarchar : RawType, IRawVariableLengthType
 	{
+		public object EmptyValue { get { return ""; } }
+
 		public RawNVarchar(string name) : base(name)
 		{ }
 

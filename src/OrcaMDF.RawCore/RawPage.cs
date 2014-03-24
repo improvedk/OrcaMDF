@@ -11,8 +11,6 @@ namespace OrcaMDF.RawCore
 		public RawPageHeader Header { get; private set; }
 		public byte[] RawBytes;
 
-		private readonly RawDataFile dataFile;
-		
 		public IEnumerable<short> SlotArray
 		{
 			get
@@ -30,33 +28,29 @@ namespace OrcaMDF.RawCore
 			{
 				foreach (var entry in SlotArray)
 				{
-					byte statusA = RawBytes[entry];
-					var type = (RecordType)((statusA & 0xE) >> 1);
+					// Get the record type from the first byte of the record, the A status byte
+					var type = RecordTypeParser.Parse(RawBytes[entry]);
+					var recordBytes = new ArrayDelimiter<byte>(RawBytes, entry, RawBytes.Length - entry); // -1?
 					
 					switch (type)
 					{
 						case RecordType.Primary:
-							yield return new RawPrimaryRecord(entry, this, dataFile);
-							break;
-
-						case RecordType.Index:
-							yield return new RawIndexRecord(entry, this, dataFile);
+							yield return new RawPrimaryRecord(recordBytes);
 							break;
 
 						default:
-							yield return new RawRecord(entry, this, dataFile);
+							yield return new RawRecord();
 							break;
 					}
 				}
 			}
 		}
 
-		public RawPage(int pageID, RawDataFile dataFile)
+		public RawPage(int pageID, byte[] rawBytes)
 		{
-			this.dataFile = dataFile;
 			PageID = pageID;
 			Header = new RawPageHeader(this);
-			RawBytes = dataFile.GetPageBytes(pageID);
+			RawBytes = rawBytes;
 		}
 	}
 }

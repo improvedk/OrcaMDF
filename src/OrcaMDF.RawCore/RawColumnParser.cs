@@ -45,8 +45,8 @@ namespace OrcaMDF.RawCore
 		public static dynamic Parse(RawPrimaryRecord record, IRawType[] schema)
 		{
 			return Parse(
-				record.FixedLengthData.ToArray(),
-				record.VariableLengthOffsetValues.Select(x => x.ToArray()).ToArray(),
+				record.FixedLengthData != null ? record.FixedLengthData.ToArray() : null,
+				record.VariableLengthOffsetValues != null ? record.VariableLengthOffsetValues.Select(x => x.ToArray()).ToArray() : null,
 				record.NullBitmapRawBytes.ToArray(),
 				schema
 			);
@@ -76,6 +76,7 @@ namespace OrcaMDF.RawCore
 			{
 				object value = null;
 
+				// Is it a fixed length or a variable length type?
 				if (type is IRawFixedLengthType)
 				{
 					var fixedType = (IRawFixedLengthType)type;
@@ -101,17 +102,23 @@ namespace OrcaMDF.RawCore
 				}
 				else
 				{
+					var variableType = (IRawVariableLengthType)type;
+
 					// We may have schema columns that haven't been persisted, in which case we'll simply miss certain
 					// variable length offset entries from the record completely. These can only be at the end. If we're
 					// missing a value, it's an implicit null (ignoring 2012's ability to have non-persisted default values).
-					if (variableIndex < variableLengthData.Length)
+					if (variableLengthData != null && variableIndex < variableLengthData.Length)
 					{
-						var variableType = (IRawVariableLengthType)type;
 						value = variableType.GetValue(variableLengthData[variableIndex++]);
+					}
+					else
+					{
+						// If there is no variable length data for this column, and it's not null, it's empty
+						value = variableType.EmptyValue;
 					}
 				}
 
-				// If null bitmap indicates a null value, ignore the previously found value and return null instead
+				// If null bitmap indicates a null value, overwrite the previously found value
 				if (nullBitmap[nullBitmapIndex++])
 					value = null;
 

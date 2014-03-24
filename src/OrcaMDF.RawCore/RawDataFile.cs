@@ -17,7 +17,7 @@ namespace OrcaMDF.RawCore
 
 		public RawPage GetPage(int pageID)
 		{
-			return new RawPage(pageID, this);
+			return new RawPage(pageID, GetPageBytes(pageID));
 		}
 
 		public byte[] GetPageBytes(int pageID)

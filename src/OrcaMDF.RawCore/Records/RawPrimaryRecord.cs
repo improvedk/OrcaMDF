@@ -1,96 +1,82 @@
-﻿using System;
+﻿using OrcaMDF.Framework;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OrcaMDF.RawCore.Records
 {
 	public class RawPrimaryRecord : RawRecord
 	{
-		private short? _pointerToEndOfNullBitmap;
-		private short pointerToEndOfNullBitmap
+		public bool Version { get; private set; }
+		public RecordType Type { get; private set; }
+		public bool HasNullBitmap { get; private set; }
+		public bool HasVariableLengthColumns { get; private set; }
+		public bool HasVersioningInformation { get; private set; }
+		public bool IsGhostForwardedRecord { get; private set; }
+		public short NullBitmapPointer { get; private set; }
+		public ArrayDelimiter<byte> FixedLengthData { get; private set; }
+		public short NullBitmapColumnCount { get; private set; }
+		public BitArray NullBitmap { get; private set; }
+		public short? NumberOfVariableLengthOffsetArrayEntries { get; private set; }
+		public List<short> VariableLengthOffsetArray { get; private set; }
+		public List<ArrayDelimiter<byte>> VariableLengthOffsetValues { get; private set; }
+
+		public byte RawStatusByteA { get; private set; }
+		public byte RawStatusByteB { get; private set; }
+		public ArrayDelimiter<byte> NullBitmapRawBytes {get; private set; }
+
+		public RawPrimaryRecord(ArrayDelimiter<byte> bytes)
 		{
-			get
+			// Status byte A
+			RawStatusByteA = bytes[0];
+			Version = (RawStatusByteA & 0x01) == 0x01; // First bit
+			Type = (RecordType)((RawStatusByteA & 0x0E) >> 1); // 2-4th bits
+			HasNullBitmap = (RawStatusByteA & 0x10) == 0x10; // Fifth bit
+			HasVariableLengthColumns = (RawStatusByteA & 0x20) == 0x20; // Sixth bit
+			HasVersioningInformation = (RawStatusByteA & 0x40) == 0x40; // Seventh bit
+
+			// Status byte B
+			RawStatusByteB = bytes[1];
+			IsGhostForwardedRecord = (bytes[1] & 0x01) == 0x01; // First bit
+
+			// Null bitmap pointer
+			NullBitmapPointer = BitConverter.ToInt16(bytes.SourceArray, bytes.Offset + 2);
+
+			// Fixed length data
+			FixedLengthData = new ArrayDelimiter<byte>(bytes.SourceArray, bytes.Offset + 4, NullBitmapPointer - 4);
+
+			// Null bitmap column count
+			NullBitmapColumnCount = BitConverter.ToInt16(bytes.SourceArray, bytes.Offset + NullBitmapPointer);
+
+			// Null bitmap
+			NullBitmapRawBytes = new ArrayDelimiter<byte>(bytes.SourceArray, bytes.Offset + NullBitmapPointer + 2, (NullBitmapColumnCount + 7) / 8);
+			NullBitmap = new BitArray(NullBitmapRawBytes.ToArray());
+
+			// Variable length offset array
+			if (HasVariableLengthColumns)
 			{
-				if (_pointerToEndOfNullBitmap == null)
-					_pointerToEndOfNullBitmap = (short)(NullBitmapPointer + 2 + ((NullBitmapColumnCount + 7) / 8));
+				int endOfNullBitmapPointer = NullBitmapPointer + 2 + NullBitmapRawBytes.Count;
+				
+				// Number of pointers
+				NumberOfVariableLengthOffsetArrayEntries = BitConverter.ToInt16(bytes.SourceArray, bytes.Offset + endOfNullBitmapPointer);
+				
+				// Pointers
+				VariableLengthOffsetArray = new List<short>();
+				for (int i = 0; i < NumberOfVariableLengthOffsetArrayEntries; i++)
+					VariableLengthOffsetArray.Add(BitConverter.ToInt16(bytes.SourceArray, bytes.Offset + endOfNullBitmapPointer + 2 + i * 2));
 
-				return _pointerToEndOfNullBitmap.Value;
-			}
-		}
+				// Values
+				int endOfVariableLengthOffsetArrayPointer = endOfNullBitmapPointer + 2 + NumberOfVariableLengthOffsetArrayEntries.Value * 2;
+				int previousPointer = endOfVariableLengthOffsetArrayPointer;
 
-		public byte RawStatusByteB
-		{
-			get { return Page.RawBytes[Index + 1]; }
-		}
-
-		public bool IsGhostForwardedRecord
-		{
-			get { return RawStatusByteB == 1; }
-		}
-
-		public short NullBitmapPointer
-		{
-			get { return BitConverter.ToInt16(Page.RawBytes, Index + 2); }
-		}
-
-		public short NullBitmapColumnCount
-		{
-			get { return BitConverter.ToInt16(Page.RawBytes, Index + NullBitmapPointer); }
-		}
-
-		public ArraySegment<byte> FixedLengthData
-		{
-			get { return new ArraySegment<byte>(Page.RawBytes, Index + 4, NullBitmapPointer - 4); }
-		}
-
-		public ArraySegment<byte> NullBitmapRawBytes
-		{
-			get { return new ArraySegment<byte>(Page.RawBytes, Index + NullBitmapPointer + 2, (NullBitmapColumnCount + 7) / 8); }
-		}
-
-		public short? NumberOfVariableLengthOffsetArrayEntries
-		{
-			get
-			{
-				if (!HasVariableLengthColumns)
-					return null;
-
-				return BitConverter.ToInt16(Page.RawBytes, Index + pointerToEndOfNullBitmap);
-			}
-		}
-
-		public IEnumerable<short> VariableLengthOffsetArray
-		{
-			get
-			{
-				if (HasVariableLengthColumns)
+				VariableLengthOffsetValues = new List<ArrayDelimiter<byte>>();
+				foreach (short entry in VariableLengthOffsetArray)
 				{
-					for (int i = 0; i < NumberOfVariableLengthOffsetArrayEntries; i++)
-						yield return BitConverter.ToInt16(Page.RawBytes, Index + pointerToEndOfNullBitmap + 2 + i * 2);
+					VariableLengthOffsetValues.Add(new ArrayDelimiter<byte>(bytes.SourceArray, bytes.Offset + previousPointer, entry - previousPointer));
+					previousPointer = entry;
 				}
 			}
 		}
-
-		public IEnumerable<ArraySegment<byte>> VariableLengthOffsetValues
-		{
-			get
-			{
-				if (HasVariableLengthColumns)
-				{
-					int endOfVariableLengthArray = pointerToEndOfNullBitmap + 2 + NumberOfVariableLengthOffsetArrayEntries.Value * 2;
-
-					int previousPointer = endOfVariableLengthArray;
-					foreach (short entry in VariableLengthOffsetArray)
-					{
-						yield return new ArraySegment<byte>(Page.RawBytes, Index + previousPointer, entry - previousPointer);
-						
-						previousPointer = entry;
-					}
-				}
-			}
-		}
-
-		public RawPrimaryRecord(int index, RawPage page, RawDataFile dataFile)
-			: base (index, page, dataFile)
-		{ }
 	}
 }

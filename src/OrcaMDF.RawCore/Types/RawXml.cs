@@ -2,6 +2,8 @@
 {
 	public class RawXml : RawType, IRawVariableLengthType
 	{
+		public object EmptyValue { get { return ""; } }
+
 		public RawXml(string name) : base(name)
 		{ }
 
