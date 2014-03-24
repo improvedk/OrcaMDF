@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace OrcaMDF.RawCore.Tests.Utilities.SQL2012
 {
-	public class SQL2012SysschobjTests : BaseFixture
+	public class SQL2012SysschobjsTests : BaseFixture
 	{
 		[Test]
 		public void sysschobjs()
