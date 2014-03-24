@@ -18,9 +18,6 @@ namespace OrcaMDF.RawCore.Tests.Utilities.SQL2012
 			Assert.AreEqual(860, rows.Count);
 			Assert.AreEqual(317769461, (int)rows.Average(x => x.id));
 			Assert.AreEqual(105, (int)rows.Average(x => x.xtype));
-
-			var nullRows = rows.Where(x => x.name == null).ToList();
-
 			Assert.AreEqual(8, (int)rows.Average(x => x.name.Length));
 
 			// Individual rows
