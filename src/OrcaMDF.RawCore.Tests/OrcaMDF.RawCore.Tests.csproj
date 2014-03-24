@@ -67,7 +67,7 @@
     <Compile Include="RawPageHeaderTests.cs" />
     <Compile Include="RawPageTests.cs" />
     <Compile Include="Records\RawPrimaryRecordTests.cs" />
-    <Compile Include="Utilities\SQL2012\SQL2012BaseSchemaTests.cs" />
+    <Compile Include="Utilities\SQL2012\SQL2012SysschobjTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj">
