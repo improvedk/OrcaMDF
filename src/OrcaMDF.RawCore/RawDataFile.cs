@@ -9,6 +9,11 @@ namespace OrcaMDF.RawCore
 		private readonly Stream stream;
 		private readonly long fileSize;
 
+		public long PageCount
+		{
+			get { return fileSize / 8192; }
+		}
+
 		public RawDataFile(string filePath)
 		{
 			stream = File.OpenRead(filePath);
