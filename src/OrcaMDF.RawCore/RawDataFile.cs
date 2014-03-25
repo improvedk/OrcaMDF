@@ -9,9 +9,9 @@ namespace OrcaMDF.RawCore
 		private readonly Stream stream;
 		private readonly long fileSize;
 
-		public long PageCount
+		public int PageCount
 		{
-			get { return fileSize / 8192; }
+			get { return (int)(fileSize / 8192); }
 		}
 
 		public RawDataFile(string filePath)
@@ -35,13 +35,39 @@ namespace OrcaMDF.RawCore
 			return bytes;
 		}
 
+		/// <summary>
+		/// Returns all the pages in the database that can be successfully parsed. Note that these may
+		/// still be corrupt, but they're at least structurally valid.
+		/// </summary>
+		public IEnumerable<RawPage> BestEffortPages
+		{
+			get
+			{
+				for (int i = 0; i < PageCount; i++)
+				{
+					RawPage page = null;
+
+					try
+					{
+						page = GetPage(i);
+					}
+					catch
+					{ }
+
+					if (page != null)
+						yield return page;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Returns all the pages in the database
+		/// </summary>
 		public IEnumerable<RawPage> Pages
 		{
 			get
 			{
-				int numberOfPages = (int)(fileSize / 8192);
-
-				for (int i = 0; i < numberOfPages; i++)
+				for (int i = 0; i < PageCount; i++)
 					yield return GetPage(i);
 			}
 		}
