@@ -15,26 +15,28 @@ namespace OrcaMDF.RawCore
 		/// this will try to brute-force parse each record on the page and return just the ones that
 		/// physically match the schema.
 		/// </summary>
-		public static IEnumerable<dynamic> BestEffortParse(RawDataFile file, Func<RawPage, bool> pagePredicate, IRawType[] schema)
+		public static IEnumerable<dynamic> BestEffortParse(IEnumerable<RawPage> pages, IRawType[] schema)
 		{
-			var result = new List<dynamic>();
-
-			for (int i = 0; i < file.PageCount; i++)
+			foreach (var page in pages)
 			{
-				try
+				foreach (var record in page.BestEffortRecords)
 				{
-					var page = file.GetPage(i);
+					dynamic parsedRecord = null;
 
-					if (!pagePredicate(page))
-						continue;
+					try
+					{
+						var primaryRecord = record as RawPrimaryRecord;
 
-					result.AddRange(Parse(new[] { page }, schema));
+						if (primaryRecord != null)
+							parsedRecord = Parse(primaryRecord, schema);
+					}
+					catch
+					{ }
+
+					if (parsedRecord != null)
+						yield return parsedRecord;
 				}
-				catch
-				{ }
 			}
-
-			return result;
 		}
 
 		public static IEnumerable<dynamic> Parse(IEnumerable<RawPage> pages, IRawType[] schema)

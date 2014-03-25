@@ -8,11 +8,6 @@ namespace OrcaMDF.RawCore.Records
 {
 	public class RawPrimaryRecord : RawRecord
 	{
-		public bool Version { get; private set; }
-		public RecordType Type { get; private set; }
-		public bool HasNullBitmap { get; private set; }
-		public bool HasVariableLengthColumns { get; private set; }
-		public bool HasVersioningInformation { get; private set; }
 		public bool IsGhostForwardedRecord { get; private set; }
 		public short NullBitmapPointer { get; private set; }
 		public ArrayDelimiter<byte> FixedLengthData { get; private set; }
@@ -22,20 +17,11 @@ namespace OrcaMDF.RawCore.Records
 		public List<short> VariableLengthOffsetArray { get; private set; }
 		public List<ArrayDelimiter<byte>> VariableLengthOffsetValues { get; private set; }
 
-		internal byte RawStatusByteA { get; private set; }
 		internal byte RawStatusByteB { get; private set; }
 		internal ArrayDelimiter<byte> NullBitmapRawBytes {get; private set; }
 
-		public RawPrimaryRecord(ArrayDelimiter<byte> bytes)
+		public RawPrimaryRecord(ArrayDelimiter<byte> bytes) : base(bytes)
 		{
-			// Status byte A
-			RawStatusByteA = bytes[0];
-			Version = (RawStatusByteA & 0x01) == 0x01; // First bit
-			Type = (RecordType)((RawStatusByteA & 0x0E) >> 1); // 2-4th bits
-			HasNullBitmap = (RawStatusByteA & 0x10) == 0x10; // Fifth bit
-			HasVariableLengthColumns = (RawStatusByteA & 0x20) == 0x20; // Sixth bit
-			HasVersioningInformation = (RawStatusByteA & 0x40) == 0x40; // Seventh bit
-
 			// Status byte B
 			RawStatusByteB = bytes[1];
 			IsGhostForwardedRecord = (bytes[1] & 0x01) == 0x01; // First bit

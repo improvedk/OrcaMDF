@@ -22,6 +22,39 @@ namespace OrcaMDF.RawCore
 			}
 		}
 
+		public IEnumerable<RawRecord> BestEffortRecords
+		{
+			get
+			{
+				foreach (var entry in SlotArray)
+				{
+					RawRecord record = null;
+
+					try
+					{
+						var type = RecordTypeParser.Parse(RawBytes[entry]);
+						var recordBytes = new ArrayDelimiter<byte>(RawBytes, entry, RawBytes.Length - entry);
+
+						switch (type)
+						{
+							case RecordType.Primary:
+								record = new RawPrimaryRecord(recordBytes);
+								break;
+
+							default:
+								record = new RawRecord(recordBytes);
+								break;
+						}
+					}
+					catch
+					{ }
+
+					if (record != null)
+						yield return record;
+				}
+			}
+		}
+
 		public IEnumerable<RawRecord> Records
 		{
 			get
@@ -30,7 +63,7 @@ namespace OrcaMDF.RawCore
 				{
 					// Get the record type from the first byte of the record, the A status byte
 					var type = RecordTypeParser.Parse(RawBytes[entry]);
-					var recordBytes = new ArrayDelimiter<byte>(RawBytes, entry, RawBytes.Length - entry); // -1?
+					var recordBytes = new ArrayDelimiter<byte>(RawBytes, entry, RawBytes.Length - entry);
 					
 					switch (type)
 					{
@@ -39,7 +72,7 @@ namespace OrcaMDF.RawCore
 							break;
 
 						default:
-							yield return new RawRecord();
+							yield return new RawRecord(recordBytes);
 							break;
 					}
 				}
