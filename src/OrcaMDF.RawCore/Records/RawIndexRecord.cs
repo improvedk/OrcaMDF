@@ -6,39 +6,38 @@ using System.Linq;
 
 namespace OrcaMDF.RawCore.Records
 {
-	public class RawPrimaryRecord : RawRecord
+	public class RawIndexRecord : RawRecord
 	{
-		public bool IsGhostForwardedRecord { get; private set; }
+		public int? ChildPageID { get; private set; }
+		public short? ChildFileID { get; private set; }
 
-		internal byte RawStatusByteB { get; private set; }
+		private short pminlen;
 
-		public RawPrimaryRecord(ArrayDelimiter<byte> bytes) : base(bytes)
+		public RawIndexRecord(ArrayDelimiter<byte> bytes, short pminlen, byte level) : base(bytes)
 		{
-			// Status byte B
-			RawStatusByteB = bytes[1];
-			IsGhostForwardedRecord = (bytes[1] & 0x01) == 0x01; // First bit
-
+			this.pminlen = pminlen;
+			
 			// Fixed length size
-			FixedLengthSize = (short)(BitConverter.ToInt16(bytes.SourceArray, bytes.Offset + 2) - 4);
+			FixedLengthSize = (short)(pminlen - 1);
 
 			// Fixed length data
-			FixedLengthData = new ArrayDelimiter<byte>(bytes.SourceArray, bytes.Offset + 4, FixedLengthSize);
+			FixedLengthData = new ArrayDelimiter<byte>(bytes.SourceArray, bytes.Offset + 1, FixedLengthSize);
 
 			// Null bitmap column count
-			NullBitmapColumnCount = BitConverter.ToInt16(bytes.SourceArray, bytes.Offset + 4 + FixedLengthSize);
+			NullBitmapColumnCount = BitConverter.ToInt16(bytes.SourceArray, FixedLengthData.Offset + FixedLengthData.Count);
 
 			// Null bitmap
-			NullBitmapRawBytes = new ArrayDelimiter<byte>(bytes.SourceArray, bytes.Offset + 4 + FixedLengthSize + 2, (NullBitmapColumnCount + 7) / 8);
+			NullBitmapRawBytes = new ArrayDelimiter<byte>(bytes.SourceArray, FixedLengthData.Offset + FixedLengthData.Count + 2, (NullBitmapColumnCount + 7) / 8);
 			NullBitmap = new BitArray(NullBitmapRawBytes.ToArray());
 
 			// Variable length offset array
 			if (HasVariableLengthColumns)
 			{
-				int endOfNullBitmapPointer = 4 + FixedLengthSize + 2 + NullBitmapRawBytes.Count;
-				
+				int endOfNullBitmapPointer = FixedLengthData.Offset + FixedLengthData.Count + 2 + NullBitmapRawBytes.Count;
+
 				// Number of pointers
 				NumberOfVariableLengthOffsetArrayEntries = BitConverter.ToInt16(bytes.SourceArray, bytes.Offset + endOfNullBitmapPointer);
-				
+
 				// Pointers
 				VariableLengthOffsetArray = new List<short>();
 				for (int i = 0; i < NumberOfVariableLengthOffsetArrayEntries; i++)
@@ -54,6 +53,13 @@ namespace OrcaMDF.RawCore.Records
 					VariableLengthOffsetValues.Add(new ArrayDelimiter<byte>(bytes.SourceArray, bytes.Offset + previousPointer, entry - previousPointer));
 					previousPointer = entry;
 				}
+			}
+
+			// If we're at a non-leaf level, parse the page pointers
+			if (level > 0)
+			{
+				ChildPageID = BitConverter.ToInt32(bytes.SourceArray, bytes.Offset + 1 + FixedLengthData.Count - 6);
+				ChildFileID = BitConverter.ToInt16(bytes.SourceArray, bytes.Offset + 1 + FixedLengthData.Count - 2);
 			}
 		}
 	}

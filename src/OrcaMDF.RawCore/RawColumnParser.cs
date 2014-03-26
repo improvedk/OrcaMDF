@@ -25,10 +25,7 @@ namespace OrcaMDF.RawCore
 
 					try
 					{
-						var primaryRecord = record as RawPrimaryRecord;
-
-						if (primaryRecord != null)
-							parsedRecord = Parse(primaryRecord, schema);
+						parsedRecord = Parse(record, schema);
 					}
 					catch
 					{ }
@@ -41,15 +38,15 @@ namespace OrcaMDF.RawCore
 
 		public static IEnumerable<dynamic> Parse(IEnumerable<RawPage> pages, IRawType[] schema)
 		{
-			return pages.SelectMany(x => x.Records).Cast<RawPrimaryRecord>().Select(x => Parse(x, schema));
+			return pages.SelectMany(x => x.Records).Select(x => Parse(x, schema));
 		}
 
-		public static IEnumerable<dynamic> Parse(IEnumerable<RawPrimaryRecord> records, IRawType[] schema)
+		public static IEnumerable<dynamic> Parse(IEnumerable<RawRecord> records, IRawType[] schema)
 		{
 			return records.Select(x => Parse(x, schema));
 		}
 
-		public static dynamic Parse(RawPrimaryRecord record, IRawType[] schema)
+		public static dynamic Parse(RawRecord record, IRawType[] schema)
 		{
 			return Parse(
 				record.FixedLengthData != null ? record.FixedLengthData.ToArray() : null,

@@ -1,4 +1,6 @@
 ﻿using OrcaMDF.Framework;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace OrcaMDF.RawCore.Records
 {
@@ -9,10 +11,18 @@ namespace OrcaMDF.RawCore.Records
 		public bool HasNullBitmap { get; private set; }
 		public bool HasVariableLengthColumns { get; private set; }
 		public bool HasVersioningInformation { get; private set; }
+		public short FixedLengthSize { get; protected set; }
+		public ArrayDelimiter<byte> FixedLengthData { get; protected set; }
+		public short NullBitmapColumnCount { get; protected set; }
+		public BitArray NullBitmap { get; protected set; }
+		public short? NumberOfVariableLengthOffsetArrayEntries { get; protected set; }
+		public List<short> VariableLengthOffsetArray { get; protected set; }
+		public List<ArrayDelimiter<byte>> VariableLengthOffsetValues { get; protected set; }
 
 		internal byte RawStatusByteA { get; private set; }
+		internal ArrayDelimiter<byte> NullBitmapRawBytes { get; set; }
 
-		public RawRecord(ArrayDelimiter<byte> bytes)
+		internal RawRecord(ArrayDelimiter<byte> bytes)
 		{
 			// Status byte A
 			RawStatusByteA = bytes[0];

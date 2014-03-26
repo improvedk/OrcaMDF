@@ -46,6 +46,7 @@
     <Compile Include="RawDataFile.cs" />
     <Compile Include="RawPage.cs" />
     <Compile Include="RawPageHeader.cs" />
+    <Compile Include="Records\RawIndexRecord.cs" />
     <Compile Include="Records\RawPrimaryRecord.cs" />
     <Compile Include="Records\RawRecord.cs" />
     <Compile Include="Types\RawBinary.cs" />

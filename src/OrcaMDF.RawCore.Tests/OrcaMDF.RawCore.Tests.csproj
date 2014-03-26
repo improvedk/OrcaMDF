@@ -66,6 +66,7 @@
     <Compile Include="RawDatabaseFixtures.cs" />
     <Compile Include="RawPageHeaderTests.cs" />
     <Compile Include="RawPageTests.cs" />
+    <Compile Include="Records\RawIndexRecordTests.cs" />
     <Compile Include="Records\RawPrimaryRecordTests.cs" />
     <Compile Include="Utilities\SQL2012\SQL2012SysallocunitsTests.cs" />
     <Compile Include="Utilities\SQL2012\SQL2012SyscolparsTests.cs" />
