@@ -11,12 +11,8 @@ namespace OrcaMDF.RawCore.Records
 		public int? ChildPageID { get; private set; }
 		public short? ChildFileID { get; private set; }
 
-		private short pminlen;
-
 		public RawIndexRecord(ArrayDelimiter<byte> bytes, short pminlen, byte level) : base(bytes)
 		{
-			this.pminlen = pminlen;
-			
 			// Fixed length size
 			FixedLengthSize = (short)(pminlen - 1);
 
@@ -33,7 +29,7 @@ namespace OrcaMDF.RawCore.Records
 			// Variable length offset array
 			if (HasVariableLengthColumns)
 			{
-				int endOfNullBitmapPointer = FixedLengthData.Offset + FixedLengthData.Count + 2 + NullBitmapRawBytes.Count;
+				int endOfNullBitmapPointer = 1 + FixedLengthData.Count + 2 + NullBitmapRawBytes.Count;
 
 				// Number of pointers
 				NumberOfVariableLengthOffsetArrayEntries = BitConverter.ToInt16(bytes.SourceArray, bytes.Offset + endOfNullBitmapPointer);

@@ -51,7 +51,7 @@ namespace OrcaMDF.RawCore
 			return Parse(
 				record.FixedLengthData != null ? record.FixedLengthData.ToArray() : null,
 				record.VariableLengthOffsetValues != null ? record.VariableLengthOffsetValues.Select(x => x.ToArray()).ToArray() : null,
-				record.NullBitmapRawBytes.ToArray(),
+				record.NullBitmapRawBytes != null ? record.NullBitmapRawBytes.ToArray() : new byte[0],
 				schema
 			);
 		}

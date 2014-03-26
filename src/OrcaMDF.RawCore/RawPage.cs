@@ -41,6 +41,10 @@ namespace OrcaMDF.RawCore
 								record = new RawPrimaryRecord(recordBytes);
 								break;
 
+							case RecordType.Index:
+								record = new RawIndexRecord(recordBytes, Header.Pminlen, Header.Level);
+								break;
+
 							default:
 								record = new RawRecord(recordBytes);
 								break;
@@ -69,6 +73,10 @@ namespace OrcaMDF.RawCore
 					{
 						case RecordType.Primary:
 							yield return new RawPrimaryRecord(recordBytes);
+							break;
+
+						case RecordType.Index:
+							yield return new RawIndexRecord(recordBytes, Header.Pminlen, Header.Level);
 							break;
 
 						default:
