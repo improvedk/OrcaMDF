@@ -46,6 +46,18 @@ namespace OrcaMDF.RawCore.Utilities.SQL2012
 			RawType.Int("scope_id")
 		};
 
+		public static SQL2012Sysrowsets BestEffortRow(dynamic obj)
+		{
+			try
+			{
+				return Row(obj);
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
 		public static SQL2012Sysrowsets Row(dynamic obj)
 		{
 			return new SQL2012Sysrowsets {

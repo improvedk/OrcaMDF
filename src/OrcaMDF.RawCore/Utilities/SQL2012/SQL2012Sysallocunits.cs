@@ -31,6 +31,18 @@ namespace OrcaMDF.RawCore.Utilities.SQL2012
 			RawType.BigInt("pcreserved")
 		};
 
+		public static SQL2012Sysallocunits BestEffortRow(dynamic obj)
+		{
+			try
+			{
+				return Row(obj);
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
 		public static SQL2012Sysallocunits Row(dynamic obj)
 		{
 			return new SQL2012Sysallocunits {

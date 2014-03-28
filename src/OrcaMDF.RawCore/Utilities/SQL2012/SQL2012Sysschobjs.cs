@@ -35,6 +35,18 @@ namespace OrcaMDF.RawCore.Utilities.SQL2012
 			RawType.Int("status2")
 		};
 
+		public static SQL2012Sysschobjs BestEffortRow(dynamic obj)
+		{
+			try
+			{
+				return Row(obj);
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
 		public static SQL2012Sysschobjs Row(dynamic obj)
 		{
 			return new SQL2012Sysschobjs {

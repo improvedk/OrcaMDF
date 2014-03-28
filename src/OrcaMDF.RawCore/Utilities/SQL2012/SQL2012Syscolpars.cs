@@ -42,6 +42,18 @@ namespace OrcaMDF.RawCore.Utilities.SQL2012
 			RawType.VarBinary("idtval")
 		};
 
+		public static SQL2012Syscolpars BestEffortRow(dynamic obj)
+		{
+			try
+			{
+				return Row(obj);
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
 		public static SQL2012Syscolpars Row(dynamic obj)
 		{
 			return new SQL2012Syscolpars {
