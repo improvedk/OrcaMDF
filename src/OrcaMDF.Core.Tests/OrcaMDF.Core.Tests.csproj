@@ -1,131 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C6062A74-A3B2-4102-84D4-A658AA8011B3}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OrcaMDF.Core.Tests</RootNamespace>
-    <AssemblyName>OrcaMDF.Core.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <TargetFramework>net461</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Engine\Records\CompressedRecordParserTests\DateCompressionTests.cs" />
-    <Compile Include="Engine\Records\CompressedRecordParserTests\IntegerCompressionTests.cs" />
-    <Compile Include="Features\BaseTables\SmokeTests.cs" />
-    <Compile Include="Features\Compression\DataTypeTests.cs" />
-    <Compile Include="Features\Compression\RecordFormatTests.cs" />
-    <Compile Include="Features\Compression\RowOverflowTests.cs" />
-    <Compile Include="Features\Compression\UniquifierTests.cs" />
-    <Compile Include="Features\DataTypes\SmallDatetimeTests.cs" />
-    <Compile Include="Features\StoredProcedures\StoredProcedureTests.cs" />
-    <Compile Include="Features\Vardecimal\VardecimalTests.cs" />
-    <Compile Include="SqlServerVersion\SqlServer2005PlusTestAttribute.cs" />
-    <Compile Include="SqlServerVersion\SqlServer2008PlusTestAttribute.cs" />
-    <Compile Include="SqlServerVersion\SqlServerTestAttribute.cs" />
-    <Compile Include="SqlServerVersion\DatabaseVersion.cs" />
-    <Compile Include="SqlServerSystemTestBase.cs" />
-    <Compile Include="Engine\IndexScannerTests.cs" />
-    <Compile Include="Engine\Pages\GamPageTests.cs" />
-    <Compile Include="Engine\Pages\PFS\PfsPageTests.cs" />
-    <Compile Include="Engine\Pages\SgamPageTests.cs" />
-    <Compile Include="Engine\Records\PrimaryRecordTests.cs" />
-    <Compile Include="Engine\Records\RecordTests.cs" />
-    <Compile Include="Engine\Records\RecordReadStateTests.cs" />
-    <Compile Include="Engine\SparseVectorParserTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlBigIntTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlBinaryTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlBitTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlCharTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlDateTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlDateTimeTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlDecimalTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlIntTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlNCharTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlNvarcharTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlSmallDateTimeTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlSmallIntTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlTimeTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlTinyIntTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlVarBinaryTests.cs" />
-    <Compile Include="Engine\SqlTypes\SqlVarcharTests.cs" />
-    <Compile Include="Engine\DataScannerTests.cs" />
-    <Compile Include="Features\DataTypes\SmallMoneyTests.cs" />
-    <Compile Include="Features\DataTypes\DecimalTests.cs" />
-    <Compile Include="Features\DataTypes\MoneyTests.cs" />
-    <Compile Include="Features\DMVs\SmokeTests.cs" />
-    <Compile Include="Features\ForwardedRecords\ForwardedRecordTests.cs" />
-    <Compile Include="Features\LobTypes\VarBinaryTests.cs" />
-    <Compile Include="Features\LobTypes\NVarcharMaxTests.cs" />
-    <Compile Include="Features\LobTypes\VarcharMaxTests.cs" />
-    <Compile Include="Features\LobTypes\ImageTests.cs" />
-    <Compile Include="Features\LobTypes\NTextTests.cs" />
-    <Compile Include="Features\LobTypes\TextTests.cs" />
-    <Compile Include="Features\MultiDataFile\MultiFileTests.cs" />
-    <Compile Include="Features\NullBitmap\NullBitmapTests.cs" />
-    <Compile Include="Features\SparseColumns\SparseColumnTests.cs" />
-    <Compile Include="MetaData\SysrscolTIParserTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlServerVersion\SqlServer2005TestAttribute.cs" />
-    <Compile Include="SqlServerVersion\SqlServer2008R2TestAttribute.cs" />
+    <Compile Include="..\TestHelper.cs">
+      <Link>TestHelper.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OrcaMDF.Core\OrcaMDF.Core.csproj">
-      <Project>{829A5C51-CB21-4DE2-9021-44F6D804D231}</Project>
-      <Name>OrcaMDF.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj">
-      <Project>{4D581CDB-A39C-4C0C-AE2C-6A3070B8983C}</Project>
-      <Name>OrcaMDF.Framework</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\OrcaMDF.Core\OrcaMDF.Core.csproj" />
+    <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
