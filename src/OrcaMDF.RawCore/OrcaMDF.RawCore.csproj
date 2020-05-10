@@ -1,95 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{57CFDBD5-8673-4E96-944A-9F9E4C9B50A4}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OrcaMDF.RawCore</RootNamespace>
-    <AssemblyName>OrcaMDF.RawCore</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArraySegmentExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RawColumnParser.cs" />
-    <Compile Include="RawDataFile.cs" />
-    <Compile Include="RawPage.cs" />
-    <Compile Include="RawPageHeader.cs" />
-    <Compile Include="Records\RawIndexRecord.cs" />
-    <Compile Include="Records\RawPrimaryRecord.cs" />
-    <Compile Include="Records\RawRecord.cs" />
-    <Compile Include="Types\RawBinary.cs" />
-    <Compile Include="Types\RawBigInt.cs" />
-    <Compile Include="Types\RawChar.cs" />
-    <Compile Include="Types\RawDecimal.cs" />
-    <Compile Include="Types\RawMoney.cs" />
-    <Compile Include="Types\RawSysname.cs" />
-    <Compile Include="Types\RawVarchar.cs" />
-    <Compile Include="Types\RawBit.cs" />
-    <Compile Include="Types\RawDate.cs" />
-    <Compile Include="Types\RawHierarchyID.cs" />
-    <Compile Include="Types\RawXml.cs" />
-    <Compile Include="Types\RawVarBinary.cs" />
-    <Compile Include="Types\RawSmallInt.cs" />
-    <Compile Include="Types\RawNVarchar.cs" />
-    <Compile Include="Types\RawTinyInt.cs" />
-    <Compile Include="Types\IRawType.cs" />
-    <Compile Include="Types\IRawVariableLengthType.cs" />
-    <Compile Include="Types\RawDateTime.cs" />
-    <Compile Include="Types\RawType.cs" />
-    <Compile Include="Types\RawUniqueIdentifier.cs" />
-    <Compile Include="Types\RawNChar.cs" />
-    <Compile Include="Types\IRawFixedLengthType.cs" />
-    <Compile Include="Types\RawInt.cs" />
-    <Compile Include="Utilities\SQL2012\SQL2012Sysrowsets.cs" />
-    <Compile Include="Utilities\SQL2012\SQL2012Syscolpars.cs" />
-    <Compile Include="Utilities\SQL2012\SQL2012Sysallocunits.cs" />
-    <Compile Include="Utilities\SQL2012\SQL2012Sysschobjs.cs" />
+    <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OrcaMDF.Framework\OrcaMDF.Framework.csproj">
-      <Project>{4d581cdb-a39c-4c0c-ae2c-6a3070b8983c}</Project>
-      <Name>OrcaMDF.Framework</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

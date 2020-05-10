@@ -130,7 +130,7 @@ namespace OrcaMDF.Core.Tests
 			cmd.ExecuteNonQuery();
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void TearDown()
 		{
 			// Delete all collateral files resulting from running this test
